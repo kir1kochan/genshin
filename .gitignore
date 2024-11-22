@@ -29,3 +29,24 @@ Release/
 .vs/
 *.vsdx
 *.vssscc
+
+# 忽略构建过程生成的临时文件
+*.tlog
+*.log
+*.recipe
+*.idb
+*.exp
+
+# 忽略其他构建生成的二进制文件
+*.dll
+*.lib
+*.a
+*.so
+
+# 忽略 Visual Studio 中的其他配置文件
+.vs2019/
+.vs2017/
+
+# 忽略操作系统生成的临时文件（如 Windows 下的 thumbs.db 和 .DS_Store）
+Thumbs.db
+.DS_Store
