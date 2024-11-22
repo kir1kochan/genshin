@@ -1,31 +1,26 @@
-/****************************************************************************
- Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
- 
- http://www.cocos2d-x.org
- 
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
- 
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
- 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
- ****************************************************************************/
-
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
 
+// 添加 Spirit 相关头文件
+#include "Common/Spirit.h"        // 包含 Spirit 类
+#include "Common/Player/PlayerSpirit.h"  // 包含 PlayerSpirit 类
+#include "Common/Enemy/EnemySpirit.h"   // 包含 EnemySpirit 类
+
 USING_NS_CC;
+
+
+std::string elementToString(Element element) {
+    switch (element) {
+    case Element::FIRE: return "Fire";
+    case Element::WATER: return "Water";
+    case Element::EARTH: return "Earth";
+    case Element::AIR: return "Air";
+    case Element::LIGHT: return "Light";
+    case Element::DARK: return "Dark";
+    default: return "Unknown";
+    }
+}
+
 
 Scene* HelloWorld::createScene()
 {
@@ -44,7 +39,7 @@ bool HelloWorld::init()
 {
     //////////////////////////////
     // 1. super init first
-    if ( !Scene::init() )
+    if (!Scene::init())
     {
         return false;
     }
@@ -52,82 +47,38 @@ bool HelloWorld::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    /////////////////////////////
-    // 2. add a menu item with "X" image, which is clicked to quit the program
-    //    you may modify it.
-
-    // add a "close" icon to exit the progress. it's an autorelease object
-    auto closeItem = MenuItemImage::create(
-                                           "CloseNormal.png",
-                                           "CloseSelected.png",
-                                           CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
-
-    if (closeItem == nullptr ||
-        closeItem->getContentSize().width <= 0 ||
-        closeItem->getContentSize().height <= 0)
-    {
-        problemLoading("'CloseNormal.png' and 'CloseSelected.png'");
-    }
-    else
-    {
-        float x = origin.x + visibleSize.width - closeItem->getContentSize().width/2;
-        float y = origin.y + closeItem->getContentSize().height/2;
-        closeItem->setPosition(Vec2(x,y));
-    }
-
-    // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem, NULL);
-    menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 1);
+    Director::getInstance()->setClearColor(Color4F(0, 0, 0, 1)); // 设置黑色背景
 
     /////////////////////////////
-    // 3. add your codes below...
+    // 3. 创建一个标签显示
+    auto label = Label::createWithSystemFont("Hello, Genshin!", "Arial", 24);
+    label->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+    this->addChild(label);
 
-    // add a label shows "Hello World"
-    // create and initialize a label
+    /////////////////////////////
+    // 2. 添加其他内容 ...
 
-    auto label = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
-    if (label == nullptr)
-    {
-        problemLoading("'fonts/Marker Felt.ttf'");
-    }
-    else
-    {
-        // position the label on the center of the screen
-        label->setPosition(Vec2(origin.x + visibleSize.width/2,
-                                origin.y + visibleSize.height - label->getContentSize().height));
+    // 创建 Spirit 实例并测试
 
-        // add the label as a child to this layer
-        this->addChild(label, 1);
-    }
+    Spirit* spirit = new Spirit();
+    CCLOG("Spirit Health: %d, Element: %s", spirit->getHealth(), elementToString(spirit->getElement()).c_str());
 
-    // add "HelloWorld" splash screen"
-    auto sprite = Sprite::create("HelloWorld.png");
-    if (sprite == nullptr)
-    {
-        problemLoading("'HelloWorld.png'");
-    }
-    else
-    {
-        // position the sprite on the center of the screen
-        sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+    // 创建 PlayerSpirit 实例并测试
+    PlayerSpirit* playerSpirit = new PlayerSpirit();
+    CCLOG("PlayerSpirit Health: %d, Element: %s, Name: %s", playerSpirit->getHealth(), elementToString(playerSpirit->getElement()).c_str());
 
-        // add the sprite as a child to this layer
-        this->addChild(sprite, 0);
-    }
+    // 创建 EnemySpirit 实例并测试
+    EnemySpirit* enemySpirit = new EnemySpirit();
+    CCLOG("EnemySpirit Health: %d, Element: %s", enemySpirit->getHealth(), elementToString(enemySpirit->getElement()).c_str());
+
+    /////////////////////////////
+    // 3. 继续添加其他代码
+
     return true;
 }
-
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
 {
     //Close the cocos2d-x game scene and quit the application
     Director::getInstance()->end();
-
-    /*To navigate back to native iOS screen(if present) without quitting the application  ,do not use Director::getInstance()->end() as given above,instead trigger a custom event created in RootViewController.mm as below*/
-
-    //EventCustom customEndEvent("game_scene_close_event");
-    //_eventDispatcher->dispatchEvent(&customEndEvent);
-
-
 }
