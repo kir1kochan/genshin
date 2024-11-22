@@ -2,16 +2,7 @@
 #define SPIRIT_H
 
 #include "cocos2d.h"
-
-// 枚举：元素类型（例如火、冰、水等）
-enum class Element {
-    FIRE,
-    WATER,
-    EARTH,
-    AIR,
-    LIGHT,
-    DARK
-};
+#include "Element.h"
 
 class Spirit : public cocos2d::Node {
 protected:

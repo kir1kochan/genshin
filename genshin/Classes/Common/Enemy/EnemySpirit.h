@@ -14,6 +14,8 @@ public:
     // 用于测试的默认构造函数
     EnemySpirit() : Spirit(100, Element::EARTH) {}
 
+    int getAttack() const { return aggressionLevel; }
+
     // 攻击敌人
     void attack(Spirit& target) override {
         if (aggressionLevel > 5) {
