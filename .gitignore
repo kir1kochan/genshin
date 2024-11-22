@@ -1,6 +1,7 @@
 # 忽略 Visual Studio 临时文件和构建输出
 Debug/
 Release/
+**/Debug.win32/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Dd]Release/
