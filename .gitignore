@@ -1,5 +1,9 @@
+# 忽略 Visual Studio 临时文件和构建输出
+Debug/
+Release/
 [Dd]ebug/
 [Dd]ebugPublic/
+[Dd]Release/
 [Dd]ebug_x64/
 [Dd]ebug_x86/
 *.pdb
@@ -10,3 +14,18 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.vcxproj.user
+*.suo
+*.user
+*.userosscache
+
+# 忽略 Visual Studio 用户配置文件
+*.vcxproj.user
+*.suo
+*.user
+*.userosscache
+
+# 忽略 Visual Studio 配置和临时文件
+.vs/
+*.vsdx
+*.vssscc
