@@ -2,15 +2,15 @@
 #include "cocos2d.h"
 
 Enemy::Enemy(float health, Element element, int aggressionLevel)
-    : Creator(health, element), aggressionLevel(aggressionLevel) {}
+    : Entities(health, element), aggressionLevel(aggressionLevel) {}
 
-Enemy::Enemy() : Creator(100, Element::EARTH), aggressionLevel(1) {}
+Enemy::Enemy() : Entities(100, Element::EARTH), aggressionLevel(1) {}
 
 int Enemy::getAggressionLevel() const {
     return aggressionLevel;
 }
 
-void Enemy::attack(Creator& target) {
+void Enemy::attack(Entities& target) {
     if (aggressionLevel > 5) {
         target.takeDamage(15.0f);  // ¸ß¹¥»÷ÐÔ
     }
@@ -29,6 +29,6 @@ void Enemy::aiBehavior() {
 }
 
 void Enemy::printStatus() {
-    Creator::printStatus();
+    Entities::printStatus();
     CCLOG("Aggression Level: %d", aggressionLevel);
 }

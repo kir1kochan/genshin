@@ -1,9 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "../Creator.h"
+#include "../Entities.h"
 
-class Player : public Creator {
+class Player : public Entities {
 private:
     int experience;  // 玩家经验值
     int level;       // 玩家等级
@@ -22,7 +22,7 @@ public:
     void gainExperience(int exp);
 
     // 攻击玩家敌人时根据元素相克
-    void attack(Creator& target) override;
+    void attack(Entities& target) override;
 
     // 玩家独特的技能
     void castSkill();
