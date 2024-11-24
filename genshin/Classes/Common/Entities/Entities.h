@@ -1,10 +1,10 @@
-#ifndef CREATOR_H
-#define CREATOR_H
+#ifndef ENTITIES_H
+#define ENTITIES_H
 
 #include "cocos2d.h"
-#include "Element.h"
+#include "../Element/Element.h"
 
-class Creator : public cocos2d::Node {
+class Entities : public cocos2d::Node {
 protected:
     float health;          // 当前血量
     float maxHealth;       // 最大血量
@@ -12,13 +12,13 @@ protected:
 
 public:
     // 构造函数
-    Creator(float health, Element element);
+    Entities(float health, Element element);
 
     // 默认构造函数
-    Creator();
+    Entities();
 
     // 虚析构函数
-    virtual ~Creator();
+    virtual ~Entities();
 
     // 获取当前血量
     float getHealth() const;
@@ -36,10 +36,10 @@ public:
     virtual void heal(float amount);
 
     // 攻击目标
-    virtual void attack(Creator& target);
+    virtual void attack(Entities& target);
 
     // 打印当前状态
     virtual void printStatus();
 };
 
-#endif // CREATOR_H
+#endif // ENTITIES_H

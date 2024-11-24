@@ -1,9 +1,9 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include "../Creator.h"
+#include "../Entities.h"
 
-class Enemy : public Creator {
+class Enemy : public Entities {
 private:
     int aggressionLevel;  // 敌人的攻击性等级（决定敌人的攻击频率或强度）
 
@@ -14,7 +14,7 @@ public:
     int getAggressionLevel() const;
 
     // 攻击敌人
-    void attack(Creator& target) override;
+    void attack(Entities& target) override;
 
     // 敌人AI行为
     void aiBehavior();

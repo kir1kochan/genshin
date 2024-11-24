@@ -2,9 +2,9 @@
 #include "cocos2d.h"
 
 Player::Player(float health, Element element)
-    : Creator(health, element), experience(0), level(1) {}
+    : Entities(health, element), experience(0), level(1) {}
 
-Player::Player() : Creator(100, Element::WATER), experience(0), level(1) {}
+Player::Player() : Entities(100, Element::WATER), experience(0), level(1) {}
 
 void Player::levelUp() {
     level++;
@@ -25,7 +25,7 @@ void Player::gainExperience(int exp) {
     }
 }
 
-void Player::attack(Creator& target) {
+void Player::attack(Entities& target) {
     if (element == Element::FIRE && target.getElement() == Element::EARTH) {
         target.takeDamage(20.0f);  // »ð¿ËÍÁ
     }
@@ -39,7 +39,7 @@ void Player::castSkill() {
 }
 
 void Player::printStatus() {
-    Creator::printStatus();
+    Entities::printStatus();
     CCLOG("Experience: %d", experience);
     CCLOG("Level: %d", level);
 }
