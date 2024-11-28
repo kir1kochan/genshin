@@ -2,11 +2,13 @@
 #define TESTSCENE_H
 
 #include "cocos2d.h"
+#include "Classes/Common/InputManager/InputManager.h" 
 
 class TestScene : public cocos2d::Scene
 {
 public:
     static cocos2d::Scene* createScene();
+    virtual ~TestScene();  // 析构函数，释放资源
 
     virtual bool init();
 
@@ -17,7 +19,12 @@ public:
     // 键盘事件处理
     void setupKeyboardListener();
 
-    CREATE_FUNC(TestScene);
-};
+    // 加载 TMX 地图背景
+    void loadBackgroundMap();
 
+    CREATE_FUNC(TestScene);
+
+private:
+    MouseInputManager1* mouseInputManager;  // 鼠标输入管理器
+};
 #endif // TESTSCENE_H

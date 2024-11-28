@@ -10,6 +10,15 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Classes">
+      <UniqueIdentifier>{0f54796b-e123-4630-b76d-ede7e2f1b082}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Classes\Common">
+      <UniqueIdentifier>{3fe7480a-5ff1-4d35-a66b-249a8d0d3441}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Classes\Common\InputManager">
+      <UniqueIdentifier>{37b1c237-3a2c-4d1a-b868-c8f0b567eddf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -21,6 +30,9 @@
     <ClCompile Include="..\Classes\TestScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Common\InputManager\InputManager.cpp">
+      <Filter>src\Classes\Common\InputManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -31,6 +43,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\TestScene.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\InputManager\InputManager.h">
+      <Filter>src\Classes\Common\InputManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
