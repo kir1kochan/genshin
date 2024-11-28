@@ -3,16 +3,22 @@
 
 #include "cocos2d.h"
 #include "../Element/Element.h"
+#include "json/document.h"
+#include "json/writer.h"
+#include "json/stringbuffer.h"
+#include <fstream>
 
 class Entities : public cocos2d::Node {
 protected:
     float health;          // 当前血量
     float maxHealth;       // 最大血量
+    float attack;
+    float defence;
     Element element;       // 元素属性
 
 public:
     // 构造函数
-    Entities(float health, Element element);
+    Entities(float health, float attack, float defence, Element element);
 
     // 默认构造函数
     Entities();
@@ -40,6 +46,18 @@ public:
 
     // 打印当前状态
     virtual void printStatus();
+
+    // 将所有成员变量序列化为 JSON 格式，生成 JSON 字符串
+    virtual std::string saveToJson() const;
+
+    // 从 JSON 字符串中读取成员变量序列
+    virtual void loadFromJson(const std::string& jsonString);
+
+    // 将成员变量序列化为 JSON 格式，并保存到本地
+    virtual void Entities::saveToFile(const std::string& filePath) const;
+
+    // 从本地读取 JSON 文件，读取成员变量序列
+    virtual void Entities::loadFromFile(const std::string& filePath);
 };
 
 #endif // ENTITIES_H
