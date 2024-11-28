@@ -17,8 +17,9 @@ enum class Element {
 std::string elementToString(Element element);
 Element stringToElement(const std::string& str);
 
-// 比较操作符声明（可选）
+// 比较操作符声明
 bool operator==(Element lhs, Element rhs);
 bool operator!=(Element lhs, Element rhs);
 
+float calculateElementalDamageModifier(Element attackerElement, Element targetElement);
 #endif // ELEMENT_H

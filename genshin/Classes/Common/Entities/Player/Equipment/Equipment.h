@@ -6,6 +6,7 @@
 #include "json/document.h"
 #include "json/writer.h"
 #include "json/stringbuffer.h"
+#include <fstream>
 
 // 装备基类
 class Equipment {
@@ -27,6 +28,12 @@ public:
 
     // 从 JSON 字符串加载装备数据
     virtual void loadFromJson(const std::string& jsonString);
+
+    // 将成员变量序列化为 JSON 格式，并保存到本地
+    virtual void Entities::saveToFile(const std::string& filePath) const;
+
+    // 从本地读取 JSON 文件，读取成员变量序列
+    virtual void Entities::loadFromFile(const std::string& filePath);
 
     // 虚析构函数，确保派生类可以正确析构
     virtual ~Equipment() {}
