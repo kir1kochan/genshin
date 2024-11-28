@@ -17,9 +17,6 @@ private:
     Armor* armor;             // 护甲
     Accessory* accessory;     // 饰品
 
-    // 元素相克关系判断
-    float calculateElementalDamageModifier(Element attackerElement, Element targetElement);
-
 public:
     Player(float health, Element element);
     Player();  // 默认构造函数

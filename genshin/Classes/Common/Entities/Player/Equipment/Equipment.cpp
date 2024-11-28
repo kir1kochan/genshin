@@ -53,3 +53,33 @@ void Equipment::loadFromJson(const std::string& jsonString) {
     if (doc.HasMember("name")) name = doc["name"].GetString();
     if (doc.HasMember("power")) power = doc["power"].GetInt();
 }
+
+// 将成员变量序列化为 JSON 格式，并保存到本地
+void Entities::saveToFile(const std::string& filePath) const {
+    std::string jsonString = saveToJson(); // 调用 saveToJson 获取 JSON 字符串
+    std::ofstream file(filePath);
+    if (file.is_open()) {
+        file << jsonString;
+        file.close();
+        CCLOG("Entity saved to file: %s", filePath.c_str());
+    }
+    else {
+        CCLOG("Failed to open file: %s", filePath.c_str());
+    }
+}
+
+// 从本地读取 JSON 文件，读取成员变量序列
+void Entities::loadFromFile(const std::string& filePath) {
+    std::ifstream file(filePath);
+    if (file.is_open()) {
+        std::stringstream buffer;
+        buffer << file.rdbuf(); // 读取整个文件内容到 buffer
+        file.close();
+        std::string jsonString = buffer.str();
+        loadFromJson(jsonString); // 调用 loadFromJson 解析 JSON 数据
+        CCLOG("Entity loaded from file: %s", filePath.c_str());
+    }
+    else {
+        CCLOG("Failed to open file: %s", filePath.c_str());
+    }
+}

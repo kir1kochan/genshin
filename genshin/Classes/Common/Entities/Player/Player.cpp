@@ -1,30 +1,6 @@
 #include "Player.h"
 #include "cocos2d.h"
 
-float Player::calculateElementalDamageModifier(Element attackerElement, Element targetElement) {
-    // 属性相克关系
-    if (attackerElement == Element::FIRE && targetElement == Element::EARTH ||
-        attackerElement == Element::WATER && targetElement == Element::FIRE ||
-        attackerElement == Element::EARTH && targetElement == Element::AIR ||
-        attackerElement == Element::AIR && targetElement == Element::WATER ||
-        ) {
-        return 1.2f;  // 火克土\水克火\土克风\风克水
-    }
-    if (attackerElement == targetElement) {
-        return 1.0f;  // 元素相同，正常伤害
-    }
-
-    // 被克制的情况
-    if ((attackerElement == Element::FIRE && targetElement == Element::WATER) ||
-        (attackerElement == Element::WATER && targetElement == Element::EARTH) ||
-        (attackerElement == Element::EARTH && targetElement == Element::AIR) ||
-        (attackerElement == Element::AIR && targetElement == Element::FIRE)) {
-        return 0.8f;  // 被克制，伤害减少
-    }
-
-    return 1.0f;  // 默认返回 1，表示没有元素相克
-}
-
 Player::Player(float health, Element element)
     : Entities(health, element), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr) {}
 
