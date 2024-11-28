@@ -1,10 +1,36 @@
 #include "Player.h"
 #include "cocos2d.h"
 
-Player::Player(float health, Element element)
-    : Entities(health, element), experience(0), level(1) {}
+float Player::calculateElementalDamageModifier(Element attackerElement, Element targetElement) {
+    // 属性相克关系
+    if (attackerElement == Element::FIRE && targetElement == Element::EARTH ||
+        attackerElement == Element::WATER && targetElement == Element::FIRE ||
+        attackerElement == Element::EARTH && targetElement == Element::AIR ||
+        attackerElement == Element::AIR && targetElement == Element::WATER ||
+        ) {
+        return 1.2f;  // 火克土\水克火\土克风\风克水
+    }
+    if (attackerElement == targetElement) {
+        return 1.0f;  // 元素相同，正常伤害
+    }
 
-Player::Player() : Entities(100, Element::WATER), experience(0), level(1) {}
+    // 被克制的情况
+    if ((attackerElement == Element::FIRE && targetElement == Element::WATER) ||
+        (attackerElement == Element::WATER && targetElement == Element::EARTH) ||
+        (attackerElement == Element::EARTH && targetElement == Element::AIR) ||
+        (attackerElement == Element::AIR && targetElement == Element::FIRE)) {
+        return 0.8f;  // 被克制，伤害减少
+    }
+
+    return 1.0f;  // 默认返回 1，表示没有元素相克
+}
+
+Player::Player(float health, Element element)
+    : Entities(health, element), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr) {}
+
+
+Player::Player() : Entities(100, Element::WATER), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr) {}
+
 
 void Player::levelUp() {
     level++;
@@ -26,12 +52,20 @@ void Player::gainExperience(int exp) {
 }
 
 void Player::attack(Entities& target) {
-    if (element == Element::FIRE && target.getElement() == Element::EARTH) {
-        target.takeDamage(20.0f);  // 火克土
+    // 默认伤害
+    float damage = 10.0f;
+    if (weapon != nullptr) {
+        damage = weapon->getPower();
     }
-    else {
-        target.takeDamage(10.0f);   // 默认伤害
-    }
+
+    // 考虑属性相克
+    float elementModifier = calculateElementalDamageModifier(element, target.getElement());
+
+    // 计算最终伤害
+    damage *= elementModifier;
+
+    // 给目标造成伤害
+    target.takeDamage(damage);
 }
 
 void Player::castSkill() {
@@ -42,4 +76,59 @@ void Player::printStatus() {
     Entities::printStatus();
     CCLOG("Experience: %d", experience);
     CCLOG("Level: %d", level);
+
+    // 打印装备信息
+    if (weapon != nullptr) {
+        CCLOG("Equipped Weapon: %s", weapon->getName().c_str());
+    }
+    else {
+        CCLOG("No Weapon Equipped");
+    }
+
+    if (armor != nullptr) {
+        CCLOG("Equipped Armor: %s", armor->getName().c_str());
+    }
+    else {
+        CCLOG("No Armor Equipped");
+    }
+
+    if (accessory != nullptr) {
+        CCLOG("Equipped Accessory: %s", accessory->getName().c_str());
+    }
+    else {
+        CCLOG("No Accessory Equipped");
+    }
+}
+
+void Player::equipWeapon(Weapon* newWeapon) {
+    if (newWeapon != nullptr) {
+        weapon = newWeapon;
+        CCLOG("Equipped Weapon: %s", weapon->getName().c_str());
+    }
+}
+
+void Player::equipArmor(Armor* newArmor) {
+    if (newArmor != nullptr) {
+        armor = newArmor;
+        CCLOG("Equipped Armor: %s", armor->getName().c_str());
+    }
+}
+
+void Player::equipAccessory(Accessory* newAccessory) {
+    if (newAccessory != nullptr) {
+        accessory = newAccessory;
+        CCLOG("Equipped Accessory: %s", accessory->getName().c_str());
+    }
+}
+
+Weapon* Player::getWeapon() const {
+    return weapon;
+}
+
+Armor* Player::getArmor() const {
+    return armor;
+}
+
+Accessory* Player::getAccessory() const {
+    return accessory;
 }
