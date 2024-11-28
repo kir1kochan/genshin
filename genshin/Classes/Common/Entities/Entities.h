@@ -7,6 +7,7 @@
 #include "json/writer.h"
 #include "json/stringbuffer.h"
 #include <fstream>
+#include<Map.h>
 
 class Entities : public cocos2d::Node {
 protected:
@@ -15,6 +16,9 @@ protected:
     float attack;
     float defence;
     Element element;       // 元素属性
+
+    // 存储实体的状态，如冰冻、中毒、燃烧等
+    std::map<std::string, float> statusEffects; // 状态名 -> 持续时间
 
 public:
     // 构造函数
@@ -58,6 +62,15 @@ public:
 
     // 从本地读取 JSON 文件，读取成员变量序列
     virtual void Entities::loadFromFile(const std::string& filePath);
+
+    // 添加状态效果
+    void applyStatusEffect(const std::string& effect, float duration);
+
+    // 移除状态效果
+    void removeStatusEffect(const std::string& effect);
+
+    // 更新状态效果
+    virtual void updateStatusEffects(float deltaTime);
 };
 
 #endif // ENTITIES_H

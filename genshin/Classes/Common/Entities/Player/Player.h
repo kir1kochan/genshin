@@ -3,10 +3,22 @@
 
 #include "../Entities.h"
 
+#include "Weapon.h"
+#include "Armor.h"
+#include "Accessory.h"
+
 class Player : public Entities {
 private:
     int experience;  // 玩家经验值
     int level;       // 玩家等级
+
+    // 装备（确保一个玩家只能佩戴一个装备）
+    Weapon* weapon;           // 武器
+    Armor* armor;             // 护甲
+    Accessory* accessory;     // 饰品
+
+    // 元素相克关系判断
+    float calculateElementalDamageModifier(Element attackerElement, Element targetElement);
 
 public:
     Player(float health, Element element);
@@ -29,6 +41,16 @@ public:
 
     // 打印玩家状态
     void printStatus() override;
+
+    // 装备管理
+    void equipWeapon(Weapon* weapon);
+    void equipArmor(Armor* armor);
+    void equipAccessory(Accessory* accessory);
+
+    // 获取装备
+    Weapon* getWeapon() const;
+    Armor* getArmor() const;
+    Accessory* getAccessory() const;
 };
 
 #endif // PLAYER_H

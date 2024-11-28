@@ -119,3 +119,29 @@ void Entities::loadFromFile(const std::string& filePath) {
         CCLOG("Failed to open file: %s", filePath.c_str());
     }
 }
+
+
+// 添加状态效果
+void Entities::applyStatusEffect(const std::string& effect, float duration) {
+    statusEffects[effect] = duration;
+}
+
+// 移除状态效果
+void Entities::removeStatusEffect(const std::string& effect) {
+    statusEffects.erase(effect);
+}
+
+// 更新状态效果
+void Entities::updateStatusEffects(float deltaTime) {
+    // 更新状态持续时间
+    for (auto itr = statusEffects.begin(); itr != statusEffects.end();) {
+        itr->second -= deltaTime;  // 减少持续时间
+        if (itr->second <= 0) {
+            // 如果状态已过期，移除该状态
+            itr = statusEffects.erase(itr);
+        }
+        else {
+            ++itr;  // 如果状态仍在持续，继续检查下一个状态
+        }
+    }
+}
