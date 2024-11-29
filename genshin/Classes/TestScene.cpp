@@ -29,9 +29,25 @@ bool TestScene::init()
     director->getOpenGLView()->setDesignResolutionSize(1920, 1080, ResolutionPolicy::NO_BORDER);
 
     // 如果地图太小，可以调整缩放比例，放大地图
-    auto map = this->getChildByName("background");  // 假设地图已经作为背景添加
+    auto map = TMXTiledMap::create("test_map.tmx");
     if (map) {
-        map->setScale(1.5f);  // 设置适当的缩放比例
+        map->setName("background");
+        this->addChild(map, -1);  // 将地图作为背景层添加到场景中
+
+        // 获取指定图层
+        auto layer = map->getLayer("layer_name");  // 根据 TMX 文件中的图层名称获取图层
+        if (layer) {
+            // 处理图层，遍历图块等
+            Size layerSize = layer->getLayerSize(); // 获取图层尺寸
+            for (int x = 0; x < layerSize.width; ++x) {
+                for (int y = 0; y < layerSize.height; ++y) {
+                    auto tile = layer->getTileAt(Vec2(x, y)); // 获取指定坐标的图块
+                    if (tile) {
+                        tile->setPosition3D(Vec3(x, y, y * 10));  // 根据需要调整 z 值来增加层次感
+                    }
+                }
+            }
+        }
     }
 
     // 测试模块 1
@@ -45,10 +61,20 @@ bool TestScene::init()
     scheduleOnce([this](float dt) {
         auto director = Director::getInstance();
         Camera* camera = Camera::getDefaultCamera();
-        camera->setPosition3D(Vec3(1280, 460, 500));  // 改变摄像头的位置
-        camera->lookAt(Vec3(1280, 460, 0));  // 朝向场景中心
+        camera->setPosition3D(Vec3(800, 400, 500));  // 改变摄像头的位置
+        camera->lookAt(Vec3(800, 400, 0));  // 朝向场景中心
 
         }, 0, "init_camera_key");  // 延迟执行，相机设置将在场景初始化后执行
+
+    // 加入树木
+    scheduleOnce([this](float dt) {
+        auto tree = Sprite::create("Tree117.png");
+        this->addChild(tree, 1);
+        tree->setPosition(500, 500);
+        tree->setVisible(true);
+        tree->setScale(0.8);
+        }, 0.1f, "init_tree_key");
+
 
     // 设置鼠标输入管理器用于视角缩放
     scheduleOnce([this](float dt) {
@@ -56,6 +82,7 @@ bool TestScene::init()
         mouseInputManager->initialize();  // 在场景初始化后才初始化输入管理器
         }, 0.1f, "init_mouse_manager_key");
 
+  
     return true;
 }
 
