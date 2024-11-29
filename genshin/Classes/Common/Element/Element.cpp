@@ -37,26 +37,33 @@ bool operator!=(Element lhs, Element rhs) {
 }
 
 float calculateElementalDamageModifier(Element attackerElement, Element targetElement) {
-    // 属性相克关系
-    if (attackerElement == Element::FIRE && targetElement == Element::EARTH ||
-        attackerElement == Element::WATER && targetElement == Element::FIRE ||
-        attackerElement == Element::EARTH && targetElement == Element::AIR ||
-        attackerElement == Element::AIR && targetElement == Element::WATER ||
-        ) {
-        return 1.2f;  // 火克土\水克火\土克风\风克水
+    // 属性克制关系
+    if ((attackerElement == Element::FIRE && targetElement == Element::GRASS) ||
+        (attackerElement == Element::WATER && targetElement == Element::FIRE) ||
+        (attackerElement == Element::EARTH && targetElement == Element::THUNDER) ||
+        (attackerElement == Element::AIR && targetElement == Element::ICE) ||
+        (attackerElement == Element::THUNDER && targetElement == Element::WATER) ||
+        (attackerElement == Element::GRASS && targetElement == Element::EARTH) ||
+        (attackerElement == Element::ICE && targetElement == Element::THUNDER)) {
+        return 1.2f;  // 克制，伤害提升
     }
+
+    // 属性被克制关系
+    if ((attackerElement == Element::FIRE && targetElement == Element::WATER) ||
+        (attackerElement == Element::WATER && targetElement == Element::THUNDER) ||
+        (attackerElement == Element::EARTH && targetElement == Element::GRASS) ||
+        (attackerElement == Element::AIR && targetElement == Element::EARTH) ||
+        (attackerElement == Element::THUNDER && targetElement == Element::ICE) ||
+        (attackerElement == Element::GRASS && targetElement == Element::FIRE) ||
+        (attackerElement == Element::ICE && targetElement == Element::AIR)) {
+        return 0.8f;  // 被克制，伤害降低
+    }
+
+    // 属性相同
     if (attackerElement == targetElement) {
         return 1.0f;  // 元素相同，正常伤害
     }
 
-    // 被克制的情况
-    if ((attackerElement == Element::FIRE && targetElement == Element::WATER) ||
-        (attackerElement == Element::WATER && targetElement == Element::EARTH) ||
-        (attackerElement == Element::EARTH && targetElement == Element::AIR) ||
-        (attackerElement == Element::AIR && targetElement == Element::FIRE)) {
-        return 0.8f;  // 被克制，伤害减少
-    }
-
-    return 1.0f;  // 默认返回 1，表示没有元素相克
+    return 1.0f;  // 默认返回正常伤害
 }
 
