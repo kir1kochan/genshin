@@ -7,7 +7,7 @@
 #include "json/writer.h"
 #include "json/stringbuffer.h"
 #include <fstream>
-#include<Map.h>
+#include <map>
 
 class Entities : public cocos2d::Node {
 protected:
