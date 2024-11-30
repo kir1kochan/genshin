@@ -51,6 +51,12 @@ public:
     // 打印玩家状态
     void printStatus() override;
 
+    // 序列化为 JSON 字符串
+    std::string saveToJson() const override;
+
+    // 从 JSON 字符串加载数据
+    void loadFromJson(const std::string& jsonString) override;
+
     // 装备管理
     void equipWeapon(Weapon* weapon);
     void equipArmor(Armor* armor);

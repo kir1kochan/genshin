@@ -7,7 +7,7 @@
 class Armor : public Equipment {
 public:
     // 构造函数
-    Armor(const std::string& name, int defense);
+    Armor((int id, const std::string& name, int defense);
 
     // 重写打印信息函数
     void printInfo() const override;

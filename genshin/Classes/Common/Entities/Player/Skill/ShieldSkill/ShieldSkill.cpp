@@ -1,8 +1,8 @@
 #include "ShieldSkill.h"
 #include "cocos2d.h"
 
-ShieldSkill::ShieldSkill(const std::string& name, float cooldown, float shieldValue)
-    : Skill(name, cooldown), shieldValue(shieldValue) {}
+ShieldSkill::ShieldSkill(int id, const std::string& name, float cooldown, float shieldValue)
+    : Skill(id, name, cooldown), shieldValue(shieldValue) {}
 
 
 

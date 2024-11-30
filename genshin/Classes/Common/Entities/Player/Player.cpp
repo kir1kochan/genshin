@@ -128,9 +128,18 @@ bool Player::equipSkill(int skillSlot, const std::shared_ptr<Skill>& skill) {
         return false;
     }
 
-    if (std::find(skillBar.begin(), skillBar.end(), skill) != skillBar.end()) {
-        CCLOG("Skill %s is already equipped.", skill->getName().c_str());
-        return false; // 不能重复装备
+    // 检查技能是否已装备
+    auto it = std::find(skillBar.begin(), skillBar.end(), skill);
+    if (it != skillBar.end()) {
+        if (it == skillBar.begin() + skillSlot) {
+            CCLOG("Skill %s is already equipped in the same slot.", skill->getName().c_str());
+            return false; // 技能已在目标槽位
+        }
+
+        // 技能已装备但在不同槽位，交换
+        std::iter_swap(it, skillBar.begin() + skillSlot);
+        CCLOG("Swapped skill %s to slot %d.", skill->getName().c_str(), skillSlot);
+        return true;
     }
 
     skillBar[skillSlot] = skill;
@@ -219,4 +228,98 @@ void Player::setShield(float shield) {
 
 float Player::getShield() const {
     return currentShield;
+}
+
+// 将所有成员变量序列化为 JSON 格式，生成 JSON 字符串
+std::string Player::saveToJson() const {
+    // 调用父类方法，获取基础数据的 JSON 字符串
+    rapidjson::Document doc;
+    doc.Parse(Entities::saveToJson().c_str());
+
+    if (doc.HasParseError() || !doc.IsObject()) {
+        CCLOG("Error parsing base class JSON");
+        return "{}";
+    }
+
+    auto& allocator = doc.GetAllocator();
+
+    // 序列化 Player 特有数据
+    doc.AddMember("experience", experience, allocator);
+    doc.AddMember("level", level, allocator);
+
+    // 序列化装备（仅保存指针是否为空）
+    doc.AddMember("weapon", weapon ? weapon->getId() : 0, allocator);
+    doc.AddMember("armor", armor ? armor->getId() : 0, allocator);
+    doc.AddMember("accessory", accessory ? accessory->getId() : 0, allocator);
+
+    // 序列化技能系统
+    rapidjson::Value unlockedSkillsArray(rapidjson::kArrayType);
+    for (const auto& skill : unlockedSkills) {
+        if (skill) {
+            unlockedSkillsArray.PushBack(skill->getId(), allocator);
+        }
+    }
+    doc.AddMember("unlockedSkills", unlockedSkillsArray, allocator);
+
+    rapidjson::Value skillBarArray(rapidjson::kArrayType);
+    for (const auto& skill : skillBar) {
+        if (skill) {
+            skillBarArray.PushBack(skill->getId(), allocator);
+        }
+        else {
+            skillBarArray.PushBack(0, allocator); // 空槽位
+        }
+    }
+    doc.AddMember("skillBar", skillBarArray, allocator);
+
+    doc.AddMember("currentShield", currentShield, allocator);
+
+    // 转换为 JSON 字符串
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    doc.Accept(writer);
+
+    return buffer.GetString();
+}
+
+// 从 JSON 字符串中读取成员变量序列
+void Player::loadFromJson(const std::string& jsonString) {
+    rapidjson::Document doc;
+    doc.Parse(jsonString.c_str());
+
+    if (doc.HasParseError() || !doc.IsObject()) {
+        CCLOG("Error parsing JSON");
+        return;
+    }
+
+    // 调用父类方法加载基础数据
+    if (doc.IsObject()) {
+        Entities::loadFromJson(jsonString);
+    }
+
+    // 反序列化 Player 特有数据
+    if (doc.HasMember("experience")) experience = doc["experience"].GetInt();
+    if (doc.HasMember("level")) level = doc["level"].GetInt();
+
+    // 反序列化装备（通过 ID 恢复指针）
+    if (doc.HasMember("weapon")) weapon = Weapon::findById(doc["weapon"].GetInt());
+    if (doc.HasMember("armor")) armor = Armor::findById(doc["armor"].GetInt());
+    if (doc.HasMember("accessory")) accessory = Accessory::findById(doc["accessory"].GetInt());
+
+    // 反序列化技能系统
+    if (doc.HasMember("unlockedSkills") && doc["unlockedSkills"].IsArray()) {
+        unlockedSkills.clear();
+        for (const auto& skillId : doc["unlockedSkills"].GetArray()) {
+            unlockedSkills.push_back(Skill::findById(skillId.GetInt()));
+        }
+    }
+
+    if (doc.HasMember("skillBar") && doc["skillBar"].IsArray()) {
+        skillBar.clear();
+        for (const auto& skillId : doc["skillBar"].GetArray()) {
+            skillBar.push_back(skillId.GetInt() == 0 ? nullptr : Skill::findById(skillId.GetInt()));
+        }
+    }
+
+    if (doc.HasMember("currentShield")) currentShield = doc["currentShield"].GetFloat();
 }

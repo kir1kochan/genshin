@@ -1,8 +1,8 @@
 #include "Equipment.h"
 
 // 构造函数
-Equipment::Equipment(const std::string& name, int power)
-    : name(name), power(power) {}
+Equipment::Equipment(int id, const std::string& name, int power)
+    : id(id), name(name), power(power) {}
 
 // 获取装备名称
 const std::string& Equipment::getName() const {
@@ -28,6 +28,7 @@ std::string Equipment::saveToJson() const {
     auto& allocator = doc.GetAllocator();
 
     // 将装备的成员变量序列化为 JSON 对象
+    doc.AddMember("id", id, allocator);
     doc.AddMember("name", rapidjson::Value(name.c_str(), allocator), allocator);
     doc.AddMember("power", power, allocator);
 
@@ -50,6 +51,7 @@ void Equipment::loadFromJson(const std::string& jsonString) {
     }
 
     // 从 JSON 中加载装备数据
+    if (doc.HasMember("id")) power = doc["id"].GetInt();
     if (doc.HasMember("name")) name = doc["name"].GetString();
     if (doc.HasMember("power")) power = doc["power"].GetInt();
 }

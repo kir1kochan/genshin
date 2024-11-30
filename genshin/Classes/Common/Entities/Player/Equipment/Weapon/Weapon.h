@@ -9,7 +9,7 @@
 class Weapon : public Equipment {
 public:
     // 构造函数
-    Weapon(const std::string& name, int attackPower);
+    Weapon(int id, const std::string& name, int attackPower);
 
     // 重写打印信息函数
     void printInfo() const override;

@@ -39,8 +39,9 @@ void Entities::heal(float amount) {
 }
 
 // 对目标造成伤害
-void Entities::attack(Entities& target, float amount) {
-    target.takeDamage(amount); 
+void Entities::attack(Entities& target, float amount, Element element) {
+    float elementModifier = calculateElementalDamageModifier(element, target.getElement());
+    target.takeDamage(elementModifier);
 }
 
 // 打印当前状态
