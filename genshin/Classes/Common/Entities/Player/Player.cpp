@@ -230,6 +230,23 @@ float Player::getShield() const {
     return currentShield;
 }
 
+// 用于定时更新玩家状态
+void update(float deltaTime) {
+    // 累积技能冷却更新的时间
+    skillCooldownAccumulator += deltaTime;
+    if (skillCooldownAccumulator >= skillCooldownInterval) {
+        updateSkillsCooldown(skillCooldownAccumulator); // 更新技能冷却
+        skillCooldownAccumulator = 0.0f;  // 重置时间
+    }
+
+    // 累积护盾时间更新的时间
+    shieldTimeAccumulator += deltaTime;
+    if (shieldTimeAccumulator >= shieldTimeInterval) {
+        updateshieldTime(shieldTimeAccumulator);  // 更新护盾时间
+        shieldTimeAccumulator = 0.0f;  // 重置时间
+    }
+}
+
 // 将所有成员变量序列化为 JSON 格式，生成 JSON 字符串
 std::string Player::saveToJson() const {
     // 调用父类方法，获取基础数据的 JSON 字符串

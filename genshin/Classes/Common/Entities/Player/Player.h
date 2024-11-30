@@ -21,6 +21,11 @@ private:
     std::vector<std::shared_ptr<Skill>> unlockedSkills; // 已解锁技能
     std::vector<std::shared_ptr<Skill>> skillBar;       // 技能栏（最多3个技能）
 
+    float skillCooldownAccumulator = 0.0f;  // 累积时间
+    const float skillCooldownInterval = 0.5f;  // 每次更新的时间间隔，单位秒
+
+    float shieldTimeAccumulator = 0.0f;  // 累积时间
+    const float shieldTimeInterval = 0.5f;  // 每次更新的时间间隔，单位秒
   
     float currentShield;  // 当前护甲值
 
@@ -74,7 +79,7 @@ public:
     void useSkill(int skillSlot, Entities& target);            // 使用技能
     void updateSkillsCooldown(float deltaTime);                // 更新冷却时间
 
-
+    void update(float deltaTime)        // 定时更新玩家状态，目前用于技能和护盾，也可以更新其他的状态
     
 };
 
