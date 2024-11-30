@@ -2,7 +2,8 @@
 #define SKILL_H
 
 #include <string>
-#include "Entities.h"
+#include "Enemy.h"
+#include "Player.h"
 
 class Skill : public cocos2d::Node {
 protected:
@@ -23,7 +24,7 @@ public:
     void updateCooldown(float deltaTime);  // 更新冷却时间
     void resetCooldown();            // 重置冷却
 
-    virtual void activate(Entities* user, Entities& target) = 0;
+    virtual void activate(Player* user, Enemy& target) = 0;
 };
 
 #endif // SKILL_H

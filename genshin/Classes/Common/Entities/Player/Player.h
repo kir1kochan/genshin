@@ -44,14 +44,10 @@ public:
     void gainExperience(int exp);
 
     // 攻击玩家敌人时根据元素相克
-    void attack(Entities& target) override;
+    void attack(Entities& target);
 
     // 玩家受到攻击
     void takeDamage(float damage) override;
-
-
-    // 玩家独特的技能
-    void castSkill();
 
     // 打印玩家状态
     void printStatus() override;

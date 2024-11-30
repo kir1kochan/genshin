@@ -15,7 +15,7 @@ float AttackSkill::getRange() const {
 }
 
 // 激活技能
-void AttackSkill::activate(Entities* user, Entities& target) {
+void AttackSkill::activate(Player* user, Enemy& target) {
     // 检查目标是否在范围内
     float distance = user->getPosition().distance(target.getPosition());
     if (distance > range) {

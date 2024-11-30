@@ -52,10 +52,6 @@ void Player::attack(Entities& target) {
     target.takeDamage(damage);
 }
 
-void Player::castSkill() {
-    CCLOG("Player casts a special skill!");
-}
-
 void Player::printStatus() {
     Entities::printStatus();
     CCLOG("Experience: %d", experience);

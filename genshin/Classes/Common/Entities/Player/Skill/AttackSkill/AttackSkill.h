@@ -19,7 +19,7 @@ public:
     float getRange() const;
 
     // 实现技能激活
-    void activate(Entities* user, Entities& target) override;
+    void activate(Player* user, Entities& target) override;
 };
 
 #endif // ATTACK_SKILL_H
