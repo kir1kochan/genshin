@@ -54,13 +54,13 @@ void Equipment::loadFromJson(const std::string& jsonString) {
     }
 
     // 从 JSON 中加载装备数据
-    if (doc.HasMember("id")) power = doc["id"].GetInt();
+    if (doc.HasMember("id")) id = doc["id"].GetInt();
     if (doc.HasMember("name")) name = doc["name"].GetString();
     if (doc.HasMember("power")) power = doc["power"].GetInt();
 }
 
 // 将成员变量序列化为 JSON 格式，并保存到本地
-void Entities::saveToFile(const std::string& filePath) const {
+void Equipment::saveToFile(const std::string& filePath) const {
     std::string jsonString = saveToJson(); // 调用 saveToJson 获取 JSON 字符串
     std::ofstream file(filePath);
     if (file.is_open()) {
@@ -74,7 +74,7 @@ void Entities::saveToFile(const std::string& filePath) const {
 }
 
 // 从本地读取 JSON 文件，读取成员变量序列
-void Entities::loadFromFile(const std::string& filePath) {
+void Equipment::loadFromFile(const std::string& filePath) {
     std::ifstream file(filePath);
     if (file.is_open()) {
         std::stringstream buffer;
