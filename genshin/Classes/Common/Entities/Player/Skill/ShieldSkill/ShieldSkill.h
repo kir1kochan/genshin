@@ -9,10 +9,10 @@ private:
 
 
 public:
-    ShieldSkill(const std::string& name, float cooldown);
+    ShieldSkill(int id,const std::string& name, float cooldown, float shieldValue);
 
     // 激活护甲技能
-    void activate(Entities* user, Entities& target) override;
+    void activate(Player* user, Enemy& target) override;
 };
 
 #endif // SHIELDSKILL_H

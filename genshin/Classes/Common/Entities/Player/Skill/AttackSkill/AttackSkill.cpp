@@ -1,8 +1,8 @@
 #include "AttackSkill.h"
 #include "cocos2d.h"
 
-AttackSkill::AttackSkill(const std::string& name, float cooldown, float attackPower, float range)
-    : Skill(name, cooldown), attackPower(attackPower), range(range) {}
+AttackSkill::AttackSkill(int id, const std::string& name, float cooldown, float attackPower, float range, Element element)
+    : Skill(id, name, cooldown), attackPower(attackPower), range(range),element(element){}
 
 // 获取攻击力
 float AttackSkill::getAttackPower() const {
@@ -15,7 +15,7 @@ float AttackSkill::getRange() const {
 }
 
 // 激活技能
-void AttackSkill::activate(Entities* user, Entities& target) {
+void AttackSkill::activate(Player* user, Enemy& target) {
     // 检查目标是否在范围内
     float distance = user->getPosition().distance(target.getPosition());
     if (distance > range) {
@@ -24,6 +24,6 @@ void AttackSkill::activate(Entities* user, Entities& target) {
     }
 
     // 对目标造成伤害
-    target.takeDamage(attackPower);
+    user->attack(target, attackPower,element);
     CCLOG("%s dealt %.2f damage to target.", name.c_str(), attackPower);
 }

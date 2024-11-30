@@ -7,7 +7,7 @@
 #include "json/writer.h"
 #include "json/stringbuffer.h"
 #include <fstream>
-#include<Map.h>
+#include <map>
 
 class Entities : public cocos2d::Node {
 protected:
@@ -46,7 +46,7 @@ public:
     virtual void heal(float amount);
 
     // 攻击目标
-    virtual void attack(Entities& target);
+    virtual void attack(Entities& target, float amount, Element element);
 
     // 打印当前状态
     virtual void printStatus();
@@ -58,10 +58,10 @@ public:
     virtual void loadFromJson(const std::string& jsonString);
 
     // 将成员变量序列化为 JSON 格式，并保存到本地
-    virtual void Entities::saveToFile(const std::string& filePath) const;
+    virtual void saveToFile(const std::string& filePath) const;
 
     // 从本地读取 JSON 文件，读取成员变量序列
-    virtual void Entities::loadFromFile(const std::string& filePath);
+    virtual void loadFromFile(const std::string& filePath);
 
     // 添加状态效果
     void applyStatusEffect(const std::string& effect, float duration);

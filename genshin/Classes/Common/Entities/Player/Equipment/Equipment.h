@@ -12,10 +12,12 @@
 class Equipment {
 public:
     // 构造函数
-    Equipment(const std::string& name, int power);
+    Equipment(int id, const std::string& name, int power);
 
     // 获取装备名称
     const std::string& getName() const;
+
+    int getId() const;
 
     // 获取装备的属性（攻击力或防御力）
     int getPower() const;
@@ -39,6 +41,7 @@ public:
     virtual ~Equipment() {}
 
 private:
+    int id;
     std::string name;  // 装备名称
     int power;         // 装备的攻击力或防御力
 };

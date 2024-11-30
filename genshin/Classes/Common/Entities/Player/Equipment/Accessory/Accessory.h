@@ -7,7 +7,7 @@
 class Accessory : public Equipment {
 public:
     // 构造函数
-    Accessory(const std::string& name, int power);
+    Accessory(int id, const std::string& name, int power);
 
     // 重写打印信息函数
     void printInfo() const override;
