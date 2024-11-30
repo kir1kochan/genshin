@@ -3,7 +3,7 @@
 
 // 构造函数
 Skill::Skill(int id, const std::string& name, float cooldown)
-    : name(name), cooldown(cooldown), currentCooldown(0.0f) {}
+    : id(id), name(name), cooldown(cooldown), currentCooldown(0.0f) {}
 
 // 获取技能名称
 std::string Skill::getName() const {

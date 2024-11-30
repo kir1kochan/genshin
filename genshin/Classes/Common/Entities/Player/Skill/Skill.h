@@ -2,7 +2,7 @@
 #define SKILL_H
 
 #include <string>
-#include "../Entities.h"
+#include "Entities.h"
 
 class Skill : public cocos2d::Node {
 protected:

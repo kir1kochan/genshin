@@ -24,6 +24,6 @@ void AttackSkill::activate(Entities* user, Entities& target) {
     }
 
     // 对目标造成伤害
-    Entities::attack(Entities & target, attackPower,element);
+    user->attack(target, attackPower,element);
     CCLOG("%s dealt %.2f damage to target.", name.c_str(), attackPower);
 }

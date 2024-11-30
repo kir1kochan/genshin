@@ -9,7 +9,7 @@ class AttackSkill : public Skill {
 private:
     float attackPower; // 技能攻击力
     float range;       // 技能范围
-    Element element
+    Element element;
 
 public:
     AttackSkill(int id, const std::string& name, float cooldown, float attackPower, float range, Element element);
