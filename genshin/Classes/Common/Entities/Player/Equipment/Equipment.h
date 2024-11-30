@@ -17,6 +17,8 @@ public:
     // 获取装备名称
     const std::string& getName() const;
 
+    int getId() const;
+
     // 获取装备的属性（攻击力或防御力）
     int getPower() const;
 

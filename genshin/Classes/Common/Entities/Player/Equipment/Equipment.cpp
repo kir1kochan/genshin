@@ -20,6 +20,9 @@ void Equipment::printInfo() const {
     CCLOG("Power: %d", power);
 }
 
+int Equipment::getId() const {
+    return id;
+}
 
 // 将装备数据序列化为 JSON 字符串
 std::string Equipment::saveToJson() const {
