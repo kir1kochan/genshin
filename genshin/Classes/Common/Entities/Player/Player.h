@@ -17,6 +17,14 @@ private:
     Armor* armor;             // 护甲
     Accessory* accessory;     // 饰品
 
+    // 技能系统
+    std::vector<std::shared_ptr<Skill>> unlockedSkills; // 已解锁技能
+    std::vector<std::shared_ptr<Skill>> skillBar;       // 技能栏（最多3个技能）
+
+  
+    float currentShield;  // 当前护甲值
+
+
 public:
     Player(float health, Element element);
     Player();  // 默认构造函数
@@ -33,6 +41,10 @@ public:
     // 攻击玩家敌人时根据元素相克
     void attack(Entities& target) override;
 
+    // 玩家受到攻击
+    void takeDamage(float damage) override;
+
+
     // 玩家独特的技能
     void castSkill();
 
@@ -48,6 +60,16 @@ public:
     Weapon* getWeapon() const;
     Armor* getArmor() const;
     Accessory* getAccessory() const;
+
+    // 技能系统
+    void unlockSkill(const std::shared_ptr<Skill>& newSkill);   // 解锁技能
+    bool equipSkill(int skillSlot, const std::shared_ptr<Skill>& skill); // 装备技能
+    void unequipSkill(int skillSlot);                          // 卸载技能
+    void useSkill(int skillSlot, Entities& target);            // 使用技能
+    void updateSkillsCooldown(float deltaTime);                // 更新冷却时间
+
+
+    
 };
 
 #endif // PLAYER_H
