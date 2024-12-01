@@ -28,10 +28,10 @@ public:
     virtual void loadFromJson(const std::string& jsonString);
 
     // 将成员变量序列化为 JSON 格式，并保存到本地
-    virtual void Entities::saveToFile(const std::string& filePath) const;
+    virtual void saveToFile(const std::string& filePath) const;
 
     // 从本地读取 JSON 文件，读取成员变量序列
-    virtual void Entities::loadFromFile(const std::string& filePath);
+    virtual void loadFromFile(const std::string& filePath);
 
     // 虚析构函数，确保派生类可以正确析构
     virtual ~Equipment() {}

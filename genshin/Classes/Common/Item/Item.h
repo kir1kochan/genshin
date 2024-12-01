@@ -4,9 +4,9 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include "rapidjson/document.h"
-#include "rapidjson/writer.h"
-#include "rapidjson/stringbuffer.h"
+#include "json/document.h"
+#include "json/writer.h"
+#include "json/stringbuffer.h"
 #include "Player.h"
 
 //物品可以继承Node类，可以根据需要再改进
