@@ -2,12 +2,12 @@
 #include "cocos2d.h"
 
 Player::Player(float health, Element element)
-    : Entities(health, element), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), activeShield(0) {
+    : Entities(health, element), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), activeShield(0), backpack(nullptr){
     skillBar.resize(3, nullptr); // 初始化技能栏为空
 }
 
 
-Player::Player() : Entities(100, Element::WATER), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), activeShield(0) {
+Player::Player() : Entities(100, Element::WATER), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), activeShield(0), backpack(nullptr) {
     skillBar.resize(3, nullptr); // 初始化技能栏为空
 }
 
@@ -176,6 +176,16 @@ void Player::updateSkillsCooldown(float deltaTime) {
         }
     }
 }
+void Player::addItemToBackpack(Item* item) {
+    backpack.addItem(item); 
+}
+
+void Player::removeItemFromBackpack(int itemId) {
+    backpack.removeItem(itemId);  
+}
+
+void Player::printBackpackInfo() const {
+    backpack.printInfo();  
 
 void Player::updateshieldTime(float deltaTime)
 {
@@ -188,8 +198,6 @@ void Player::updateshieldTime(float deltaTime)
         }
     }
 }
-
-
 
 void Player::takeDamage(float damage) {
     if (currentShield > 0.0f) {
@@ -256,6 +264,9 @@ std::string Player::saveToJson() const {
 
     auto& allocator = doc.GetAllocator();
 
+    // 保存背包数据
+    doc.AddMember("backpack", rapidjson::Value(backpack.saveToJson().c_str(), allocator), allocator);
+
     // 序列化 Player 特有数据
     doc.AddMember("experience", experience, allocator);
     doc.AddMember("level", level, allocator);
@@ -309,6 +320,8 @@ void Player::loadFromJson(const std::string& jsonString) {
     if (doc.IsObject()) {
         Entities::loadFromJson(jsonString);
     }
+    //反序列化背包
+    if (doc.HasMember("backpack"))backpack.loadFromJson(doc["backpack"].GetString());  
 
     // 反序列化 Player 特有数据
     if (doc.HasMember("experience")) experience = doc["experience"].GetInt();

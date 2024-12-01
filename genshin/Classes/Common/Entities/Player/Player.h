@@ -7,6 +7,8 @@
 #include "Armor.h"
 #include "Accessory.h"
 
+#include "Backpack.h"
+
 class Player : public Entities {
 private:
     int experience;  // 玩家经验值
@@ -28,6 +30,9 @@ private:
     const float shieldTimeInterval = 0.5f;  // 每次更新的时间间隔，单位秒
   
     float currentShield;  // 当前护甲值
+
+   
+    Backpack backpack; // 背包
 
 
 public:
@@ -75,7 +80,12 @@ public:
     void useSkill(int skillSlot, Entities& target);            // 使用技能
     void updateSkillsCooldown(float deltaTime);                // 更新冷却时间
 
-    void update(float deltaTime)        // 定时更新玩家状态，目前用于技能和护盾，也可以更新其他的状态
+    void update(float deltaTime);        // 定时更新玩家状态，目前用于技能和护盾，也可以更新其他的状态
+
+    // 更新背包
+    void addItemToBackpack(Item* item);
+    void removeItemFromBackpack(int itemId);
+    void printBackpackInfo() const;
     
 };
 

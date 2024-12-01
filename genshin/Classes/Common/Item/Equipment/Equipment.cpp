@@ -2,12 +2,8 @@
 
 // 构造函数
 Equipment::Equipment(int id, const std::string& name, int power)
-    : id(id), name(name), power(power) {}
+    : Item(id, name), power(power) {}
 
-// 获取装备名称
-const std::string& Equipment::getName() const {
-    return name;
-}
 
 // 获取装备的属性（攻击力或防御力）
 int Equipment::getPower() const {
@@ -20,9 +16,6 @@ void Equipment::printInfo() const {
     CCLOG("Power: %d", power);
 }
 
-int Equipment::getId() const {
-    return id;
-}
 
 // 将装备数据序列化为 JSON 字符串
 std::string Equipment::saveToJson() const {
