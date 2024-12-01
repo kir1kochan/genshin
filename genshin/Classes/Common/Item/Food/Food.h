@@ -10,7 +10,7 @@ public:
     Food(int id, const std::string& name, float healAmount);
 
     // 获取恢复量
-    float getRestoreAmount() const;
+    float getHealAmount() const;
 
     // 重写 printInfo 函数，打印食物信息
     void printInfo() const override;

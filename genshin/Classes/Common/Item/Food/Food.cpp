@@ -39,7 +39,7 @@ void Food::loadFromJson(const std::string& jsonString) {
     }
 
     Item::loadFromJson(jsonString);  // 调用父类的加载函数
-    if (doc.HasMember("healAmount")) restoreAmount = doc["healAmount"].GetFloat();
+    if (doc.HasMember("healAmount")) healAmount = doc["healAmount"].GetFloat();
 }
 
 void Food::use(Player* user)
