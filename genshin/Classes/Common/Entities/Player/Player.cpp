@@ -2,7 +2,7 @@
 #include "cocos2d.h"
 
 Player::Player(float health, Element element)
-    : Entities(health, element), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), activeShield(0), backpack(nullptr){
+    : Entities(health, element), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), activeShield(0), backpack(){
     skillBar.resize(3, nullptr); // 初始化技能栏为空
 }
 
@@ -176,8 +176,9 @@ void Player::updateSkillsCooldown(float deltaTime) {
         }
     }
 }
-void Player::addItemToBackpack(Item* item) {
-    backpack.addItem(item); 
+
+void Player::addItemToBackpack(int id,int count) {
+    backpack.addItemById(id, count);
 }
 
 void Player::removeItemFromBackpack(int itemId) {
@@ -185,7 +186,8 @@ void Player::removeItemFromBackpack(int itemId) {
 }
 
 void Player::printBackpackInfo() const {
-    backpack.printInfo();  
+    backpack.printInfo();
+}
 
 void Player::updateshieldTime(float deltaTime)
 {
@@ -235,7 +237,7 @@ float Player::getShield() const {
 }
 
 // 用于定时更新玩家状态
-void update(float deltaTime) {
+void Player::update(float deltaTime) {
     // 累积技能冷却更新的时间
     skillCooldownAccumulator += deltaTime;
     if (skillCooldownAccumulator >= skillCooldownInterval) {
@@ -263,9 +265,6 @@ std::string Player::saveToJson() const {
     }
 
     auto& allocator = doc.GetAllocator();
-
-    // 保存背包数据
-    doc.AddMember("backpack", rapidjson::Value(backpack.saveToJson().c_str(), allocator), allocator);
 
     // 序列化 Player 特有数据
     doc.AddMember("experience", experience, allocator);
@@ -320,17 +319,24 @@ void Player::loadFromJson(const std::string& jsonString) {
     if (doc.IsObject()) {
         Entities::loadFromJson(jsonString);
     }
-    //反序列化背包
-    if (doc.HasMember("backpack"))backpack.loadFromJson(doc["backpack"].GetString());  
 
     // 反序列化 Player 特有数据
     if (doc.HasMember("experience")) experience = doc["experience"].GetInt();
     if (doc.HasMember("level")) level = doc["level"].GetInt();
 
     // 反序列化装备（通过 ID 恢复指针）
-    if (doc.HasMember("weapon")) weapon = Weapon::findById(doc["weapon"].GetInt());
-    if (doc.HasMember("armor")) armor = Armor::findById(doc["armor"].GetInt());
-    if (doc.HasMember("accessory")) accessory = Accessory::findById(doc["accessory"].GetInt());
+    if (doc.HasMember("weapon")) {
+        int weaponid = doc["weapon"].GetInt();
+        weapon = backpack.idToItemMap[weaponid];
+    }
+    if (doc.HasMember("armor")) {
+        int armorid = doc["armor"].GetInt();
+        armor = backpack.idToItemMap[armorid];
+    }
+    if (doc.HasMember("accessory")) {
+        int accessoryid = doc["accessory"].GetInt();
+        accessory = backpack.idToItemMap[accessoryid];
+    }
 
     // 反序列化技能系统
     if (doc.HasMember("unlockedSkills") && doc["unlockedSkills"].IsArray()) {

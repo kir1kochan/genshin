@@ -1,12 +1,29 @@
 #include "Enemy.h"
 
 // 构造函数
-Enemy::Enemy(float health, Element element, int aggressionLevel, float detectionRadius, int baseLevel, const std::string& spriteFilename)
-    : Entities(health, attack, defence, element), aggressionLevel(aggressionLevel), detectionRadius(detectionRadius), baseLevel(baseLevel), spriteFilename(spriteFilename), spriteGenerated(false) {}
+Enemy::Enemy(float health, float attack, float defence, Element element, int aggressionLevel, float detectionRadius,
+    float attackRange, int baseLevel, const std::string& spriteFilename, int drop)
+    : Entities(health, attack, defence, element),
+    aggressionLevel(aggressionLevel),
+    detectionRadius(detectionRadius),
+    attackRange(attackRange),
+    baseLevel(baseLevel),
+    spriteFilename(spriteFilename),
+    spriteGenerated(false),
+    isAlive(true), // 默认设置为存活
+    drop(drop){} 
 
 // 默认构造函数
 Enemy::Enemy()
-    : Entities(100, 10, 2, Element::FIRE), aggressionLevel(1), detectionRadius(10.0f), baseLevel(1), spriteFilename(""), spriteGenerated(false) {}
+    : Entities(100, 10, 2, Element::FIRE),
+    aggressionLevel(1),
+    detectionRadius(10.0f),
+    attackRange(2.0f),  // 默认攻击范围为2
+    baseLevel(1),
+    spriteFilename(""),
+    spriteGenerated(false),
+    isAlive(true), // 默认为存活
+    drop(0){} // 默认设置为无掉落
 
 // 获取攻击性等级
 int Enemy::getAggressionLevel() const {
@@ -16,6 +33,11 @@ int Enemy::getAggressionLevel() const {
 // 获取索敌半径
 float Enemy::getDetectionRadius() const {
     return detectionRadius;
+}
+
+// 获取攻击范围
+float Enemy::getAttackRange() const {
+    return attackRange;
 }
 
 // 获取基准等级
@@ -28,14 +50,72 @@ std::string Enemy::getSpriteFilename() const {
     return spriteFilename;
 }
 
+// 受到伤害
+void Enemy::takeDamage(float amount) {
+    health -= amount;
+    if (health < 0) {
+        health = 0;
+        setIsAlive(false);
+    }
+}
+
+// 获取存活状态
+bool Enemy::getIsAlive() const {
+    return isAlive;
+}
+
+// 设置存活状态
+void Enemy::setIsAlive(bool alive) {
+    isAlive = alive;
+}
+
 // 攻击敌人
 void Enemy::attack(Entities& target) {
-    CCLOG("Enemy attacking target");
+    float elementModifier = calculateElementalDamageModifier(element, target.getElement());
+    target.takeDamage(elementModifier * attack * aggressionLevel);
 }
 
 // 敌人AI行为
-void Enemy::aiBehavior() {
-    CCLOG("Enemy AI behavior");
+void Enemy::aiBehavior(float distance, Player* player) {
+    if (!isAlive) {
+        // 如有掉落物则掉落并且重设掉落内容为0
+        if (drop) {
+            player->addItemToBackpack(drop, 1);
+            drop = 0;
+        }
+        return;
+    }
+
+    // 计算敌人和玩家之间的向量
+    cocos2d::Vec2 enemyPosition = getPosition();
+    cocos2d::Vec2 playerPosition = player->getPosition();
+    cocos2d::Vec2 directionToPlayer = playerPosition - enemyPosition;
+
+    // 如果距离玩家小于攻击范围，敌人发动攻击
+    if (distance < attackRange) {
+        attack(*player);  // 假设有攻击函数
+        CCLOG("Enemy attacks player, distance: %.2f", distance);
+    }
+    // 如果玩家等级高于敌人，敌人可能会做出逃避行为
+    else if (player->getLevel() > baseLevel * 2) {
+        CCLOG("Enemy is fleeing, player's level is too high.");
+        // 逃跑逻辑
+        // 计算逃跑方向：逃跑方向就是玩家位置的反向
+        cocos2d::Vec2 fleeDirection = -directionToPlayer.getNormalized();  // 反向，单位化
+
+        // 移动敌人
+        float fleeSpeed = 200.0f; // 逃跑速度
+        setPosition(enemyPosition + fleeDirection * fleeSpeed * 0.1f);  // 每帧按速度移动
+    }
+    else {
+        CCLOG("Enemy is pursuing player, distance: %.2f", distance);
+        // 追击逻辑，敌人继续朝玩家移动
+        // 计算追击方向
+        cocos2d::Vec2 pursuitDirection = directionToPlayer.getNormalized();  // 单位化
+         // 移动敌人
+        float pursuitSpeed = 100.0f * aggressionLevel; // 追击速度
+        setPosition(enemyPosition + pursuitDirection * pursuitSpeed * 0.1f);  // 每帧按速度移动
+    }
 }
 
 // 打印敌人状态
@@ -43,8 +123,10 @@ void Enemy::printStatus() {
     Entities::printStatus();
     CCLOG("Aggression Level: %d", aggressionLevel);
     CCLOG("Detection Radius: %.2f", detectionRadius);
+    CCLOG("Attack Range: %.2f", attackRange); // 显示攻击范围
     CCLOG("Base Level: %d", baseLevel);
     CCLOG("Sprite Filename: %s", spriteFilename.c_str());
+    CCLOG("Is Alive: %s", isAlive ? "Yes" : "No");  // 打印存活状态
 }
 
 // 将敌人对象序列化为 JSON 字符串
@@ -65,8 +147,10 @@ std::string Enemy::saveToJson() const {
 
     doc.AddMember("aggressionLevel", aggressionLevel, allocator);
     doc.AddMember("detectionRadius", detectionRadius, allocator);
+    doc.AddMember("attackRange", attackRange, allocator); // 添加攻击范围
     doc.AddMember("baseLevel", baseLevel, allocator);
     doc.AddMember("spriteFilename", rapidjson::Value(spriteFilename.c_str(), allocator), allocator);
+    doc.AddMember("isAlive", isAlive, allocator); // 保存存活状态
 
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
@@ -89,13 +173,15 @@ void Enemy::loadFromJson(const std::string& jsonString) {
 
     if (doc.HasMember("aggressionLevel")) aggressionLevel = doc["aggressionLevel"].GetInt();
     if (doc.HasMember("detectionRadius")) detectionRadius = doc["detectionRadius"].GetFloat();
+    if (doc.HasMember("attackRange")) attackRange = doc["attackRange"].GetFloat();  // 加载攻击范围
     if (doc.HasMember("baseLevel")) baseLevel = doc["baseLevel"].GetInt();
     if (doc.HasMember("spriteFilename")) spriteFilename = doc["spriteFilename"].GetString();
+    if (doc.HasMember("isAlive")) isAlive = doc["isAlive"].GetBool(); // 加载存活状态
 }
 
 // 带有新位置的clone
 Enemy* Enemy::clone(const cocos2d::Vec2& newPosition) {
-    Enemy* newEnemy = new Enemy(health, attack, defence, element, aggressionLevel, detectionRadius, baseLevel, spriteFilename);
+    Enemy* newEnemy = new Enemy(health, attack, defence, element, aggressionLevel, detectionRadius, attackRange, baseLevel, spriteFilename, drop);
     newEnemy->setPosition(newPosition);
     return newEnemy;
 }

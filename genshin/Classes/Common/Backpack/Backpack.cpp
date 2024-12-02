@@ -104,7 +104,15 @@ void Backpack::loadFromJson(const std::string& jsonString) {
         for (const auto& itemJson : doc["items"].GetArray()) {
             int itemId = itemJson["id"].GetInt();
             int quantity = itemJson["quantity"].GetInt();
-            Item* item = Item::createItemById(itemId);
+            // 将 itemJson 转换为字符串
+            rapidjson::StringBuffer buffer;
+            rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+            itemJson.Accept(writer);  // 这里会把 itemJson 转换成字符串
+            std::string jsonStr = buffer.GetString();  // 获取转换后的字符串
+
+            // 使用转换后的字符串来创建物品
+            Item* item = Item::createItemById(itemId, jsonStr);
+
             if (item) {
                 addItem(item, quantity);  // 通过物品指针添加物品到背包
             }

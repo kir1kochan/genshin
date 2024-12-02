@@ -2,29 +2,55 @@
 #define ENEMY_H
 
 #include "../Entities.h"
+#include "Player.h"
 
 class Enemy : public Entities {
 private:
-    int aggressionLevel;  // 敌人的攻击性等级（决定敌人的攻击频率或强度）
-    float detectionRadius; // 索敌半径
-    int baseLevel;        // 基准等级
+    int aggressionLevel;         // 敌人的攻击性等级（决定敌人的攻击频率或强度）
+    float detectionRadius;       // 索敌半径
+    float attackRange;           // 攻击范围
+    int baseLevel;               // 基准等级
     std::string spriteFilename;  // 代表怪物图像文件名
-    bool spriteGenerated; // 是否已生成精灵
-
+    bool spriteGenerated;        // 是否已生成精灵
+    bool isAlive;                // 是否存活
+    int drop;                    // 掉落物id（若无则为0）
 public:
-    Enemy(float health, Element element, int aggressionLevel, float detectionRadius, int baseLevel, const std::string& spriteFilename);
-    Enemy();  // 默认构造函数
+    // 构造函数
+    Enemy(float health, float attack, float defence, Element element, int aggressionLevel, float detectionRadius,
+        float attackRange, int baseLevel, const std::string& spriteFilename,int drop);
 
+    // 默认构造函数
+    Enemy();
+
+    // 获取攻击性等级
     int getAggressionLevel() const;
+
+    // 获取索敌半径
     float getDetectionRadius() const;
+
+    // 获取攻击范围
+    float getAttackRange() const;
+
+    // 获取基准等级
     int getBaseLevel() const;
+
+    // 获取精灵文件名
     std::string getSpriteFilename() const;
+
+    // 获取存活状态
+    bool getIsAlive() const;
+
+    // 设置存活状态
+    void setIsAlive(bool alive);
+
+    // 收到伤害的函数
+    void takeDamage(float amount) override;
 
     // 攻击敌人
     void attack(Entities& target) override;
 
     // 敌人AI行为
-    void aiBehavior();
+    void aiBehavior(float distance, Player* player);
 
     // 打印敌人状态
     void printStatus() override;

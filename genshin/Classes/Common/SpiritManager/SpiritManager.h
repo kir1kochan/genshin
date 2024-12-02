@@ -5,6 +5,7 @@
 #include "Enemy.h"
 #include "Player.h"
 #include "BlockManager.h"
+#include <unordered_map>
 
 class SpiritManager {
 private:
@@ -16,6 +17,9 @@ private:
 
     // 存储最近的怪物
     Enemy* nearestEnemy = nullptr;
+
+    // 存储区块内每个敌人与玩家之间的距离
+    std::unordered_map<Enemy*, float> enemyDistances;
 
 public:
     // 构造函数
@@ -30,11 +34,17 @@ public:
     // 获取最近的怪物
     Enemy* getNearestEnemy() const;
 
+    // 获取敌人到玩家的距离映射
+    const std::unordered_map<Enemy*, float>& getEnemyDistances() const;
+
     // 更新玩家和区块内怪物的状态
     void update();
 
     // 更新玩家与怪物之间的最近距离
     void updateDistances();
+
+    // 更新怪物行为
+    void updateEnemy()
 };
 
 #endif // __SPIRIT_MANAGER_H__
