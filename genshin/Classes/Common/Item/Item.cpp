@@ -71,24 +71,37 @@ void Item::saveToFile(const std::string& filePath) const {
     }
 }
 
-Item* Item::createItemById(int id) {
+Item* Item::createItemById(int id, const std::string& jsonString) {
     int itemType = id / 10000;   // 物品类型：ID的第一部分
     int subType = (id / 100) % 100; // 子类型：ID的第二部分
 
-    // 根据物品类型和子类型创建不同的物品对象
+    // 根据物品类型和子类型和字符串创建不同的物品对象
     switch (itemType) {
     case 1: // 装备类
         switch (subType) {
-        case 101: return new Weapon(id, "Weapon Name", 10); // 示例
-        case 102: return new Armor(id, "Armor Name", 5);    // 示例
-        case 103: return new Accessory(id, "Accessory Name", 3); // 示例
+        case 101: 
+            Weapon weapon = new Weapon(id, "Weapon Name", 5);
+            weapon.loadFromJson(loadFromJson);
+            return weapon;
+        case 102: 
+            Armor armor = new Armor(id, "Armor Name", 5);
+            armor.loadFromJson(loadFromJson);
+            return armor;
+        case 103: 
+            Accessory accessory =  new Accessory(id, "Accessory Name", 3);
+            accessory.loadFromJson(loadFromJson);
+            return accessory;
         default: std::cerr << "Unknown Equipment subtype\n"; break;
         }
         break;
     case 2: // 药剂类
-        return new Potion(id, "Health Potion", 50);  // 示例
+        Potion potion = new Potion(id, "Health Potion", 50);
+        potion.loadFromJson(loadFromJson);
+        return potion;
     case 3: // 食物类
-        return new Food(id, "Apple", 20); // 示例
+        Food food = new Food(id, "Apple", 20);
+        food.loadFromJson(loadFromJson);
+        return food;
     default:
         std::cerr << "Unknown item type\n";
         break;

@@ -83,7 +83,7 @@ public:
     void update(float deltaTime);        // 定时更新玩家状态，目前用于技能和护盾，也可以更新其他的状态
 
     // 更新背包
-    void addItemToBackpack(Item* item);
+    void addItemToBackpack(int id, int count);
     void removeItemFromBackpack(int itemId);
     void printBackpackInfo() const;
     
