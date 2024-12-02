@@ -39,7 +39,7 @@ public:
     // 解析 ID
     // 后续改进意见，可以根据游戏，设计更加完备的编码体系，可以以宏定义的方式出现
    // 解析 ID 并返回对应的物品类型
-    static Item* createItemById(int id);
+    Item* createItemById(int id, const std::string& jsonString);
 
 protected:
     int id;        // 物品 ID
