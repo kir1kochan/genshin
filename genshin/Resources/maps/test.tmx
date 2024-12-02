@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="isometric" renderorder="left-down" width="31" height="61" tilewidth="64" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="1">
+ <tileset firstgid="1" source="../../../../AppData/ginshin/map/outside.tsx"/>
+ <layer id="1" name="图块层 1" width="31" height="61">
+  <data encoding="base64" compression="zlib">
+   eJzt07sKgDAMQFGLq4P0/z/WxUIJtTRpagTvhQwOeuJr275ZakykbZ1IW7OHt3dW84Z9dmbUl+fNulY7L7T3asp1yvGTe9zjacvJ1Uj3TXv02T/torVrf8V/FmmP+tH2zA4aW55v/eZSx+3ZcoeZd6+xW/duNS2+lz2ap6u1S9jY2Gttrx08i7Q1OxIRERERERH9tQudKwgy
+  </data>
+ </layer>
+ <layer id="2" name="level2" width="31" height="61">
+  <data encoding="base64" compression="zlib">
+   eJztlMtKA0EQRcsvMfFJojsTdK0L10aDmviKD1yq+ABXgqC/ELJRP9VbTDVTNj2D0N0GoS4ckpkKnFRPTRFZ/DyCJ4/f5jiB+97jYYruO1VfBktgYQruFpgX2t7/OAD7mdwT5dW0xc/u3Qj3raDdN1JbrHAzzQRuP/x83ZnOgdU/dLNvVr7zmYd6X5HfpHSvgzF4B29yL+Rm7wCMxD0T4fNZU3Xt5n4bytunuL5D7q6qt6g84zNwBC7Ee5XBvQG2qey5Kd4heKXiOV+CHthJ7Oa+X6iYuwaVs+eyF+mscnfEq/MMTsBpAl+Ve1PuuT05oJ87M3Z/17mZLSp6dDN1Dg6FEcXt7zp316vxTPEs9xUp9xiH3+eOup4ot3NeZ3JXRbtz9V0Vfpf0HsnpHnvXXxTuPeW8hfIpn9x7T8HnkPPcP2pq7jnk7r3On2KnWiwWi8VisVgsFovFYrH813wDUu5JKg==
+  </data>
+ </layer>
+ <layer id="3" name="图块层 3" width="31" height="61">
+  <data encoding="base64" compression="zlib">
+   eJzt1ksKwjAUheHsoEtwERYcOhBxIO5AF+IDjAjOSic+ZrpVr5BBCWmMtNco/B8caPPoSTuqMUC7unF9k5xyHUSsI3O2w3OPCWsWkqG73nToStH85nPJQFK43oNCXyXZSbbeeCmZud5CoTdmKpkodI8C+ZZf7n607LPK3Xdv7b6Hvlh3zEqxe/xmreZ7l25s2XNHSvdL7c3bwJ7QGD5XeffXLKcw5pKp95yp91/E/qEAAAAAAACg6wnHOBkR
+  </data>
+ </layer>
+ <layer id="4" name="图块层 4" width="31" height="61">
+  <data encoding="base64" compression="zlib">
+   eJzt1DEKg0AQRuG9U1jFLvFCCdF0dnbRdInnzTQL6xAWm52B8D74C9niqYgh4KiXbMquH7JBNjrcy112k10d2tairHFqn4x7q3EvWYw6rVqnzjfDdpudfSp2S+135e6vtuU3nZrnsH/flu1ednFqWz9z3o4ObW+zuv73/6n2dOoCAAAAAAAAKPsCLj4Qtw==
+  </data>
+ </layer>
+ <layer id="5" name="图块层 5" width="31" height="61">
+  <data encoding="base64" compression="zlib">
+   eJztzTEKgDAQRNHcSVKIpaKCCB7HxirHUO/q2IlVbCYW/8Fnm4UJIV/68Asgz2ncalSlNnUYd2+LmtWuWvP2pEYVVWfeHsx7T71aC+6X2o6v61QX2AQAAAAAAAAA/NcFnj4HTw==
+  </data>
+ </layer>
+ <layer id="6" name="图块层 6" width="31" height="61">
+  <data encoding="base64" compression="zlib">
+   eJztzjEBACAMwLD5/4ALt7igT2KgnYHWibo76q6oW7v1AAAAAAAAwGcPmIACUA==
+  </data>
+ </layer>
+ <layer id="7" name="图块层 7" width="31" height="61">
+  <data encoding="base64" compression="zlib">
+   eJztzjEBAAAEADDRNVCZFBy2BIsANtR1YOR1AAAAAAAA4JEGhQEBEA==
+  </data>
+ </layer>
+</map>
