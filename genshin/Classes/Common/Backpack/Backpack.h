@@ -1,16 +1,27 @@
 #ifndef BACKPACK_H
 #define BACKPACK_H
 
-#include <vector>
+#include <unordered_map>
+#include <string>
 #include "Item.h"
 
 class Backpack {
 public:
-    // 添加物品
-    void addItem(Item* item);
 
-    // 移除物品
-    void removeItem(int itemId);
+    // 构造函数
+    Backpack(const std::vector<Item*>& itemPointers);
+   
+    // 通过物品指针添加物品
+    void addItem(Item* item, int count = 1);
+
+    // 通过物品ID添加物品
+    void addItemById(int itemId, int count = 1);
+
+    // 通过物品指针移除物品
+    void removeItem(Item* item, int count = 1);
+
+    // 通过物品ID移除物品
+    void removeItemById(int itemId, int count = 1);
 
     // 打印背包信息
     void printInfo() const;
@@ -28,7 +39,8 @@ public:
     void loadFromFile(const std::string& filePath);
 
 private:
-    std::vector<Item*> items; // 背包中的物品集合
+    std::unordered_map<Item*, int> items;  // 物品指针和数量的映射
+    std::unordered_map<int, Item*> idToItemMap;  // 物品ID到物品指针的映射
 };
 
 #endif // BACKPACK_H
