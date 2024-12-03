@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.0" orientation="isometric" renderorder="left-down" width="31" height="61" tilewidth="64" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="1">
- <tileset firstgid="1" source="../../../../AppData/ginshin/map/outside.tsx"/>
+ <tileset firstgid="1" source="outside.tsx"/>
  <layer id="1" name="图块层 1" width="31" height="61">
   <data encoding="base64" compression="zlib">
    eJzt07sKgDAMQFGLq4P0/z/WxUIJtTRpagTvhQwOeuJr275ZakykbZ1IW7OHt3dW84Z9dmbUl+fNulY7L7T3asp1yvGTe9zjacvJ1Uj3TXv02T/torVrf8V/FmmP+tH2zA4aW55v/eZSx+3ZcoeZd6+xW/duNS2+lz2ap6u1S9jY2Gttrx08i7Q1OxIRERERERH9tQudKwgy
