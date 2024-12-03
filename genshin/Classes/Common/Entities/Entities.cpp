@@ -45,15 +45,6 @@ void Entities::attackTarget(Entities& target, float amount, Element element) {
     target.takeDamage(elementModifier * amount);
 }
 
-void Entities::update(float deltaTime)
-{
-    // 更新攻击冷却时间
-    attackCooldownAccumulator += deltaTime;
-    if (attackCooldownAccumulator >= attackCooldownInterval) {
-        updateAttackCooldown(attackCooldownAccumulator);  // 更新攻击冷却
-        attackCooldownAccumulator = 0.0f;  // 重置时间
-    }
-}
 
 // 打印当前状态
 void Entities::printStatus() {
