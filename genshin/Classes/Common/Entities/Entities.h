@@ -56,8 +56,6 @@ public:
     // 攻击目标
     virtual void attackTarget(Entities& target, float amount, Element element);
 
-    //更新状态
-    virtual void update(float deltaTime);
 
     // 打印当前状态
     virtual void printStatus();
