@@ -36,9 +36,6 @@
     <ClCompile Include="..\Classes\Common\InputManager\InputManager.cpp">
       <Filter>src\Classes\Common\InputManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Common\Entities\Entities.cpp">
-      <Filter>src\Classes\Common\Entities</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -52,9 +49,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Common\InputManager\InputManager.h">
       <Filter>src\Classes\Common\InputManager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Common\Entities\Entities.h">
-      <Filter>src\Classes\Common\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

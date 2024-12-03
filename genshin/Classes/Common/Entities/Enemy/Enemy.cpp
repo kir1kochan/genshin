@@ -55,6 +55,7 @@ void Enemy::takeDamage(float amount) {
         health = 0;
         setIsAlive(false);
     }
+    currentCooldown = 0.5; // 受击的攻击僵直
 }
 
 // 获取存活状态
@@ -73,6 +74,7 @@ void Enemy::attackTarget(Entities& target) {
     if (attackInRange(target)) {
         float elementModifier = calculateElementalDamageModifier(element, target.getElement());
         target.takeDamage(elementModifier * attack * aggressionLevel);
+        currentCooldown = 5f / aggressionLevel;
     }
     else {
         CCLOG("Target is out of range.");
@@ -89,6 +91,11 @@ void Enemy::aiBehavior(float distance, Player* player) {
         }
         return;
     }
+    
+    // 不在索敌区间内则待机
+    if (distance > detectionRadius) {
+        return;
+    }
 
     // 计算敌人和玩家之间的向量
     cocos2d::Vec2 enemyPosition = getPosition();
@@ -97,8 +104,10 @@ void Enemy::aiBehavior(float distance, Player* player) {
 
     // 如果距离玩家小于攻击范围，敌人发动攻击
     if (distance < attackRange) {
-        attackTarget(*player);  // 假设有攻击函数
-        CCLOG("Enemy attacks player, distance: %.2f", distance);
+        if (canAttack()) {
+            attackTarget(*player);  // 假设有攻击函数
+            CCLOG("Enemy attacks player, distance: %.2f", distance);
+        }
     }
     // 如果玩家等级高于敌人，敌人可能会做出逃避行为
     else if (player->getLevel() > baseLevel * 2) {
