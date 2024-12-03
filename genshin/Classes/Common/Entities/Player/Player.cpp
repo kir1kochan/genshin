@@ -1,13 +1,13 @@
 #include "Player.h"
 #include "cocos2d.h"
 
-Player::Player(float health, Element element)
-    : Entities(health, element), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), activeShield(0), backpack(){
+Player::Player(float health, Element element, float attackRange)
+    : Entities(health, element,attackRange), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), activeShield(0), backpack(){
     skillBar.resize(3, nullptr); // 初始化技能栏为空
 }
 
 
-Player::Player() : Entities(100, Element::WATER), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), activeShield(0), backpack(nullptr) {
+Player::Player() : Entities(100, Element::WATER,2.0f), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), activeShield(0), backpack(nullptr) {
     skillBar.resize(3, nullptr); // 初始化技能栏为空
 }
 
@@ -35,7 +35,25 @@ void Player::gainExperience(int exp) {
     }
 }
 
-void Player::attack(Entities& target) {
+void Player::chanegElement(Element newElement)
+{
+    element = newElement;
+}
+
+void Player::attackTarget(Entities& target) {
+    
+    // 检查攻击是否可以执行（冷却时间）
+    if (!canAttack()) {
+        CCLOG("Cannot attack yet, cooldown active.");
+        return;
+    }
+
+    // 检查目标是否在攻击范围内
+    if (!attackInRange(target)) {
+        CCLOG("Target is out of range.");
+        return;
+    }
+    
     // 默认伤害
     float damage = 10.0f;
     if (weapon != nullptr) {
@@ -50,6 +68,8 @@ void Player::attack(Entities& target) {
 
     // 给目标造成伤害
     target.takeDamage(damage);
+    // 更新攻击冷却
+    updateAttackCooldown(skillCooldownInterval);
 }
 
 void Player::printStatus() {
@@ -84,6 +104,8 @@ void Player::equipWeapon(Weapon* newWeapon) {
     if (newWeapon != nullptr) {
         weapon = newWeapon;
         CCLOG("Equipped Weapon: %s", weapon->getName().c_str());
+        attackRange = weapon->getAttackRange();
+        attackCooldownInterval = 1.0f / weapon->getAttackSpeed();  // 攻击频率影响攻击冷却时间
     }
 }
 
@@ -111,6 +133,16 @@ Armor* Player::getArmor() const {
 
 Accessory* Player::getAccessory() const {
     return accessory;
+}
+
+// 获取武器攻击范围
+float Player::getWeaponAttackRange() const {
+    return (weapon != nullptr) ? weapon->getAttackRange() : 0.0f;
+}
+
+// 获取武器攻击频率
+float Player::getWeaponAttackSpeed() const {
+    return (weapon != nullptr) ? weapon->getAttackSpeed() : 0.0f;
 }
 
 void Player::unlockSkill(const std::shared_ptr<Skill>& newSkill) {
@@ -251,6 +283,16 @@ void Player::update(float deltaTime) {
         updateshieldTime(shieldTimeAccumulator);  // 更新护盾时间
         shieldTimeAccumulator = 0.0f;  // 重置时间
     }
+
+    // 累积攻击冷却的时间
+    attackCooldownAccumulator += deltaTime;
+    if (attackCooldownAccumulator >= attackCooldownInterval) {
+        updateAttackCooldown(attackCooldownAccumulator);  // 更新攻击冷却
+        attackCooldownAccumulator = 0.0f;  // 重置时间
+    }
+
+    // 更新玩家的状态效果
+    updateStatusEffects(deltaTime);  // 更新所有的状态效果（例如中毒、冰冻等）
 }
 
 // 将所有成员变量序列化为 JSON 格式，生成 JSON 字符串

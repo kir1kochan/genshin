@@ -8,7 +8,6 @@ class Enemy : public Entities {
 private:
     int aggressionLevel;         // 敌人的攻击性等级（决定敌人的攻击频率或强度）
     float detectionRadius;       // 索敌半径
-    float attackRange;           // 攻击范围
     int baseLevel;               // 基准等级
     std::string spriteFilename;  // 代表怪物图像文件名
     bool spriteGenerated;        // 是否已生成精灵
@@ -28,8 +27,6 @@ public:
     // 获取索敌半径
     float getDetectionRadius() const;
 
-    // 获取攻击范围
-    float getAttackRange() const;
 
     // 获取基准等级
     int getBaseLevel() const;
@@ -47,7 +44,7 @@ public:
     void takeDamage(float amount) override;
 
     // 攻击敌人
-    void attack(Entities& target) override;
+    void attackTarget(Entities& target) override;
 
     // 敌人AI行为
     void aiBehavior(float distance, Player* player);

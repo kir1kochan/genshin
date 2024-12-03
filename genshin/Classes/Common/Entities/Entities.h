@@ -17,12 +17,20 @@ protected:
     float defence;
     Element element;       // 元素属性
 
+    float attackRange;     // 攻击范围
+
+
     // 存储实体的状态，如冰冻、中毒、燃烧等
     std::map<std::string, float> statusEffects; // 状态名 -> 持续时间
 
+    // 攻击冷却
+    float attackCooldownAccumulator = 0.0f;   // 累积时间
+    const float attackCooldownInterval=0.5f; // 每次更新的时间间隔，单位秒
+    float currentCooldown = 0.0f;  // 当前冷却时间
+
 public:
     // 构造函数
-    Entities(float health, float attack, float defence, Element element);
+    Entities(float health, float attack, float defence, Element element, float attackRange);
 
     // 默认构造函数
     Entities();
@@ -46,10 +54,28 @@ public:
     virtual void heal(float amount);
 
     // 攻击目标
-    virtual void attack(Entities& target, float amount, Element element);
+    virtual void attackTarget(Entities& target, float amount, Element element);
+
+    //更新状态
+    virtual void update(float deltaTime);
 
     // 打印当前状态
     virtual void printStatus();
+
+    // 更新攻击冷却
+    void updateAttackCooldown(float deltaTime);
+
+    // 判断是否可以攻击
+    bool canAttack() const;
+
+    // 获取攻击范围
+    virtual float getAttackRange() const;
+
+    // 判断目标是否在攻击范围内
+    bool attackInRange(Entities& target);
+
+    // 每帧更新逻辑
+    virtual void update(float deltaTime);
 
     // 将所有成员变量序列化为 JSON 格式，生成 JSON 字符串
     virtual std::string saveToJson() const;

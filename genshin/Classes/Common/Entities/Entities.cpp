@@ -1,12 +1,13 @@
 #include "Entities.h"
 
 // 构造函数
-Entities::Entities(float health, float attack, float defence, Element element)
-    : health(health), maxHealth(health), attack(attack), defence(defence), element(element) {}
+Entities::Entities(float health, float attack, float defence, Element element,float attackRange)
+    : health(health), maxHealth(health), attack(attack), defence(defence), element(element), attackRange(attackRange) {}
+
 
 // 默认构造函数
 Entities::Entities()
-    : health(100), maxHealth(100), attack(10), defence(2), element(Element::FIRE) {}
+    : health(100), maxHealth(100), attack(10), defence(2), element(Element::FIRE), attackRange(1.5f) {}
 
 // 虚析构函数
 Entities::~Entities() {}
@@ -39,9 +40,19 @@ void Entities::heal(float amount) {
 }
 
 // 对目标造成伤害
-void Entities::attack(Entities& target, float amount, Element element) {
+void Entities::attackTarget(Entities& target, float amount, Element element) {
     float elementModifier = calculateElementalDamageModifier(element, target.getElement());
     target.takeDamage(elementModifier * amount);
+}
+
+void Entities::update(float deltaTime)
+{
+    // 更新攻击冷却时间
+    attackCooldownAccumulator += deltaTime;
+    if (attackCooldownAccumulator >= attackCooldownInterval) {
+        updateAttackCooldown(attackCooldownAccumulator);  // 更新攻击冷却
+        attackCooldownAccumulator = 0.0f;  // 重置时间
+    }
 }
 
 // 打印当前状态
@@ -51,6 +62,47 @@ void Entities::printStatus() {
     CCLOG("Defence: %.2f", defence);
     CCLOG("Element: %s", elementToString(element).c_str());
 }
+
+// 更新攻击冷却
+void Entities::updateAttackCooldown(float deltaTime) {
+    if (currentCooldown > 0) {
+        currentCooldown -= deltaTime;  // 减少冷却时间
+        if (currentCooldown < 0) {
+            currentCooldown = 0;  // 确保冷却时间不会小于0
+        }
+    }
+}
+
+// 判断是否可以攻击
+bool Entities::canAttack() const {
+    return currentCooldown == 0;
+}
+
+float Entities::getAttackRange() const
+{
+    return attackRange;
+}
+
+bool Entities::attackInRange(Entities& target)
+{
+    cocos2d::Vec2 distanceVec = target.getPosition() - this->getPosition();
+    float distance = distanceVec.length();
+    return distance <= attackRange;
+}
+
+// 每帧更新逻辑
+void Entities::update(float deltaTime) {
+    // 更新攻击冷却
+    attackCooldownAccumulator += deltaTime;
+    if (attackCooldownAccumulator >= attackCooldownInterval) {
+        updateAttackCooldown(attackCooldownAccumulator);  // 更新攻击冷却
+        attackCooldownAccumulator = 0.0f;  // 重置时间
+    }
+
+    // 更新状态效果
+    updateStatusEffects(deltaTime);
+}
+
 
 // 将所有成员变量序列化为 JSON 格式，生成 JSON 字符串
 std::string Entities::saveToJson() const {
@@ -64,6 +116,7 @@ std::string Entities::saveToJson() const {
     doc.AddMember("attack", attack, allocator);
     doc.AddMember("defence", defence, allocator);
     doc.AddMember("element", static_cast<int>(element), allocator);
+    doc.AddMember("attackRange", attackRange, allocator); 
 
     // 转换为 JSON 字符串
     rapidjson::StringBuffer buffer;
@@ -89,6 +142,7 @@ void Entities::loadFromJson(const std::string& jsonString) {
     if (doc.HasMember("attack")) attack = doc["attack"].GetFloat();
     if (doc.HasMember("defence")) defence = doc["defence"].GetFloat();
     if (doc.HasMember("element")) element = static_cast<Element>(doc["element"].GetInt());
+    if (doc.HasMember("attackRange")) attackRange = doc["attackRange"].GetFloat();  
 }
 
 // 将成员变量序列化为 JSON 格式，并保存到本地

@@ -36,7 +36,7 @@ private:
 
 
 public:
-    Player(float health, Element element);
+    Player(float health, Element element, float attackRange);
     Player();  // 默认构造函数
 
     // 升级
@@ -48,8 +48,11 @@ public:
     // 经验增加
     void gainExperience(int exp);
 
+    //改变元素
+    void chanegElement(Element newElement);
+
     // 攻击玩家敌人时根据元素相克
-    void attack(Entities& target);
+    void attackTarget(Entities& target);
 
     // 玩家受到攻击
     void takeDamage(float damage) override;
@@ -73,6 +76,12 @@ public:
     Armor* getArmor() const;
     Accessory* getAccessory() const;
 
+    // 获取武器攻击范围
+    float getWeaponAttackRange() const;
+    // 获取武器攻击频率
+
+
+    float getWeaponAttackSpeed() const;
     // 技能系统
     void unlockSkill(const std::shared_ptr<Skill>& newSkill);   // 解锁技能
     bool equipSkill(int skillSlot, const std::shared_ptr<Skill>& skill); // 装备技能
