@@ -1,12 +1,11 @@
 #include "Enemy.h"
 
 // 构造函数
-Enemy::Enemy(float health, float attack, float defence, Element element, int aggressionLevel, float detectionRadius,
-    float attackRange, int baseLevel, const std::string& spriteFilename, int drop)
-    : Entities(health, attack, defence, element),
+Enemy::Enemy(float health, float attack, float defence, Element element, float attackRange, int aggressionLevel, float detectionRadius,
+     int baseLevel, const std::string& spriteFilename, int drop)
+    : Entities(health, attack, defence, element, attackRange),  
     aggressionLevel(aggressionLevel),
     detectionRadius(detectionRadius),
-    attackRange(attackRange),
     baseLevel(baseLevel),
     spriteFilename(spriteFilename),
     spriteGenerated(false),
@@ -15,10 +14,9 @@ Enemy::Enemy(float health, float attack, float defence, Element element, int agg
 
 // 默认构造函数
 Enemy::Enemy()
-    : Entities(100, 10, 2, Element::FIRE),
+    : Entities(100, 10, 2, Element::FIRE,2.0f),// 默认攻击范围为2
     aggressionLevel(1),
     detectionRadius(10.0f),
-    attackRange(2.0f),  // 默认攻击范围为2
     baseLevel(1),
     spriteFilename(""),
     spriteGenerated(false),
@@ -70,9 +68,15 @@ void Enemy::setIsAlive(bool alive) {
 }
 
 // 攻击敌人
-void Enemy::attack(Entities& target) {
-    float elementModifier = calculateElementalDamageModifier(element, target.getElement());
-    target.takeDamage(elementModifier * attack * aggressionLevel);
+void Enemy::attackTarget(Entities& target) {
+    // 使用基类的攻击范围检查
+    if (attackInRange(target)) {
+        float elementModifier = calculateElementalDamageModifier(element, target.getElement());
+        target.takeDamage(elementModifier * attack * aggressionLevel);
+    }
+    else {
+        CCLOG("Target is out of range.");
+    }
 }
 
 // 敌人AI行为
@@ -93,7 +97,7 @@ void Enemy::aiBehavior(float distance, Player* player) {
 
     // 如果距离玩家小于攻击范围，敌人发动攻击
     if (distance < attackRange) {
-        attack(*player);  // 假设有攻击函数
+        attackTarget(*player);  // 假设有攻击函数
         CCLOG("Enemy attacks player, distance: %.2f", distance);
     }
     // 如果玩家等级高于敌人，敌人可能会做出逃避行为

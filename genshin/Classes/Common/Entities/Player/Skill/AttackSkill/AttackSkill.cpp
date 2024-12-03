@@ -24,6 +24,6 @@ void AttackSkill::activate(Player* user, Enemy& target) {
     }
 
     // 对目标造成伤害
-    user->attack(target, attackPower,element);
+    user->attackTarget(target, attackPower,element);
     CCLOG("%s dealt %.2f damage to target.", name.c_str(), attackPower);
 }
