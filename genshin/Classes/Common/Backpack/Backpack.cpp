@@ -8,7 +8,7 @@
 
 
 // 构造函数，初始化背包，将所有物品指针数量初始化为0
-Backpack::Backpack(const std::vector<Item*>& itemPointers) {
+Backpack::Backpack(const std::vector<Item*>* itemPointers) {
     for (Item* item : itemPointers) {
         items[item] = 0;  // 将每个物品指针的数量初始化为0
         idToItemMap[item->getId()] = item;  // 为每个物品创建ID到物品指针的映射

@@ -80,30 +80,29 @@ Item* Item::createItemById(int id, const std::string& jsonString) {
     case 1: // 装备类
         switch (subType) {
         case 101: 
-            Weapon weapon = new Weapon(id, "Weapon Name", 5);
-            weapon.loadFromJson(loadFromJson);
+            Weapon* weapon = new Weapon(id, "Weapon Name", 5.0f,10.0f,1.0f);
+            weapon->loadFromJson(jsonString);
             return weapon;
         case 102: 
-            Armor armor = new Armor(id, "Armor Name", 5);
-            armor.loadFromJson(loadFromJson);
+            Armor* armor = new Armor(id, "Armor Name", 5);
+            armor->loadFromJson(jsonString);
             return armor;
         case 103: 
-            Accessory accessory =  new Accessory(id, "Accessory Name", 3);
-            accessory.loadFromJson(loadFromJson);
+            Accessory* accessory =  new Accessory(id, "Accessory Name", 3);
+            accessory->loadFromJson(jsonString);
             return accessory;
-        default: std::cerr << "Unknown Equipment subtype\n"; break;
+        default: break;
         }
         break;
     case 2: // 药剂类
-        Potion potion = new Potion(id, "Health Potion", 50);
-        potion.loadFromJson(loadFromJson);
+        Potion* potion = new Potion(id, "Health Potion", 50);
+        potion->loadFromJson(jsonString);
         return potion;
     case 3: // 食物类
-        Food food = new Food(id, "Apple", 20);
-        food.loadFromJson(loadFromJson);
+        Food* food = new Food(id, "Apple", 20);
+        food->loadFromJson(jsonString);
         return food;
     default:
-        std::cerr << "Unknown item type\n";
         break;
     }
 

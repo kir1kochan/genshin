@@ -1,7 +1,7 @@
 #ifndef ACCESSORY_H
 #define ACCESSORY_H
 
-#include "Equipment.h"
+#include "../Equipment.h"
 
 // 饰品类，继承自装备类
 class Accessory : public Equipment {

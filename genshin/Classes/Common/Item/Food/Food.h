@@ -1,8 +1,8 @@
 #ifndef FOOD_H
 #define FOOD_H
 
-#include "Item.h"
-#include"Player.h"
+#include "../Item.h"
+#include "Classes/Common/Entities/Player/Player.h"
 
 class Food : public Item {
 public:

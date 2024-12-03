@@ -2,7 +2,7 @@
 #define ENEMY_H
 
 #include "../Entities.h"
-#include "Player.h"
+#include "../Player/Player.h"
 
 class Enemy : public Entities {
 private:
@@ -15,8 +15,8 @@ private:
     int drop;                    // 掉落物id（若无则为0）
 public:
     // 构造函数
-    Enemy(float health, float attack, float defence, Element element, int aggressionLevel, float detectionRadius,
-        float attackRange, int baseLevel, const std::string& spriteFilename,int drop);
+    Enemy(float health, float attack, float defence, Element element, float attackRange, int aggressionLevel, float detectionRadius,
+        int baseLevel, const std::string& spriteFilename, int drop);
 
     // 默认构造函数
     Enemy();
@@ -44,7 +44,7 @@ public:
     void takeDamage(float amount) override;
 
     // 攻击敌人
-    void attackTarget(Entities& target) override;
+    void attackTarget(Entities& target, float amount, Element element) override;
 
     // 敌人AI行为
     void aiBehavior(float distance, Player* player);
@@ -62,7 +62,7 @@ public:
     Enemy* clone(const cocos2d::Vec2& newPosition);
 
     // 根据文件名生成精灵
-    cocos2d::Sprite* generateSprite() const;
+    cocos2d::Sprite* generateSprite() ;
 
     // 检查是否生成了精灵
     bool isSpriteGenerated() const {

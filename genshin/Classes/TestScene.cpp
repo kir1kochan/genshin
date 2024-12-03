@@ -1,5 +1,7 @@
 #include "TestScene.h"
-#include "Classes/Common/InputManager/InputManager.h" 
+#include "Classes/Common/EventManager/KeyboardEventManager.h" 
+#include "Classes/Common/EventManager/MainGameMouseEventManager.h"
+#include "Classes/Common/Entities/Player/Player.h"
 USING_NS_CC;
 
 Scene* TestScene::createScene()
@@ -38,7 +40,6 @@ bool TestScene::init()
     // 测试模块 1
     addTestModule1();
 
-
     // 设置键盘事件监听器
     setupKeyboardListener();
 
@@ -48,26 +49,29 @@ bool TestScene::init()
         Camera* camera = Camera::getDefaultCamera();
         camera->setPosition3D(Vec3(1400, 1400, 500));  // 改变摄像头的位置
         camera->lookAt(Vec3(1400, 1400, 0));  // 朝向场景中心
-
         }, 0, "init_camera_key");  // 延迟执行，相机设置将在场景初始化后执行
 
-    // 加入树木
+    // 加入玩家
     scheduleOnce([this](float dt) {
-        auto tree = Sprite::create("Tree117.png");
-        this->addChild(tree, 1);
-        tree->setPosition(1500, 1500);
-        tree->setVisible(true);
-        tree->setScale(0.8);
-        }, 0.1f, "init_tree_key");
+        auto player = new Player;
+        auto playerspirt = Sprite::create("tree117.png");  // 创建玩家精灵
+        player->addChild(playerspirt, 1);  // 将玩家加入到场景中
+        player->setPosition(1400, 1400);  // 设置玩家初始位置
+        player->setVisible(true);
+        player->setScale(1.0f);
 
+        // 设置玩家输入管理器（例如键盘控制）
+        auto keyboardEventManager = new KeyboardEventManager();
+        keyboardEventManager->initialize();
+        keyboardEventManager->setPlayer(player);  // 将玩家对象传递给事件管理器
+        }, 0.1f, "init_player_key");
 
     // 设置鼠标输入管理器用于视角缩放
     scheduleOnce([this](float dt) {
-        mouseInputManager = new MouseInputManager1();
+        auto mouseInputManager = new MainGameMouseEventManager();
         mouseInputManager->initialize();  // 在场景初始化后才初始化输入管理器
         }, 0.1f, "init_mouse_manager_key");
 
-  
     return true;
 }
 
@@ -124,4 +128,5 @@ void TestScene::setupKeyboardListener()
 TestScene::~TestScene()
 {
     delete mouseInputManager;  // 释放鼠标输入管理器
+    delete keyboardEventManager;  // 释放键盘事件管理器
 }

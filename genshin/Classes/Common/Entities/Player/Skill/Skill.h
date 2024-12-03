@@ -2,8 +2,8 @@
 #define SKILL_H
 
 #include <string>
-#include "Enemy.h"
-#include "Player.h"
+#include "../../Enemy/Enemy.h"
+#include "../Player.h"
 
 class Skill : public cocos2d::Node {
 protected:
@@ -14,11 +14,11 @@ protected:
 
 public:
     // 构造函数
-    Skill(int id, const std::string& name, float cooldown)
+    Skill(int id, const std::string& name, float cooldown);
     virtual ~Skill() = default;
 
     // 获取技能名称
-    std::string getName() const;
+    std::string getSkillName() const;
     int getId() const;
     bool isOnCooldown() const;       // 检查技能是否在冷却
     void updateCooldown(float deltaTime);  // 更新冷却时间

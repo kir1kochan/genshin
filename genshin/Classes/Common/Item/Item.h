@@ -7,7 +7,9 @@
 #include "json/document.h"
 #include "json/writer.h"
 #include "json/stringbuffer.h"
-#include "Player.h"
+#include "Classes/Common/Entities/Player/Player.h"
+#include "Potion/Potion.h"
+#include "Food/Food.h"
 
 //物品可以继承Node类，可以根据需要再改进
 class Item {

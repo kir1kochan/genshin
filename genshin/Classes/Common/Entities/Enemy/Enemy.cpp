@@ -33,11 +33,6 @@ float Enemy::getDetectionRadius() const {
     return detectionRadius;
 }
 
-// 获取攻击范围
-float Enemy::getAttackRange() const {
-    return attackRange;
-}
-
 // 获取基准等级
 int Enemy::getBaseLevel() const {
     return baseLevel;
@@ -69,12 +64,12 @@ void Enemy::setIsAlive(bool alive) {
 }
 
 // 攻击敌人
-void Enemy::attackTarget(Entities& target) {
+void Enemy::attackTarget(Entities& target, float amount=0, Element element1= Element::FIRE) {
     // 使用基类的攻击范围检查
     if (attackInRange(target)) {
         float elementModifier = calculateElementalDamageModifier(element, target.getElement());
         target.takeDamage(elementModifier * attack * aggressionLevel);
-        currentCooldown = 5f / aggressionLevel;
+        currentCooldown = 5.0f / aggressionLevel;
     }
     else {
         CCLOG("Target is out of range.");
@@ -200,7 +195,7 @@ Enemy* Enemy::clone(const cocos2d::Vec2& newPosition) {
 }
 
 // 根据文件名生成精灵
-cocos2d::Sprite* Enemy::generateSprite() const {
+cocos2d::Sprite* Enemy::generateSprite() {
     if (!spriteGenerated) {
         auto sprite = cocos2d::Sprite::create(spriteFilename);
         if (sprite) {

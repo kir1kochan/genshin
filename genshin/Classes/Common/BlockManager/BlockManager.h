@@ -61,6 +61,8 @@ private:
 
     // 从 NonPlayerGenerator 中加载所有敌人和场景物体位置并存储到区块中
     void loadNonPlayerPositions();
+
+    // 未来的地图加载也考虑纳入其中
 };
 
 #endif // __BLOCK_MANAGER_H__
