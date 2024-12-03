@@ -2,12 +2,12 @@
 #include "cocos2d.h"
 
 Player::Player(float health, Element element, float attackRange)
-    : Entities(health, element,attackRange), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), activeShield(0), backpack(){
+    : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), backpack(nullptr){
     skillBar.resize(3, nullptr); // 初始化技能栏为空
 }
 
 
-Player::Player() : Entities(100, Element::WATER,2.0f), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), activeShield(0), backpack(nullptr) {
+Player::Player() : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), backpack(nullptr) {
     skillBar.resize(3, nullptr); // 初始化技能栏为空
 }
 
@@ -17,10 +17,7 @@ void Player::levelUp() {
     health = maxHealth;   // 血量恢复
     CCLOG("Level up! Now level %d", level);
 
-    // 解锁新技能
-    if (level == 2) unlockSkill(std::make_shared<FireballSkill>());
-    if (level == 3) unlockSkill(std::make_shared<ShieldSkill>());
-    if (level == 4) unlockSkill(std::make_shared<HealSkill>());
+    // 解锁新技能暂未实现
 }
 
 int Player::getLevel() const {
@@ -105,7 +102,7 @@ void Player::equipWeapon(Weapon* newWeapon) {
         weapon = newWeapon;
         CCLOG("Equipped Weapon: %s", weapon->getName().c_str());
         attackRange = weapon->getAttackRange();
-        attackCooldownInterval = 1.0f / weapon->getAttackSpeed();  // 攻击频率影响攻击冷却时间
+        CDtoSet = 1.0f / weapon->getAttackSpeed();  // 攻击频率影响攻击冷却时间
     }
 }
 

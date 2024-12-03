@@ -1,8 +1,8 @@
 #ifndef POTION_H
 #define POTION_H
 
-#include "Item.h"
-#include "Player.h"
+#include "../Item.h"
+#include "Classes/Common/Entities/Player/Player.h"
 
 // “©º¡¿‡
 class Potion : public Item {

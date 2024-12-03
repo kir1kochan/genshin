@@ -7,7 +7,7 @@
 #include "json/writer.h"
 #include "json/stringbuffer.h"
 #include <fstream>
-#include "Item.h"
+#include "../Item.h"
 
 // 装备基类
 class Equipment : public Item {

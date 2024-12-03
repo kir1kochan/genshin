@@ -3,14 +3,14 @@
 
 #include <unordered_map>
 #include <string>
-#include "Item.h"
-#include "Player.h"
+#include "../Item/Item.h"
+#include "../Entities/Player/Player.h"
 
 class Backpack {
 public:
 
     // 构造函数
-    Backpack(const std::vector<Item*>& itemPointers);
+    Backpack(const std::vector<Item*>* itemPointers);
    
     // 通过物品指针添加物品
     void addItem(Item* item, int count = 1);
@@ -39,7 +39,7 @@ public:
     // 从文件加载背包数据
     void loadFromFile(const std::string& filePath);
 
-    friend:class Player;
+    friend  class Player;
 private:
     std::unordered_map<Item*, int> items;  // 物品指针和数量的映射
     std::unordered_map<int, Item*> idToItemMap;  // 物品ID到物品指针的映射

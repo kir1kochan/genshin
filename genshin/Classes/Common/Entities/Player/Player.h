@@ -3,11 +3,11 @@
 
 #include "../Entities.h"
 
-#include "Weapon.h"
-#include "Armor.h"
-#include "Accessory.h"
-
-#include "Backpack.h"
+#include "Classes/Common/Item/Equipment/Weapon/Weapon.h"
+#include "Classes/Common/Item/Equipment/Armor/Armor.h"
+#include "Classes/Common/Item/Equipment/Accessory/Accessory.h"
+#include "Skill/Skill.h"
+#include "Classes/Common/Backpack/Backpack.h"
 
 class Player : public Entities {
 private:
@@ -30,7 +30,7 @@ private:
     const float shieldTimeInterval = 0.5f;  // 每次更新的时间间隔，单位秒
   
     float currentShield;  // 当前护甲值
-
+    float CDtoSet = 1.0f;       // 攻击cd
    
     Backpack backpack; // 背包
 

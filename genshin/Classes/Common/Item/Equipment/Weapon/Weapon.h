@@ -1,7 +1,7 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 
-#include "Equipment.h"
+#include "../Equipment.h"
 
 // 武器类，继承自装备类
 class Weapon : public Equipment {

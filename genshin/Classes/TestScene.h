@@ -2,7 +2,8 @@
 #define TESTSCENE_H
 
 #include "cocos2d.h"
-#include "Classes/Common/InputManager/InputManager.h" 
+#include "Classes/Common/EventManager/KeyboardEventManager.h" 
+#include "Classes/Common/EventManager/MainGameMouseEventManager.h" 
 
 class TestScene : public cocos2d::Scene
 {
@@ -25,6 +26,7 @@ public:
     CREATE_FUNC(TestScene);
 
 private:
-    MouseInputManager1* mouseInputManager;  // 鼠标输入管理器
+    MainGameMouseEventManager* mouseInputManager;  // 鼠标输入管理器
+    KeyboardEventManager* keyboardEventManager;
 };
 #endif // TESTSCENE_H

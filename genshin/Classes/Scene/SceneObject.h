@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_map>
 
+// 可能会废弃 转而使用tmx地图的对象层来进行
 class SceneObject : public cocos2d::Node {
 public:
     enum class ObjectType {
