@@ -1,9 +1,12 @@
 #ifndef ATTACK_SKILL_H
 #define ATTACK_SKILL_H
 
-#include "Skill.h"
-#include "Player.h"
-#include "Element.h"
+#include "../Skill.h"
+//#include "../../Player.h"
+#include "Classes/Common/Element/Element.h"
+
+class Player;
+class Enemy;
 
 class AttackSkill : public Skill {
 private:
@@ -19,7 +22,7 @@ public:
     float getRange() const;
 
     // 实现技能激活
-    void activate(Player* user, Entities& target) override;
+    void activate(Player* user, Enemy& target) override;
 };
 
 #endif // ATTACK_SKILL_H

@@ -26,7 +26,7 @@ void Backpack::addItem(Item* item, int count) {
 }
 
 // 通过物品ID添加物品
-void Backpack::addItemById(int itemId, int count) {
+void Backpack::addItem(int itemId, int count) {
     if (idToItemMap.find(itemId) != idToItemMap.end()) {
         Item* item = idToItemMap[itemId];
         addItem(item, count);  // 调用通过物品指针添加物品的函数
@@ -53,7 +53,7 @@ void Backpack::removeItem(Item* item, int count) {
 }
 
 // 通过物品ID移除物品
-void Backpack::removeItemById(int itemId, int count) {
+void Backpack::removeItem(int itemId, int count) {
     if (idToItemMap.find(itemId) != idToItemMap.end()) {
         Item* item = idToItemMap[itemId];
         removeItem(item, count);  // 调用通过物品指针移除物品的函数
@@ -111,7 +111,7 @@ void Backpack::loadFromJson(const std::string& jsonString) {
             std::string jsonStr = buffer.GetString();  // 获取转换后的字符串
 
             // 使用转换后的字符串来创建物品
-            Item* item = Item::createItemById(itemId, jsonStr);
+            Item* item = createItemById(itemId, jsonStr);
 
             if (item) {
                 addItem(item, quantity);  // 通过物品指针添加物品到背包
@@ -146,4 +146,42 @@ void Backpack::loadFromFile(const std::string& filePath) {
     else {
         CCLOG("Failed to open file: %s", filePath.c_str());
     }
+}
+
+Item* Backpack::createItemById(int id, const std::string& jsonString) {
+    int itemType = id / 10000;   // 物品类型：ID的第一部分
+    int subType = (id / 100) % 100; // 子类型：ID的第二部分
+
+    // 根据物品类型和子类型和字符串创建不同的物品对象
+    switch (itemType) {
+    case 1: // 装备类
+        switch (subType) {
+        case 101:
+            Weapon * weapon = new Weapon(id, "Weapon Name", 5.0f, 10.0f, 1.0f);
+            weapon->loadFromJson(jsonString);
+            return weapon;
+        case 102:
+            Armor * armor = new Armor(id, "Armor Name", 5);
+            armor->loadFromJson(jsonString);
+            return armor;
+        case 103:
+            Accessory * accessory = new Accessory(id, "Accessory Name", 3);
+            accessory->loadFromJson(jsonString);
+            return accessory;
+        default: break;
+        }
+        break;
+    case 2: // 药剂类
+        Potion * potion = new Potion(id, "Health Potion", 50);
+        potion->loadFromJson(jsonString);
+        return potion;
+    case 3: // 食物类
+        Food * food = new Food(id, "Apple", 20);
+        food->loadFromJson(jsonString);
+        return food;
+    default:
+        break;
+    }
+
+    return nullptr;  // 返回空指针，表示未找到有效类型
 }

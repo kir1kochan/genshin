@@ -1,5 +1,6 @@
 #include "AttackSkill.h"
 #include "cocos2d.h"
+#include "../../Player.h"
 
 AttackSkill::AttackSkill(int id, const std::string& name, float cooldown, float attackPower, float range, Element element)
     : Skill(id, name, cooldown), attackPower(attackPower), range(range),element(element){}

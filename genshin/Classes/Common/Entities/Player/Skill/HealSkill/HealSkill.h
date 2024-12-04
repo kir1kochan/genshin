@@ -1,7 +1,10 @@
 #ifndef HEAL_SKILL_H
 #define HEAL_SKILL_H
 
-#include "Skill.h"
+#include "../Skill.h"
+
+class Player;
+class Enemy;
 
 class HealSkill : public Skill {
 private:

@@ -1,6 +1,14 @@
 #include "Player.h"
 #include "cocos2d.h"
 
+#include "Classes/Common/Item/Equipment/Weapon/Weapon.h"
+#include "Classes/Common/Item/Equipment/Armor/Armor.h"
+#include "Classes/Common/Item/Equipment/Accessory/Accessory.h"
+#include "Skill/AttackSkill/AttackSkill.h"
+#include "Skill/HealSkill/HealSkill.h"
+#include "Skill/ShieldSkill/ShieldSkill.h"
+#include "Classes/Common/Backpack/Backpack.h"
+
 Player::Player(float health, Element element, float attackRange)
     : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), backpack(nullptr){
     skillBar.resize(3, nullptr); // 初始化技能栏为空
@@ -37,7 +45,7 @@ void Player::chanegElement(Element newElement)
     element = newElement;
 }
 
-void Player::attackTarget(Entities& target) {
+void Player::attackTarget(Enemy& target) {
     
     // 检查攻击是否可以执行（冷却时间）
     if (!canAttack()) {
@@ -120,18 +128,6 @@ void Player::equipAccessory(Accessory* newAccessory) {
     }
 }
 
-Weapon* Player::getWeapon() const {
-    return weapon;
-}
-
-Armor* Player::getArmor() const {
-    return armor;
-}
-
-Accessory* Player::getAccessory() const {
-    return accessory;
-}
-
 // 获取武器攻击范围
 float Player::getWeaponAttackRange() const {
     return (weapon != nullptr) ? weapon->getAttackRange() : 0.0f;
@@ -182,7 +178,7 @@ void Player::unequipSkill(int skillSlot) {
     skillBar[skillSlot] = nullptr;
 }
 
-void Player::useSkill(int skillSlot, Entities& target) {
+void Player::useSkill(int skillSlot, Enemy& target) {
     if (skillSlot < 0 || skillSlot >= 3 || !skillBar[skillSlot]) {
         CCLOG("Invalid or empty skill slot: %d", skillSlot);
         return;
@@ -207,7 +203,7 @@ void Player::updateSkillsCooldown(float deltaTime) {
 }
 
 void Player::addItemToBackpack(int id,int count) {
-    backpack.addItemById(id, count);
+    backpack.addItem(id, count);
 }
 
 void Player::removeItemFromBackpack(int itemId) {
@@ -256,14 +252,16 @@ void Player::heal(float healAmount) {
     CCLOG("Player heals %.2f health. Current health: %.2f", healAmount, health);
 }
 
-void Player::setShield(float shield) {
+void Player::setShield(float shield,float Time) {
     currentShield = shield;
+    this->shieldTime = Time;
     CCLOG("Player receives a shield of %.2f.", shield);
 }
 
 float Player::getShield() const {
     return currentShield;
 }
+
 
 // 用于定时更新玩家状态
 void Player::update(float deltaTime) {
@@ -366,15 +364,32 @@ void Player::loadFromJson(const std::string& jsonString) {
     // 反序列化装备（通过 ID 恢复指针）
     if (doc.HasMember("weapon")) {
         int weaponid = doc["weapon"].GetInt();
-        weapon = backpack.idToItemMap[weaponid];
+        Item* item = backpack.idToItemMap[weaponid];
+
+        // 使用 dynamic_cast 将基类指针转换为派生类指针
+        weapon = dynamic_cast<Weapon*>(item);
+        if (weapon == nullptr) {
+            // 处理转换失败的情况（如该物品不是 Weapon 类型）
+            CCLOG("Failed to cast item to Weapon.");
+        }
     }
     if (doc.HasMember("armor")) {
         int armorid = doc["armor"].GetInt();
-        armor = backpack.idToItemMap[armorid];
+        Item* item = backpack.idToItemMap[armorid];
+        armor = dynamic_cast<Armor*>(item);
+        if (armor == nullptr) {
+            // 处理转换失败的情况（如该物品不是 Armor 类型）
+            CCLOG("Failed to cast item to Armor.");
+        }
     }
     if (doc.HasMember("accessory")) {
         int accessoryid = doc["accessory"].GetInt();
-        accessory = backpack.idToItemMap[accessoryid];
+        Item* item = backpack.idToItemMap[accessoryid];
+        accessory = dynamic_cast<Accessory*>(item);
+        if (accessory == nullptr) {
+            // 处理转换失败的情况（如该物品不是 Accessory 类型）
+            CCLOG("Failed to cast item to Accessory.");
+        }
     }
 
     // 反序列化技能系统

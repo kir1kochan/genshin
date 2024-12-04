@@ -1,5 +1,6 @@
 #include "HealSkill.h"
 #include "cocos2d.h"
+#include "../../Player.h"
 
 HealSkill::HealSkill(int id,const std::string& name, float cooldown, float healAmount)
     : Skill(id, name, cooldown), healAmount(healAmount) {}

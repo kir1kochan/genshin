@@ -2,6 +2,7 @@
 #define WEAPON_H
 
 #include "../Equipment.h"
+#include "Classes/Common/Entities/Player/Player.h"
 
 // 武器类，继承自装备类
 class Weapon : public Equipment {

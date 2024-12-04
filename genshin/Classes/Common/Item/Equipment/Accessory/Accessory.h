@@ -2,6 +2,7 @@
 #define ACCESSORY_H
 
 #include "../Equipment.h"
+#include "Classes/Common/Entities/Player/Player.h"
 
 // 饰品类，继承自装备类
 class Accessory : public Equipment {
