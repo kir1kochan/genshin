@@ -5,7 +5,11 @@
 #include <string>
 #include "../Item/Item.h"
 #include "../Entities/Player/Player.h"
+#include<vector>
 
+// 前向声明类
+class Item;
+class Player;
 class Backpack {
 public:
 
@@ -16,13 +20,13 @@ public:
     void addItem(Item* item, int count = 1);
 
     // 通过物品ID添加物品
-    void addItemById(int itemId, int count = 1);
+    void addItem(int itemId, int count = 1);
 
     // 通过物品指针移除物品
     void removeItem(Item* item, int count = 1);
 
     // 通过物品ID移除物品
-    void removeItemById(int itemId, int count = 1);
+    void removeItem(int itemId, int count = 1);
 
     // 打印背包信息
     void printInfo() const;
@@ -38,6 +42,11 @@ public:
 
     // 从文件加载背包数据
     void loadFromFile(const std::string& filePath);
+
+    // 解析 ID
+   // 后续改进意见，可以根据游戏，设计更加完备的编码体系，可以以宏定义的方式出现
+  // 解析 ID 并返回对应的物品类型
+    Item* createItemById(int id, const std::string& jsonString);
 
     friend  class Player;
 private:

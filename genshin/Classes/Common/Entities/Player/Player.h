@@ -2,12 +2,16 @@
 #define PLAYER_H
 
 #include "../Entities.h"
-
+#include"../Enemy/Enemy.h"
 #include "Classes/Common/Item/Equipment/Weapon/Weapon.h"
 #include "Classes/Common/Item/Equipment/Armor/Armor.h"
 #include "Classes/Common/Item/Equipment/Accessory/Accessory.h"
-#include "Skill/Skill.h"
+#include "Skill/AttackSkill/AttackSkill.h"
+#include "Skill/HealSkill/HealSkill.h"
+#include "Skill/ShieldSkill/ShieldSkill.h"
 #include "Classes/Common/Backpack/Backpack.h"
+
+
 
 class Player : public Entities {
 private:
@@ -18,7 +22,7 @@ private:
     Weapon* weapon;           // 武器
     Armor* armor;             // 护甲
     Accessory* accessory;     // 饰品
-
+  
     // 技能系统
     std::vector<std::shared_ptr<Skill>> unlockedSkills; // 已解锁技能
     std::vector<std::shared_ptr<Skill>> skillBar;       // 技能栏（最多3个技能）
@@ -30,6 +34,7 @@ private:
     const float shieldTimeInterval = 0.5f;  // 每次更新的时间间隔，单位秒
   
     float currentShield;  // 当前护甲值
+    float shieldTime;     //护甲的持续时间
     float CDtoSet = 1.0f;       // 攻击cd
    
     Backpack backpack; // 背包
@@ -52,10 +57,14 @@ public:
     void chanegElement(Element newElement);
 
     // 攻击玩家敌人时根据元素相克
-    void attackTarget(Entities& target);
+    void attackTarget(Enemy& target);
 
     // 玩家受到攻击
     void takeDamage(float damage) override;
+
+    void heal(float healAmount);
+
+    void setShield(float shield, float Time);
 
     // 打印玩家状态
     void printStatus() override;
@@ -67,14 +76,10 @@ public:
     void loadFromJson(const std::string& jsonString) override;
 
     // 装备管理
-    void equipWeapon(Weapon* weapon);
-    void equipArmor(Armor* armor);
-    void equipAccessory(Accessory* accessory);
+    void equipWeapon(Weapon* newWeapon);
+    void equipArmor(Armor* newArmor);
+    void equipAccessory(Accessory* newAccessory);
 
-    // 获取装备
-    Weapon* getWeapon() const;
-    Armor* getArmor() const;
-    Accessory* getAccessory() const;
 
     // 获取武器攻击范围
     float getWeaponAttackRange() const;
@@ -86,8 +91,12 @@ public:
     void unlockSkill(const std::shared_ptr<Skill>& newSkill);   // 解锁技能
     bool equipSkill(int skillSlot, const std::shared_ptr<Skill>& skill); // 装备技能
     void unequipSkill(int skillSlot);                          // 卸载技能
-    void useSkill(int skillSlot, Entities& target);            // 使用技能
+    void useSkill(int skillSlot, Enemy& target);            // 使用技能
     void updateSkillsCooldown(float deltaTime);                // 更新冷却时间
+
+    float getShield() const;
+
+    void updateshieldTime(float deltaTime);
 
     void update(float deltaTime);        // 定时更新玩家状态，目前用于技能和护盾，也可以更新其他的状态
 

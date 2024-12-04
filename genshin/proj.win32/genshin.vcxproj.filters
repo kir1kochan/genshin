@@ -22,7 +22,7 @@
     <Filter Include="src\Classes\Common\EventManager">
       <UniqueIdentifier>{37b1c237-3a2c-4d1a-b868-c8f0b567eddf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Classes\Common\item">
+    <Filter Include="src\Classes\Common\Item">
       <UniqueIdentifier>{d0616dc5-b7d9-4653-9edb-b567da3f80b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -55,13 +55,13 @@
       <Filter>src\Classes\Common\Entities</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Common\Item\Item.cpp">
-      <Filter>src\Classes\Common\item</Filter>
+      <Filter>src\Classes\Common\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Common\Item\Equipment\Equipment.cpp">
-      <Filter>src\Classes\Common\item</Filter>
+      <Filter>src\Classes\Common\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Common\Item\Equipment\Weapon\Weapon.cpp">
-      <Filter>src\Classes\Common\item</Filter>
+      <Filter>src\Classes\Common\Item</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Common\Entities\Enemy\Enemy.cpp">
       <Filter>src\Classes\Common\Entities</Filter>
@@ -99,13 +99,13 @@
       <Filter>src\Classes\Common\Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Common\Item\Item.h">
-      <Filter>src\Classes\Common\item</Filter>
+      <Filter>src\Classes\Common\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Common\Item\Equipment\Equipment.h">
-      <Filter>src\Classes\Common\item</Filter>
+      <Filter>src\Classes\Common\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Common\Item\Equipment\Weapon\Weapon.h">
-      <Filter>src\Classes\Common\item</Filter>
+      <Filter>src\Classes\Common\Item</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Common\Entities\Enemy\Enemy.h">
       <Filter>src\Classes\Common\Entities</Filter>

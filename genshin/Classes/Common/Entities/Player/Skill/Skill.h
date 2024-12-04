@@ -2,8 +2,11 @@
 #define SKILL_H
 
 #include <string>
-#include "../../Enemy/Enemy.h"
-#include "../Player.h"
+//#include "../../Enemy/Enemy.h"
+//#include "../Player.h"
+
+class Player;
+class Enemy;
 
 class Skill : public cocos2d::Node {
 protected:
@@ -25,6 +28,10 @@ public:
     void resetCooldown();            // 重置冷却
 
     virtual void activate(Player* user, Enemy& target) = 0;
+
+    // 根据技能ID查找技能
+    static std::shared_ptr<Skill> findById(int skillId);
+
 };
 
 #endif // SKILL_H

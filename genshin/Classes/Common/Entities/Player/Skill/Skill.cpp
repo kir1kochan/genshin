@@ -1,6 +1,7 @@
 #include "Skill.h"
 #include "cocos2d.h"
-
+#include "../Player.h"
+#include "../../Enemy/Enemy.h"
 // 构造函数
 Skill::Skill(int id, const std::string& name, float cooldown)
     : id(id), name(name), cooldown(cooldown), currentCooldown(0.0f) {}
@@ -32,4 +33,12 @@ void Skill::updateCooldown(float deltaTime) {
 // 重置冷却
 void Skill::resetCooldown() {
     currentCooldown = cooldown;
+}
+
+std::shared_ptr<Skill> Skill::findById(int skillId) {
+    auto it = allSkills.find(skillId);
+    if (it != allSkills.end()) {
+        return it->second;  // 找到技能，返回
+    }
+    return nullptr;  // 如果没有找到，返回nullptr
 }

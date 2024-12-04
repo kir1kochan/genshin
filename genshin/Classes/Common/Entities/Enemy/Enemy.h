@@ -2,7 +2,8 @@
 #define ENEMY_H
 
 #include "../Entities.h"
-#include "../Player/Player.h"
+//#include "../Player/Player.h"
+class Player;
 
 class Enemy : public Entities {
 private:

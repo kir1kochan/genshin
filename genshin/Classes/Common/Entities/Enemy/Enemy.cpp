@@ -1,5 +1,5 @@
 #include "Enemy.h"
-
+#include "../Player/Player.h"
 // ¹¹Ôìº¯Êý
 Enemy::Enemy(float health, float attack, float defence, Element element, float attackRange, int aggressionLevel, float detectionRadius,
      int baseLevel, const std::string& spriteFilename, int drop)

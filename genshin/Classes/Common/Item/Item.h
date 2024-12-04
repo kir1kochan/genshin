@@ -7,9 +7,8 @@
 #include "json/document.h"
 #include "json/writer.h"
 #include "json/stringbuffer.h"
-#include "Classes/Common/Entities/Player/Player.h"
-#include "Potion/Potion.h"
-#include "Food/Food.h"
+#include "cocos2d.h"
+//#include "Classes/Common/Entities/Player/Player.h"
 
 //物品可以继承Node类，可以根据需要再改进
 class Item {
@@ -38,10 +37,6 @@ public:
     // 将物品数据保存到文件
     virtual void saveToFile(const std::string& filePath) const;
 
-    // 解析 ID
-    // 后续改进意见，可以根据游戏，设计更加完备的编码体系，可以以宏定义的方式出现
-   // 解析 ID 并返回对应的物品类型
-    Item* createItemById(int id, const std::string& jsonString);
 
 protected:
     int id;        // 物品 ID
