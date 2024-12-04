@@ -36,9 +36,5 @@ void Skill::resetCooldown() {
 }
 
 std::shared_ptr<Skill> Skill::findById(int skillId) {
-    auto it = allSkills.find(skillId);
-    if (it != allSkills.end()) {
-        return it->second;  // 找到技能，返回
-    }
-    return nullptr;  // 如果没有找到，返回nullptr
+    return nullptr;//暂未实现
 }

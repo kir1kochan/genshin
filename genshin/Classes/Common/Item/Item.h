@@ -9,7 +9,7 @@
 #include "json/stringbuffer.h"
 #include "cocos2d.h"
 //#include "Classes/Common/Entities/Player/Player.h"
-
+class Player;
 //物品可以继承Node类，可以根据需要再改进
 class Item {
 public:

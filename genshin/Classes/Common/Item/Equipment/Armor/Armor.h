@@ -2,7 +2,7 @@
 #define ARMOR_H
 
 #include "../Equipment.h"
-#include "Classes/Common/Entities/Player/Player.h"
+class  Player;
 
 // 护甲类，继承自装备类
 class Armor : public Equipment {

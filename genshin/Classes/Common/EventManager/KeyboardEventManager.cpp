@@ -3,9 +3,12 @@
 USING_NS_CC;
 
 void KeyboardEventManager::initialize() {
-    auto listener = cocos2d::EventListenerKeyboard::create();
+    auto listener = EventListenerKeyboard::create();
     listener->onKeyPressed = CC_CALLBACK_2(KeyboardEventManager::onKeyPressed, this);
-    cocos2d::Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, cocos2d::Director::getInstance()->getRunningScene());
+    listener->onKeyReleased = CC_CALLBACK_2(KeyboardEventManager::onKeyReleased, this);
+    Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, Director::getInstance()->getRunningScene());
+    moveDirection.y = 0;  
+    moveDirection.x = 0;  
 }
 
 void KeyboardEventManager::handleEvent() {
@@ -13,50 +16,71 @@ void KeyboardEventManager::handleEvent() {
 }
 
 // 键盘按下事件处理
-void KeyboardEventManager::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
+void KeyboardEventManager::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
     if (player == nullptr) return;  // 确保玩家对象存在
 
-    cocos2d::Vec2 currentPos = player->getPosition();  // 获取当前玩家位置
-    cocos2d::Vec2 targetPos = currentPos;  // 初始目标位置与当前位置相同
-
-    // 根据按键改变目标位置
-    switch (keyCode) {
-    case cocos2d::EventKeyboard::KeyCode::KEY_W:  // 向上
-        targetPos.y += moveSpeed;
-        break;
-    case cocos2d::EventKeyboard::KeyCode::KEY_S:  // 向下
-        targetPos.y -= moveSpeed;
-        break;
-    case cocos2d::EventKeyboard::KeyCode::KEY_A:  // 向左
-        targetPos.x -= moveSpeed;
-        break;
-    case cocos2d::EventKeyboard::KeyCode::KEY_D:  // 向右
-        targetPos.x += moveSpeed;
-        break;
-    default:
-        break;
+    // 在按下某个按键时，记录该按键的方向
+    if (keyCode == EventKeyboard::KeyCode::KEY_W) {
+        moveDirection.y = 1;  // 向上
     }
-
-    // 设置目标位置
-    destination = targetPos;
+    else if (keyCode == EventKeyboard::KeyCode::KEY_S) {
+        moveDirection.y = -1;  // 向下
+    }
+    else if (keyCode == EventKeyboard::KeyCode::KEY_A) {
+        moveDirection.x = -1;  // 向左
+    }
+    else if (keyCode == EventKeyboard::KeyCode::KEY_D) {
+        moveDirection.x = 1;   // 向右
+    }
 }
 
 // 键盘按键释放事件处理
-void KeyboardEventManager::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
-    // 可以在按键释放时执行额外的操作（如停止移动）
+void KeyboardEventManager::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
+    if (keyCode == EventKeyboard::KeyCode::KEY_W) {
+        moveDirection.y = 0;  // 停止向上
+    }
+    else if (keyCode == EventKeyboard::KeyCode::KEY_S) {
+        moveDirection.y = 0;  // 停止向下
+    }
+    else if (keyCode == EventKeyboard::KeyCode::KEY_A) {
+        moveDirection.x = 0;  // 停止向左
+    }
+    else if (keyCode == EventKeyboard::KeyCode::KEY_D) {
+        moveDirection.x = 0;  // 停止向右
+    }
 }
 
 // 每帧更新玩家位置
 void KeyboardEventManager::update(float deltaTime) {
     if (player == nullptr) return;  // 确保玩家对象存在
 
-    cocos2d::Vec2 currentPos = player->getPosition();  // 获取当前玩家位置
+    Vec3 currentPos = player->getPosition3D();  // 获取当前玩家位置
+    Vec3 targetPos = currentPos;  // 默认目标位置为当前玩家位置
+
+    // 根据按键状态更新目标位置
+    targetPos.x += moveDirection.x * moveSpeed * deltaTime;
+    targetPos.y += moveDirection.y * moveSpeed * deltaTime;
+
+    // 设置目标位置
+    destination = targetPos;
 
     // 使用 Lerp 平滑地过渡到目标位置
-    cocos2d::Vec2 newPos = currentPos.lerp(destination, moveSpeed * deltaTime);
-    player->setPosition(newPos);  // 设置玩家新的位置
+    // 不够平滑
+    Vec3 newPos = currentPos.lerp(destination, moveSpeed * deltaTime);
+    player->setPosition3D(newPos);  // 设置玩家新的位置
+
+    // 更新相机位置
+    if (auto camera = Director::getInstance()->getRunningScene()->getDefaultCamera()) {
+        camera->setPosition3D(cocos2d::Vec3(newPos.x, newPos.y, camera->getPosition3D().z));
+    }
 }
 
 void KeyboardEventManager::setPlayer(Player* theplayer) {
     player = theplayer;
+    // 设置玩家位置和摄像机位置一致
+    if (auto camera = Director::getInstance()->getRunningScene()->getDefaultCamera()) {
+        auto playerPos = player->getPosition3D();
+        destination = playerPos;
+        camera->setPosition3D(cocos2d::Vec3(playerPos.x, playerPos.y, camera->getPosition3D().z));
+    }
 }

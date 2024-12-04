@@ -10,7 +10,8 @@ enum class Element {
     EARTH,
     AIR,
     THUNDER,
-    GRASS
+    GRASS,
+    ICE
 };
 
 // º¯ÊýÉùÃ÷

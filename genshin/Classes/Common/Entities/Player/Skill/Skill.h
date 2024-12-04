@@ -2,6 +2,7 @@
 #define SKILL_H
 
 #include <string>
+#include <cocos2d.h>
 //#include "../../Enemy/Enemy.h"
 //#include "../Player.h"
 

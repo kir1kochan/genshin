@@ -1,5 +1,5 @@
 #include "Food.h"
-#include"Player.h"
+#include "Classes/Common/Entities/Player/Player.h"
 
 Food::Food(int id, const std::string& name, float healAmount)
     : Item(id, name), healAmount(healAmount) {}

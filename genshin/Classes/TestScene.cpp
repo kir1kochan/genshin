@@ -51,26 +51,34 @@ bool TestScene::init()
         camera->lookAt(Vec3(1400, 1400, 0));  // 朝向场景中心
         }, 0, "init_camera_key");  // 延迟执行，相机设置将在场景初始化后执行
 
+    // 设置鼠标输入管理器用于视角缩放
+    scheduleOnce([this](float dt) {
+        if (!mouseInputManager) {
+            mouseInputManager = new MainGameMouseEventManager;
+            mouseInputManager->initialize();  // 初始化输入管理器
+        }
+        }, 0.1f, "init_mouse_manager_key");
+
     // 加入玩家
     scheduleOnce([this](float dt) {
-        auto player = new Player;
         auto playerspirt = Sprite::create("tree117.png");  // 创建玩家精灵
-        player->addChild(playerspirt, 1);  // 将玩家加入到场景中
+        auto player = new Player(playerspirt);
+        this->addChild(player, 1);  // 将玩家加入到场景中
         player->setPosition(1400, 1400);  // 设置玩家初始位置
         player->setVisible(true);
         player->setScale(1.0f);
 
         // 设置玩家输入管理器（例如键盘控制）
-        auto keyboardEventManager = new KeyboardEventManager();
-        keyboardEventManager->initialize();
-        keyboardEventManager->setPlayer(player);  // 将玩家对象传递给事件管理器
+        if (!keyboardEventManager) {
+            keyboardEventManager = new KeyboardEventManager;
+            keyboardEventManager->initialize();
+            keyboardEventManager->setPlayer(player);  // 将玩家对象传递给事件管理器
+        }
         }, 0.1f, "init_player_key");
 
-    // 设置鼠标输入管理器用于视角缩放
-    scheduleOnce([this](float dt) {
-        auto mouseInputManager = new MainGameMouseEventManager();
-        mouseInputManager->initialize();  // 在场景初始化后才初始化输入管理器
-        }, 0.1f, "init_mouse_manager_key");
+    schedule([this](float deltaTime) {
+        this->update(deltaTime);  // 每帧调用 update 方法
+        }, 0.5f, "update_key");
 
     return true;
 }
@@ -123,10 +131,19 @@ void TestScene::setupKeyboardListener()
         }
         };
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventListener, this);
+
 }
 
 TestScene::~TestScene()
 {
     delete mouseInputManager;  // 释放鼠标输入管理器
     delete keyboardEventManager;  // 释放键盘事件管理器
+}
+
+void TestScene::update(float deltaTime)
+{
+    if (keyboardEventManager) {
+        keyboardEventManager->update(deltaTime);  // 调用键盘事件管理器的 update 方法
+    }
+
 }
