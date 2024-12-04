@@ -4,17 +4,29 @@
 #include <unordered_map>
 #include <string>
 #include "../Item/Item.h"
-#include "../Entities/Player/Player.h"
+//#include "../Entities/Player/Player.h"
 #include<vector>
-
+#include "Classes/Common/Item/Equipment/Weapon/Weapon.h"
+#include "Classes/Common/Item/Equipment/Armor/Armor.h"
+#include "Classes/Common/Item/Equipment/Accessory/Accessory.h"
+#include "Classes/Common/Item/Food/Food.h"
+#include "Classes/Common/Item/Potion/Potion.h"
 // 前向声明类
 class Item;
+class Potion;
+class Food;
+class Weapon;
+class Armor;
+class Accessory;
 class Player;
+
 class Backpack {
 public:
+    // 默认构造函数
+    Backpack();
 
     // 构造函数
-    Backpack(const std::vector<Item*>* itemPointers);
+    Backpack(const std::vector<Item*> itemPointers);
    
     // 通过物品指针添加物品
     void addItem(Item* item, int count = 1);

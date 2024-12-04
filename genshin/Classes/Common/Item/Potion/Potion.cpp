@@ -15,3 +15,35 @@ void Potion::printInfo() const {
     CCLOG("Potion Name: %s", getName().c_str());
     CCLOG("Effect Value: %.2f", effectValue);
 }
+
+void Potion::loadFromJson(const std::string& jsonString) {
+    rapidjson::Document doc;
+    doc.Parse(jsonString.c_str());
+
+    if (doc.HasParseError() || !doc.IsObject()) {
+        CCLOG("Error parsing Potion JSON");
+        return;
+    }
+
+    if (doc.HasMember("id")) id = doc["id"].GetInt();
+    if (doc.HasMember("name")) name = doc["name"].GetString();
+    if (doc.HasMember("effectValue")) effectValue = doc["effectValue"].GetFloat();
+}
+
+std::string Potion::saveToJson() const {
+    rapidjson::Document doc;
+    doc.SetObject();
+    auto& allocator = doc.GetAllocator();
+
+    // 添加成员变量到 JSON
+    doc.AddMember("id", id, allocator);
+    doc.AddMember("name", rapidjson::Value(name.c_str(), allocator), allocator);
+    doc.AddMember("effectValue", effectValue, allocator);
+
+    // 转换为字符串
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    doc.Accept(writer);
+
+    return buffer.GetString();
+}

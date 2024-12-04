@@ -6,11 +6,11 @@
 #include "Classes/Common/Item/Equipment/Weapon/Weapon.h"
 #include "Classes/Common/Item/Equipment/Armor/Armor.h"
 #include "Classes/Common/Item/Equipment/Accessory/Accessory.h"
+#include "Skill/Skill.h"
 #include "Skill/AttackSkill/AttackSkill.h"
 #include "Skill/HealSkill/HealSkill.h"
 #include "Skill/ShieldSkill/ShieldSkill.h"
 #include "Classes/Common/Backpack/Backpack.h"
-
 
 
 class Player : public Entities {
@@ -43,6 +43,7 @@ private:
 public:
     Player(float health, Element element, float attackRange);
     Player();  // 默认构造函数
+    Player(cocos2d::Sprite* sprite);
 
     // 升级
     void levelUp();

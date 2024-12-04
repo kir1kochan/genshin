@@ -2,7 +2,7 @@
 #define FOOD_H
 
 #include "../Item.h"
-#include "Classes/Common/Entities/Player/Player.h"
+class Player;
 
 class Food : public Item {
 public:

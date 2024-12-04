@@ -1,5 +1,5 @@
 #include "Backpack.h"
-#include "Item.h"
+#include "../Item/Item.h"
 #include "json/document.h"
 #include "json/writer.h"
 #include "json/stringbuffer.h"
@@ -8,11 +8,14 @@
 
 
 // 构造函数，初始化背包，将所有物品指针数量初始化为0
-Backpack::Backpack(const std::vector<Item*>* itemPointers) {
-    for (Item* item : itemPointers) {
+Backpack::Backpack(const std::vector<Item*> itemPointers) {
+    for (auto item : itemPointers) {
         items[item] = 0;  // 将每个物品指针的数量初始化为0
         idToItemMap[item->getId()] = item;  // 为每个物品创建ID到物品指针的映射
     }
+}
+
+Backpack::Backpack(){
 }
 
 // 通过物品指针添加物品
@@ -153,35 +156,41 @@ Item* Backpack::createItemById(int id, const std::string& jsonString) {
     int subType = (id / 100) % 100; // 子类型：ID的第二部分
 
     // 根据物品类型和子类型和字符串创建不同的物品对象
+    Item* item = nullptr;  // 在这里声明一个指针变量，用于存储物品对象
+
     switch (itemType) {
     case 1: // 装备类
         switch (subType) {
-        case 101:
-            Weapon * weapon = new Weapon(id, "Weapon Name", 5.0f, 10.0f, 1.0f);
-            weapon->loadFromJson(jsonString);
-            return weapon;
-        case 102:
-            Armor * armor = new Armor(id, "Armor Name", 5);
-            armor->loadFromJson(jsonString);
-            return armor;
-        case 103:
-            Accessory * accessory = new Accessory(id, "Accessory Name", 3);
-            accessory->loadFromJson(jsonString);
-            return accessory;
+        case 101: {
+            item = new Weapon(id, "Weapon Name", 5.0f, 10.0f, 1.0f);
+            item->loadFromJson(jsonString);
+            return item;
+        }
+        case 102: {
+            item = new Armor(id, "Armor Name", 5);
+            item->loadFromJson(jsonString);
+            return item;
+        }
+        case 103: {
+            item = new Accessory(id, "Accessory Name", 3);
+            item->loadFromJson(jsonString);
+            return item;
+        }
         default: break;
         }
         break;
     case 2: // 药剂类
-        Potion * potion = new Potion(id, "Health Potion", 50);
-        potion->loadFromJson(jsonString);
-        return potion;
+        item = new Potion(id, "Health Potion", 50);
+        item->loadFromJson(jsonString);
+        return item;
     case 3: // 食物类
-        Food * food = new Food(id, "Apple", 20);
-        food->loadFromJson(jsonString);
-        return food;
+        item = new Food(id, "Apple", 20);
+        item->loadFromJson(jsonString);
+        return item;
     default:
         break;
     }
+    
 
     return nullptr;  // 返回空指针，表示未找到有效类型
 }

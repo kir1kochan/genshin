@@ -10,13 +10,18 @@
 #include "Classes/Common/Backpack/Backpack.h"
 
 Player::Player(float health, Element element, float attackRange)
-    : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), backpack(nullptr){
+    : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), backpack(){
     skillBar.resize(3, nullptr); // 初始化技能栏为空
 }
 
 
-Player::Player() : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), backpack(nullptr) {
+Player::Player() : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), backpack() {
     skillBar.resize(3, nullptr); // 初始化技能栏为空
+}
+
+Player::Player(cocos2d::Sprite* sprite) { 
+    Player();
+    this->addChild(sprite, 1);
 }
 
 void Player::levelUp() {

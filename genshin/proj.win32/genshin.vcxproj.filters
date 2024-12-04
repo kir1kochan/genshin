@@ -25,6 +25,15 @@
     <Filter Include="src\Classes\Common\Item">
       <UniqueIdentifier>{d0616dc5-b7d9-4653-9edb-b567da3f80b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Classes\Common\Element">
+      <UniqueIdentifier>{9c429b18-3291-42b0-bf4d-caf943b56f9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Classes\Common\Skill">
+      <UniqueIdentifier>{af0e04b3-c809-41bd-bfd0-2263cc712e9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Classes\Common\Backpack">
+      <UniqueIdentifier>{3fce192b-ab84-40a0-9739-36addf0ec79b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -65,6 +74,27 @@
     </ClCompile>
     <ClCompile Include="..\Classes\Common\Entities\Enemy\Enemy.cpp">
       <Filter>src\Classes\Common\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Common\Element\Element.cpp">
+      <Filter>src\Classes\Common\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Common\Entities\Player\Skill\Skill.cpp">
+      <Filter>src\Classes\Common\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Common\Backpack\Backpack.cpp">
+      <Filter>src\Classes\Common\Backpack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Common\Item\Food\Food.cpp">
+      <Filter>src\Classes\Common\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Common\Item\Potion\Potion.cpp">
+      <Filter>src\Classes\Common\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Common\Item\Equipment\Accessory\Accessory.cpp">
+      <Filter>src\Classes\Common\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Common\Item\Equipment\Armor\Armor.cpp">
+      <Filter>src\Classes\Common\Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +139,27 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Common\Entities\Enemy\Enemy.h">
       <Filter>src\Classes\Common\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\Element\Element.h">
+      <Filter>src\Classes\Common\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\Entities\Player\Skill\Skill.h">
+      <Filter>src\Classes\Common\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\Backpack\Backpack.h">
+      <Filter>src\Classes\Common\Backpack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\Item\Food\Food.h">
+      <Filter>src\Classes\Common\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\Item\Potion\Potion.h">
+      <Filter>src\Classes\Common\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\Item\Equipment\Armor\Armor.h">
+      <Filter>src\Classes\Common\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\Item\Equipment\Accessory\Accessory.h">
+      <Filter>src\Classes\Common\Item</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

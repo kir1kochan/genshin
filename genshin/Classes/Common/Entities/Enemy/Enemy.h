@@ -2,6 +2,7 @@
 #define ENEMY_H
 
 #include "../Entities.h"
+#include "../../Element/Element.h"
 //#include "../Player/Player.h"
 class Player;
 

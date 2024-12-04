@@ -23,10 +23,13 @@ public:
     // 加载 TMX 地图背景
     void loadBackgroundMap();
 
+    void update(float deltaTime);
+
     CREATE_FUNC(TestScene);
 
 private:
     MainGameMouseEventManager* mouseInputManager;  // 鼠标输入管理器
     KeyboardEventManager* keyboardEventManager;
+    Player player;
 };
 #endif // TESTSCENE_H
