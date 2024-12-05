@@ -108,7 +108,7 @@
     <ClCompile Include="..\Classes\Common\Entities\Player\Skill\AttackSkill\AttackSkill.cpp">
       <Filter>src\Classes\Common\Skill</Filter>
     </ClCompile>
-    <ClCompile Include="ToolFunction.cpp">
+    <ClCompile Include="..\Classes\Tools\ToolFunction.cpp">
       <Filter>src\ToolFunction</Filter>
     </ClCompile>
   </ItemGroup>
@@ -185,7 +185,7 @@
     <ClInclude Include="..\Classes\Common\Entities\Player\Skill\AttackSkill\AttackSkill.h">
       <Filter>src\Classes\Common\Skill</Filter>
     </ClInclude>
-    <ClInclude Include="ToolFunction.h">
+    <ClInclude Include="..\Classes\Tools\ToolFunction.h">
       <Filter>src\ToolFunction</Filter>
     </ClInclude>
   </ItemGroup>

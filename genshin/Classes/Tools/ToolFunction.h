@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _TOOL_FUNCTION_
 #define _TOOL_FUNCTION_
 
