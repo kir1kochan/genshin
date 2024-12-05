@@ -34,6 +34,9 @@
     <Filter Include="src\Classes\Common\Backpack">
       <UniqueIdentifier>{3fce192b-ab84-40a0-9739-36addf0ec79b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\ToolFunction">
+      <UniqueIdentifier>{4a9b527a-fb3c-489c-b590-3d0199d9e092}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -104,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\Common\Entities\Player\Skill\AttackSkill\AttackSkill.cpp">
       <Filter>src\Classes\Common\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolFunction.cpp">
+      <Filter>src\ToolFunction</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Common\Entities\Player\Skill\AttackSkill\AttackSkill.h">
       <Filter>src\Classes\Common\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolFunction.h">
+      <Filter>src\ToolFunction</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
