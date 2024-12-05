@@ -32,4 +32,5 @@ private:
     KeyboardEventManager* keyboardEventManager;
     Player player;
 };
+
 #endif // TESTSCENE_H

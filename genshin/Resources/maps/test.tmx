@@ -1,39 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="isometric" renderorder="left-down" width="31" height="61" tilewidth="64" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.0" orientation="isometric" renderorder="right-up" width="25" height="25" tilewidth="64" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="10">
  <tileset firstgid="1" source="outside.tsx"/>
- <layer id="1" name="图块层 1" width="31" height="61">
+ <layer id="2" name="level 1" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt07sKgDAMQFGLq4P0/z/WxUIJtTRpagTvhQwOeuJr275ZakykbZ1IW7OHt3dW84Z9dmbUl+fNulY7L7T3asp1yvGTe9zjacvJ1Uj3TXv02T/torVrf8V/FmmP+tH2zA4aW55v/eZSx+3ZcoeZd6+xW/duNS2+lz2ap6u1S9jY2Gttrx08i7Q1OxIRERERERH9tQudKwgy
+   eJxjZGBgYARiJiTMSCM8XOxgHLVj1A4amE0PO2idP0btGDx2oJs/asfwj/NROwZf2qK1HQCBNwLL
   </data>
  </layer>
- <layer id="2" name="level2" width="31" height="61">
+ <objectgroup id="9" name="object 1">
+  <object id="7" name="SpawnPoint" x="716.833" y="635.167">
+   <point/>
+  </object>
+  <object id="8" x="639.5" y="639.5">
+   <polygon points="0,0 31.25,-0.25 31,32 -0.25,32.25"/>
+  </object>
+ </objectgroup>
+ <layer id="3" name="level 2" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJztlMtKA0EQRcsvMfFJojsTdK0L10aDmviKD1yq+ABXgqC/ELJRP9VbTDVTNj2D0N0GoS4ckpkKnFRPTRFZ/DyCJ4/f5jiB+97jYYruO1VfBktgYQruFpgX2t7/OAD7mdwT5dW0xc/u3Qj3raDdN1JbrHAzzQRuP/x83ZnOgdU/dLNvVr7zmYd6X5HfpHSvgzF4B29yL+Rm7wCMxD0T4fNZU3Xt5n4bytunuL5D7q6qt6g84zNwBC7Ee5XBvQG2qey5Kd4heKXiOV+CHthJ7Oa+X6iYuwaVs+eyF+mscnfEq/MMTsBpAl+Ve1PuuT05oJ87M3Z/17mZLSp6dDN1Dg6FEcXt7zp316vxTPEs9xUp9xiH3+eOup4ot3NeZ3JXRbtz9V0Vfpf0HsnpHnvXXxTuPeW8hfIpn9x7T8HnkPPcP2pq7jnk7r3On2KnWiwWi8VisVgsFovFYrH813wDUu5JKg==
+   eJzdlMtOAkEQRcsvEQQhIDshusaFa1GigKKohKUaH4krExP9BcJG/VRvZaozZad70jMNLKzkZB41qTPVL6L/Hc/gxSI0LnI4Hi2e1uB4UPk6qIHqCh0NUBGalu8MnEY6Fqq+pikedhwHOO4F7biT3LbHwZRzOOyoUzoWW6C1AgfX3ZR7HitXLzvyTRHHHpiDT/Ah71wOrj8EE3FsBNS12VV57eD/L6n6/cA+XI6OyjcoHZsrcA5upP40wrEPDlUPZak/Au+UzMMt6IGjiD7eKJn/EqVrwMRJYG2foy31dbyCMbjMUdfn6Mo7cz4M6e9ZEXo+ZTmYA0r+2cztNRgIEwo7n7IcHSvHc8trp68osq85eD+01fNCOUztWaTDF9oR24cveI3q/bYMx9x6/iF3L0Xm3RXfcuVeegruaxnj9ZWRM+Pn6uUXUCRIhQ==
   </data>
  </layer>
- <layer id="3" name="图块层 3" width="31" height="61">
+ <layer id="4" name="level 3" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt1ksKwjAUheHsoEtwERYcOhBxIO5AF+IDjAjOSic+ZrpVr5BBCWmMtNco/B8caPPoSTuqMUC7unF9k5xyHUSsI3O2w3OPCWsWkqG73nToStH85nPJQFK43oNCXyXZSbbeeCmZud5CoTdmKpkodI8C+ZZf7n607LPK3Xdv7b6Hvlh3zEqxe/xmreZ7l25s2XNHSvdL7c3bwJ7QGD5XeffXLKcw5pKp95yp91/E/qEAAAAAAACg6wnHOBkR
+   eJxjYBgFQxX0I7GnA3EbHeysxCPXQIT+ZiLU+AKxMZRdRYR6YgByWHkDsTwQ80PNb6TA3F4grgHiajRxEyB2h5rPT4H5+IArEDtTYIc5FkxtMBjsmI9DXwOV7JiHpraeBHPx2YEPxFLBDnsCaqnhDxOoWAyZZhFjBwj0o8k3YNGDTWwkgV40/jQa2zeVxuZPobH5gw3gqnsB6qQZEQ==
   </data>
  </layer>
- <layer id="4" name="图块层 4" width="31" height="61">
+ <layer id="5" name="level 4" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt1DEKg0AQRuG9U1jFLvFCCdF0dnbRdInnzTQL6xAWm52B8D74C9niqYgh4KiXbMquH7JBNjrcy112k10d2tairHFqn4x7q3EvWYw6rVqnzjfDdpudfSp2S+135e6vtuU3nZrnsH/flu1ednFqWz9z3o4ObW+zuv73/6n2dOoCAAAAAAAAKPsCLj4Qtw==
+   eJxjYBiZoBeIa5D4pUBcDMQlNLSzCIgLgDifhnbQCpgCsRmN7TCmkbk9NDIXBrqpbJ45GrZEk59GAzvMkeSmUsF8fHZMoZL52OygRRqCme3AgBpOtLDDCYgdaWwHrfyAbIcpDe2gF2hG4w+1cgQddNHY/FEwMAAAbdEQtw==
   </data>
  </layer>
- <layer id="5" name="图块层 5" width="31" height="61">
+ <layer id="6" name="level 5" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJztzTEKgDAQRNHcSVKIpaKCCB7HxirHUO/q2IlVbCYW/8Fnm4UJIV/68Asgz2ncalSlNnUYd2+LmtWuWvP2pEYVVWfeHsx7T71aC+6X2o6v61QX2AQAAAAAAAAA/NcFnj4HTw==
+   eJxjYCAONBOpbhSMgsEA5tLATGsgNgbiWiCeQwPzQSAAiH2BeDYQO9PIDm8g9gBiUyB2oZEd7jQyFxm4AXEFHeyhtR2maDQtgCUNzR4Fo2AUDBwAAHR4B08=
   </data>
  </layer>
- <layer id="6" name="图块层 6" width="31" height="61">
+ <layer id="7" name="level 6" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJztzjEBACAMwLD5/4ALt7igT2KgnYHWibo76q6oW7v1AAAAAAAAwGcPmIACUA==
+   eJxjYBgFo4CBYTKNzZ9EY/Mn0th8eoGZA+2AUTAKRsEoGAVDBgAAV/ACUA==
   </data>
  </layer>
- <layer id="7" name="图块层 7" width="31" height="61">
+ <layer id="8" name="level 7" width="25" height="25">
   <data encoding="base64" compression="zlib">
-   eJztzjEBAAAEADDRNVCZFBy2BIsANtR1YOR1AAAAAAAA4JEGhQEBEA==
+   eJxjYBgFo2Dogn462tVAR7tGwSgYBaNgFIwCQgAAQWkBEA==
   </data>
  </layer>
 </map>

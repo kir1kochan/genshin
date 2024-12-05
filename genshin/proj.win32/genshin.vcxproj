@@ -173,6 +173,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Common\Item\Potion\Potion.cpp" />
     <ClCompile Include="..\Classes\TestScene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ToolFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
@@ -199,6 +200,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Common\Item\Potion\Potion.h" />
     <ClInclude Include="..\Classes\TestScene.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="ToolFunction.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cocos2d\cocos\2d\libcocos2d.vcxproj">
