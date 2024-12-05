@@ -11,6 +11,7 @@
 #include "Classes/Common/Item/Equipment/Accessory/Accessory.h"
 #include "Classes/Common/Item/Food/Food.h"
 #include "Classes/Common/Item/Potion/Potion.h"
+#include <memory>
 // 前向声明类
 class Item;
 class Potion;
@@ -26,16 +27,16 @@ public:
     Backpack();
 
     // 构造函数
-    Backpack(const std::vector<Item*> itemPointers);
-   
+    Backpack(const std::vector<std::shared_ptr<Item>>& itemPointers);
+
     // 通过物品指针添加物品
-    void addItem(Item* item, int count = 1);
+    void addItem(const std::shared_ptr<Item>& item, int count = 1);
 
     // 通过物品ID添加物品
     void addItem(int itemId, int count = 1);
 
     // 通过物品指针移除物品
-    void removeItem(Item* item, int count = 1);
+    void removeItem(const std::shared_ptr<Item>& item, int count = 1);
 
     // 通过物品ID移除物品
     void removeItem(int itemId, int count = 1);
@@ -56,14 +57,14 @@ public:
     void loadFromFile(const std::string& filePath);
 
     // 解析 ID
-   // 后续改进意见，可以根据游戏，设计更加完备的编码体系，可以以宏定义的方式出现
-  // 解析 ID 并返回对应的物品类型
-    Item* createItemById(int id, const std::string& jsonString);
+    // 后续改进意见，可以根据游戏，设计更加完备的编码体系，可以以宏定义的方式出现
+    // 解析 ID 并返回对应的物品类型
+    std::shared_ptr<Item> createItemById(int id, const std::string& jsonString);
 
-    friend  class Player;
+    friend class Player;
 private:
-    std::unordered_map<Item*, int> items;  // 物品指针和数量的映射
-    std::unordered_map<int, Item*> idToItemMap;  // 物品ID到物品指针的映射
+    std::unordered_map<std::shared_ptr<Item>, int> items;  // 物品指针和数量的映射
+    std::unordered_map<int, std::shared_ptr<Item>> idToItemMap;  // 物品ID到物品指针的映射
 };
 
 #endif // BACKPACK_H
