@@ -2,6 +2,7 @@
 #include "Classes/Common/EventManager/KeyboardEventManager.h" 
 #include "Classes/Common/EventManager/MainGameMouseEventManager.h"
 #include "Classes/Common/Entities/Player/Player.h"
+#include "proj.win32/ToolFunction.h"
 USING_NS_CC;
 
 Scene* TestScene::createScene()
@@ -60,11 +61,17 @@ bool TestScene::init()
         }, 0.1f, "init_mouse_manager_key");
 
     // 加入玩家
-    scheduleOnce([this](float dt) {
-        auto playerspirt = Sprite::create("tree117.png");  // 创建玩家精灵
+    scheduleOnce([this,map](float dt) {
+        auto objectLayer = map->getObjectGroup("object 1");  // 获取对应图层
+        auto spawnPoint = objectLayer->getObject("SpawnPoint");  // 获取对象点
+        float x = spawnPoint["x"].asFloat();
+        float y = spawnPoint["y"].asFloat();
+        Vec2 playerInitialPosition = convertToSecenPoint(map, x, y);  // 转换获取当前点的世界坐标
+        auto playerspirt = Sprite::create("player.png");
         auto player = new Player(playerspirt);
+        player->setPosition(playerInitialPosition.x, playerInitialPosition.y);
+
         this->addChild(player, 1);  // 将玩家加入到场景中
-        player->setPosition(1400, 1400);  // 设置玩家初始位置
         player->setVisible(true);
         player->setScale(1.0f);
 
