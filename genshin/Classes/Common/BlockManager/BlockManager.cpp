@@ -1,128 +1,186 @@
 #include "BlockManager.h"
+#include "cocos2d.h"
 
-BlockManager::BlockManager()
-    : nonPlayerGenerator(new NonPlayerGenerator()) {
-    // 加载非玩家数据
-    nonPlayerGenerator->loadNonPlayerDataFromJson("path_to_your_json_file.json");
+USING_NS_CC;
 
-    // 从 NonPlayerGenerator 中加载所有位置数据并存储到区块中
-    loadNonPlayerPositions();
+BlockManager::BlockManager() {
+    // 加载 TMX 文件的对象层数据
+    loadObjectsFromTMX("your_tmx_file.tmx");
 }
 
 BlockManager::~BlockManager() {
     clear();
 }
 
-// 添加怪物到特定区块
-void BlockManager::addEnemyToBlock(Enemy* enemy) {
-    cocos2d::Vec2 enemyPosition = enemy->getPosition();
-    std::pair<int, int> blockCoordinates = getBlockCoordinates(enemyPosition);
-    blockToEnemies[blockCoordinates].push_back(enemy);
-}
-
 // 获取玩家所在的区块
-std::pair<int, int> BlockManager::getBlockCoordinates(const cocos2d::Vec2& position) const {
+std::pair<int, int> BlockManager::getBlockCoordinates(const Vec2& position) const {
     int x = static_cast<int>(std::floor(position.x / BLOCK_SIZE));
     int y = static_cast<int>(std::floor(position.y / BLOCK_SIZE));
     return std::make_pair(x, y);
 }
 
-// 获取某个区块内的怪物
-std::vector<Enemy*> BlockManager::getEnemiesInBlock(const std::pair<int, int>& blockCoordinates) {
-    if (blockToEnemies.find(blockCoordinates) != blockToEnemies.end()) {
-        return blockToEnemies[blockCoordinates];
-    }
-    return {};
-}
-
-// 获取某个区块内的场景物体
-std::vector<SceneObject*> BlockManager::getSceneObjectsInBlock(const std::pair<int, int>& blockCoordinates) {
-    if (blockToSceneObjects.find(blockCoordinates) != blockToSceneObjects.end()) {
-        return blockToSceneObjects[blockCoordinates];
-    }
-    return {};
-}
-
 // 更新区块内容，加载玩家附近的区块，卸载远离的区块
-void BlockManager::updateBlocksForPlayer(cocos2d::Node* playerNode) {
+// 更新区块内容，加载玩家附近的区块，卸载远离的区块
+void BlockManager::updateBlocksForPlayer(Player* playerNode) {
     if (!playerNode) return;
 
-    std::pair<int, int> playerBlock = getBlockCoordinates(playerNode->getPosition());
+    std::pair<int, int> newPlayerBlock = getBlockCoordinates(playerNode->getPosition());
 
-    std::set<std::pair<int, int>> blocksToLoad;
-    // 加载玩家周围的区块（以玩家为中心，最大加载半径为 LOAD_RADIUS）
+    // 判断玩家所在区块是否发生变化
+    if (newPlayerBlock == playerBlock) {
+        return;
+    }
+    playerBlock = newPlayerBlock;
+    updateCollisionMap(); // 更新碰撞映射
+
+    blockStatus.clear();  // 清空原先的状态
+
+    // 加载玩家周围的区块
     for (int dx = -LOAD_RADIUS; dx <= LOAD_RADIUS; ++dx) {
         for (int dy = -LOAD_RADIUS; dy <= LOAD_RADIUS; ++dy) {
             std::pair<int, int> blockToLoad = { playerBlock.first + dx, playerBlock.second + dy };
-            blocksToLoad.insert(blockToLoad);
-        }
-    }
 
-    // 加载新的区块
-    for (const auto& block : blocksToLoad) {
-        if (loadedBlocks.find(block) == loadedBlocks.end()) {
-            loadedBlocks.insert(block);
-            CCLOG("Loading block: (%d, %d)", block.first, block.second);
-
-            // 加载区块内的场景物体和敌人
-            if (blockToSceneObjects.find(block) != blockToSceneObjects.end()) {
-                for (const auto& position : blockToSceneObjects[block]) {
-                    nonPlayerGenerator->generateSceneObjectFromJson(position);
-                }
+            // 如果区块已经被加载过了，就跳过
+            if (loadedBlocks.find(blockToLoad) != loadedBlocks.end()) {
+                continue;  // 区块已经加载，跳过处理
             }
-            if (blockToEnemies.find(block) != blockToEnemies.end()) {
-                for (const auto& position : blockToEnemies[block]) {
-                    nonPlayerGenerator->generateEnemyFromJson(position);
-                }
+
+            blockStatus[blockToLoad] = true; // 标记为需要加载
+
+            // 将区块加入已加载列表
+            if (loadedBlocks.find(blockToLoad) == loadedBlocks.end()) {
+                loadedBlocks.insert(blockToLoad); // 添加到已加载的区块集合中
             }
         }
     }
 
-    // 卸载远离的区块
+    // 计算要卸载的区块
     for (auto it = loadedBlocks.begin(); it != loadedBlocks.end();) {
         const auto& block = *it;
-        if (blocksToLoad.find(block) == blocksToLoad.end()) {
+        if (blockStatus.find(block) == blockStatus.end()) {
             int dx = std::abs(block.first - playerBlock.first);
             int dy = std::abs(block.second - playerBlock.second);
             if (dx > UNLOAD_RADIUS || dy > UNLOAD_RADIUS) {
-                CCLOG("Unloading block: (%d, %d)", block.first, block.second);
-                // 卸载区块中的所有敌人
-                for (auto& enemy : blockToEnemies[block]) {
-                    delete enemy;
-                }
-                blockToEnemies[block].clear();
-
-                // 卸载区块中的所有场景物体
-                for (auto& sceneObject : blockToSceneObjects[block]) {
-                    delete sceneObject;
-                }
-                blockToSceneObjects[block].clear();
-
-                it = loadedBlocks.erase(it);  // 删除并继续遍历
+                blockStatus[block] = false; // 标记为需要卸载
+                it = loadedBlocks.erase(it);
             }
             else {
-                ++it;  // 没有卸载则继续遍历
+                ++it;
             }
         }
         else {
-            ++it;  // 如果区块仍需要加载，继续遍历
+            ++it;
         }
     }
 }
 
+
+// 读取当前区块的加载状态
+std::unordered_map<std::pair<int, int>, bool, BlockManager::PairHash> BlockManager::getBlockStatus() const {
+    return blockStatus;
+}
+
+
+// 从 TMX 文件加载对象层的数据
+void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
+    // 加载 TMX 文件
+    TMXTiledMap* tmxMap = TMXTiledMap::create(tmxFile);
+    if (!tmxMap) {
+        CCLOG("Failed to load TMX file: %s", tmxFile.c_str());
+        return;
+    }
+
+    // 获取对象层（假设对象层的名字为 "ObjectLayer"）
+    TMXObjectGroup* objectGroup = tmxMap->getObjectGroup("ObjectLayer");
+    if (!objectGroup) {
+        CCLOG("No object layer found in TMX file: %s", tmxFile.c_str());
+        return;
+    }
+
+    // 获取对象层中的所有对象
+    auto objects = objectGroup->getObjects();
+    for (auto& obj : objects) {
+        // 解析每个对象的类型和位置
+        ValueMap objectData = obj.asValueMap();
+        std::string type = objectData["type"].asString();
+        float x = objectData["x"].asFloat();
+        float y = objectData["y"].asFloat();
+        // 将等距坐标转换为屏幕坐标（即真实的游戏世界坐标）
+        float realX = (x - y) * tileWidth / 2;
+        float realY = (x + y) * tileHeight / 2;
+        // 将对象添加到相应的区块中
+        std::pair<int, int> block = getBlockCoordinates(Vec2(x, y));
+        if (type == "SpecialEnemy") {
+            std::string jsonpath = objectData["jsonpath"].asString();
+            // 创建敌人并加入到区块
+            Enemy* enemy = new Enemy();
+            enemy->loadFromFile(jsonpath);
+            enemy->setPosition(Vec2(realX, realY));
+            blockToEnemies[block].push_back(enemy);
+        }
+        else if (type == "Enemy") {
+            Enemy* enemy = new Enemy();
+            enemy->setPosition(Vec2(realX, realY));
+            blockToEnemies[block].push_back(enemy);
+        }
+        else if (type == "SceneObject") {
+            SceneObject* sceneObject = new SceneObject();
+            std::string subtype = objectData["subtype"].asString();
+            if (subtype == "chest" || subtype == "door") {    // 目前设想的特殊物体
+                std::string jsonpath = objectData["jsonpath"].asString();
+                SceneObject* sceneObject = new SceneObject();
+                sceneObject->loadFromFile(jsonpath);
+            }
+            sceneObject->setPosition(Vec2(realX, realY));
+            blockToSceneObjects[block].push_back(sceneObject);
+        }
+    }
+}
+
+// 处理点击事件（比如采摘、烹饪、钓鱼点等）
+void BlockManager::handleClickEvent(const Vec2& clickPosition) {
+    checkCollisions(clickPosition);
+}
+
+// 检查玩家点击位置与场景物体或敌人的碰撞
+void BlockManager::checkCollisions(const Vec2& clickPosition) {
+    std::pair<int, int> block = getBlockCoordinates(clickPosition);
+
+    // 检查场景物体
+    if (blockToSceneObjects.find(block) != blockToSceneObjects.end()) {
+        for (auto& sceneObject : blockToSceneObjects[block]) {
+            if (sceneObject->getBoundingBox().containsPoint(clickPosition)) {
+                CCLOG("SceneObject clicked!");
+                // 执行场景物体的点击事件处理
+            }
+        }
+    }
+}
+
+std::vector<Enemy*> BlockManager::getEnemyInPlayerBlock() {
+    return getEnemiesInBlock(playerBlock);
+}
+
+std::vector<Enemy*> BlockManager::getEnemiesInBlock(const std::pair<int, int>& block) {
+    auto it = blockToEnemies.find(block);
+    if (it != blockToEnemies.end()) {
+        return it->second;
+    }
+    return {}; // 返回空向量;
+}
+
+
 // 清理区块
 void BlockManager::clear() {
-    // 清理敌人
     for (auto& block : blockToEnemies) {
         for (auto& enemy : block.second) {
-            delete enemy;
+            enemy->release(); // 替代 delete
         }
     }
 
-    // 清理场景物体
     for (auto& block : blockToSceneObjects) {
         for (auto& sceneObject : block.second) {
-            delete sceneObject;
+            sceneObject->release(); // 替代 delete
         }
     }
 
@@ -131,21 +189,31 @@ void BlockManager::clear() {
     blockToSceneObjects.clear();
 }
 
-// 从 NonPlayerGenerator 中加载所有敌人和场景物体位置并存储到区块中
-void BlockManager::loadNonPlayerPositions() {
-    // 获取所有敌人位置
-    auto enemyPositions = nonPlayerGenerator->getAllEnemyPositions();
-    for (const auto& pair : enemyPositions) {
-        cocos2d::Vec2 position = pair.first;
-        std::pair<int, int> block = getBlockCoordinates(position);
-        blockToEnemies[block].push_back(position);
-    }
 
-    // 获取所有场景物体位置
-    auto sceneObjectPositions = nonPlayerGenerator->getAllSceneObjectPositions();
-    for (const auto& pair : sceneObjectPositions) {
-        cocos2d::Vec2 position = pair.first;
-        std::pair<int, int> block = getBlockCoordinates(position);
-        blockToSceneObjects[block].push_back(position);
+std::vector<SceneObject*> BlockManager::getSceneObjectsInBlock(const std::pair<int, int>& block) {
+    auto it = blockToSceneObjects.find(block);
+    if (it != blockToSceneObjects.end()) {
+        return it->second;
+    }
+    return {};
+}
+
+void BlockManager::updateCollisionMap() {
+    // 清除原有的映射
+    sceneObjectCollisions.clear();
+
+    // 遍历当前玩家所在区块及其周围区块
+    for (int dx = -LOAD_RADIUS; dx <= LOAD_RADIUS; ++dx) {
+        for (int dy = -LOAD_RADIUS; dy <= LOAD_RADIUS; ++dy) {
+            std::pair<int, int> blockToUpdate = { playerBlock.first + dx, playerBlock.second + dy };
+
+            // 获取该区块中的所有场景物体
+            if (blockToSceneObjects.find(blockToUpdate) != blockToSceneObjects.end()) {
+                for (auto* sceneObject : blockToSceneObjects[blockToUpdate]) {
+                    // 将场景物体及其碰撞框添加到映射中
+                    sceneObjectCollisions[blockToUpdate][sceneObject] = sceneObject->getBoundingBox();
+                }
+            }
+        }
     }
 }

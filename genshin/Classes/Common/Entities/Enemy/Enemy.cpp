@@ -2,12 +2,12 @@
 #include "../Player/Player.h"
 // 构造函数
 Enemy::Enemy(float health, float attack, float defence, Element element, float attackRange, int aggressionLevel, float detectionRadius,
-     int baseLevel, const std::string& spriteFilename, int drop)
+     int baseLevel, const std::string& imagePath, int drop)
     : Entities(health, attack, defence, element, attackRange),  
     aggressionLevel(aggressionLevel),
     detectionRadius(detectionRadius),
     baseLevel(baseLevel),
-    spriteFilename(spriteFilename),
+    imagePath(imagePath),
     spriteGenerated(false),
     isAlive(true), // 默认设置为存活
     drop(drop){} 
@@ -18,7 +18,7 @@ Enemy::Enemy()
     aggressionLevel(1),
     detectionRadius(10.0f),
     baseLevel(1),
-    spriteFilename(""),
+    imagePath(""),
     spriteGenerated(false),
     isAlive(true), // 默认为存活
     drop(0){} // 默认设置为无掉落
@@ -40,7 +40,7 @@ int Enemy::getBaseLevel() const {
 
 // 获取精灵文件名
 std::string Enemy::getSpriteFilename() const {
-    return spriteFilename;
+    return imagePath;
 }
 
 // 受到伤害
@@ -133,7 +133,7 @@ void Enemy::printStatus() {
     CCLOG("Detection Radius: %.2f", detectionRadius);
     CCLOG("Attack Range: %.2f", attackRange); // 显示攻击范围
     CCLOG("Base Level: %d", baseLevel);
-    CCLOG("Sprite Filename: %s", spriteFilename.c_str());
+    CCLOG("Sprite Filename: %s", imagePath.c_str());
     CCLOG("Is Alive: %s", isAlive ? "Yes" : "No");  // 打印存活状态
 }
 
@@ -157,7 +157,7 @@ std::string Enemy::saveToJson() const {
     doc.AddMember("detectionRadius", detectionRadius, allocator);
     doc.AddMember("attackRange", attackRange, allocator); // 添加攻击范围
     doc.AddMember("baseLevel", baseLevel, allocator);
-    doc.AddMember("spriteFilename", rapidjson::Value(spriteFilename.c_str(), allocator), allocator);
+    doc.AddMember("imagePath", rapidjson::Value(imagePath.c_str(), allocator), allocator);
     doc.AddMember("isAlive", isAlive, allocator); // 保存存活状态
 
     rapidjson::StringBuffer buffer;
@@ -183,13 +183,13 @@ void Enemy::loadFromJson(const std::string& jsonString) {
     if (doc.HasMember("detectionRadius")) detectionRadius = doc["detectionRadius"].GetFloat();
     if (doc.HasMember("attackRange")) attackRange = doc["attackRange"].GetFloat();  // 加载攻击范围
     if (doc.HasMember("baseLevel")) baseLevel = doc["baseLevel"].GetInt();
-    if (doc.HasMember("spriteFilename")) spriteFilename = doc["spriteFilename"].GetString();
+    if (doc.HasMember("imagePath")) imagePath = doc["imagePath"].GetString();
     if (doc.HasMember("isAlive")) isAlive = doc["isAlive"].GetBool(); // 加载存活状态
 }
 
 // 带有新位置的clone
 Enemy* Enemy::clone(const cocos2d::Vec2& newPosition) {
-    Enemy* newEnemy = new Enemy(health, attack, defence, element, aggressionLevel, detectionRadius, attackRange, baseLevel, spriteFilename, drop);
+    Enemy* newEnemy = new Enemy(health, attack, defence, element, aggressionLevel, detectionRadius, attackRange, baseLevel, imagePath, drop);
     newEnemy->setPosition(newPosition);
     return newEnemy;
 }
@@ -197,9 +197,10 @@ Enemy* Enemy::clone(const cocos2d::Vec2& newPosition) {
 // 根据文件名生成精灵
 cocos2d::Sprite* Enemy::generateSprite() {
     if (!spriteGenerated) {
-        auto sprite = cocos2d::Sprite::create(spriteFilename);
+        auto sprite = cocos2d::Sprite::create(imagePath);
         if (sprite) {
             spriteGenerated = true;  // 精灵生成成功后标记为 true
+            this->addChild(sprite, 1);
             return sprite;
         }
     }
