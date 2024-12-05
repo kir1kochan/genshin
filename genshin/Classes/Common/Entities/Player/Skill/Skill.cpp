@@ -35,6 +35,28 @@ void Skill::resetCooldown() {
     currentCooldown = cooldown;
 }
 
-std::shared_ptr<Skill> Skill::findById(int skillId) {
-    return nullptr;//暂未实现
+// 从 JSON 字符串加载数据
+void Skill::loadFromJson(const std::string& jsonString) {
+    rapidjson::Document doc;
+    doc.Parse(jsonString.c_str());
+
+    if (doc.HasParseError() || !doc.IsObject()) {
+        CCLOG("Error parsing JSON for Skill");
+        return;
+    }
+
+    // 假设 JSON 字符串包含以下键值对: id, name, cooldown
+    if (doc.HasMember("id") && doc["id"].IsInt()) {
+        id = doc["id"].GetInt();
+    }
+
+    if (doc.HasMember("name") && doc["name"].IsString()) {
+        name = doc["name"].GetString();
+    }
+
+    if (doc.HasMember("cooldown") && doc["cooldown"].IsFloat()) {
+        cooldown = doc["cooldown"].GetFloat();
+    }
+
+    currentCooldown = cooldown;  // 可以选择将初始冷却时间设置为最大值
 }

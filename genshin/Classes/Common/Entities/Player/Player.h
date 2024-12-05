@@ -6,12 +6,15 @@
 #include "Classes/Common/Item/Equipment/Weapon/Weapon.h"
 #include "Classes/Common/Item/Equipment/Armor/Armor.h"
 #include "Classes/Common/Item/Equipment/Accessory/Accessory.h"
-#include "Skill/Skill.h"
-#include "Skill/AttackSkill/AttackSkill.h"
-#include "Skill/HealSkill/HealSkill.h"
-#include "Skill/ShieldSkill/ShieldSkill.h"
+//#include "Skill/Skill.h"
+//#include "Skill/AttackSkill/AttackSkill.h"
+//#include "Skill/HealSkill/HealSkill.h"
+//#include "Skill/ShieldSkill/ShieldSkill.h"
 #include "Classes/Common/Backpack/Backpack.h"
-
+class AttackSkill;
+class HealSkill;
+class ShiedSkill;
+class Skill;
 
 class Player : public Entities {
 private:
@@ -19,9 +22,9 @@ private:
     int level;       // 玩家等级
 
     // 装备（确保一个玩家只能佩戴一个装备）
-    Weapon* weapon;           // 武器
-    Armor* armor;             // 护甲
-    Accessory* accessory;     // 饰品
+    std::shared_ptr<Weapon> weapon;      //武器
+    std::shared_ptr<Armor> armor;         //护具
+    std::shared_ptr<Accessory> accessory;  //饰品
   
     // 技能系统
     std::vector<std::shared_ptr<Skill>> unlockedSkills; // 已解锁技能
@@ -60,6 +63,8 @@ public:
     // 攻击玩家敌人时根据元素相克
     void attackTarget(Enemy& target);
 
+    void attackTargetBySkill(Enemy& target, float attackValue, Element skillElment);
+
     // 玩家受到攻击
     void takeDamage(float damage) override;
 
@@ -77,9 +82,9 @@ public:
     void loadFromJson(const std::string& jsonString) override;
 
     // 装备管理
-    void equipWeapon(Weapon* newWeapon);
-    void equipArmor(Armor* newArmor);
-    void equipAccessory(Accessory* newAccessory);
+    void equipWeapon(std::shared_ptr<Weapon> newWeapon);
+    void equipArmor(std::shared_ptr<Armor> newArmor);
+    void equipAccessory(std::shared_ptr<Accessory> newAccessory);
 
 
     // 获取武器攻击范围
@@ -105,6 +110,8 @@ public:
     void addItemToBackpack(int id, int count);
     void removeItemFromBackpack(int itemId);
     void printBackpackInfo() const;
+
+    std::shared_ptr<Skill> creatSkillById(int id, const std::string& jsonString);
     
 };
 

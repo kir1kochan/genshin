@@ -30,8 +30,8 @@ public:
 
     virtual void activate(Player* user, Enemy& target) = 0;
 
-    // 根据技能ID查找技能
-    static std::shared_ptr<Skill> findById(int skillId);
+    // 从 JSON 字符串加载数据
+    virtual void loadFromJson(const std::string& jsonString);
 
 };
 

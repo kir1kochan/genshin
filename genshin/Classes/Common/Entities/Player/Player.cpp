@@ -7,7 +7,9 @@
 #include "Skill/AttackSkill/AttackSkill.h"
 #include "Skill/HealSkill/HealSkill.h"
 #include "Skill/ShieldSkill/ShieldSkill.h"
+#include "Skill/Skill.h"
 #include "Classes/Common/Backpack/Backpack.h"
+#include <memory>
 
 Player::Player(float health, Element element, float attackRange)
     : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), backpack(){
@@ -82,6 +84,35 @@ void Player::attackTarget(Enemy& target) {
     updateAttackCooldown(skillCooldownInterval);
 }
 
+void Player::attackTargetBySkill(Enemy& target, float attackValue, Element skillElment)
+{
+    // 检查攻击是否可以执行（冷却时间）
+    if (!canAttack()) {
+        CCLOG("Cannot attack yet, cooldown active.");
+        return;
+    }
+
+    // 检查目标是否在攻击范围内
+    if (!attackInRange(target)) {
+        CCLOG("Target is out of range.");
+        return;
+    }
+
+    float damage = attackValue;
+    
+
+    // 考虑属性相克
+    float elementModifier = calculateElementalDamageModifier(skillElment, target.getElement());
+
+    // 计算最终伤害
+    damage *= elementModifier;
+
+    // 给目标造成伤害
+    target.takeDamage(damage);
+    // 更新攻击冷却
+    updateAttackCooldown(skillCooldownInterval);
+}
+
 void Player::printStatus() {
     Entities::printStatus();
     CCLOG("Experience: %d", experience);
@@ -110,7 +141,7 @@ void Player::printStatus() {
     }
 }
 
-void Player::equipWeapon(Weapon* newWeapon) {
+void Player::equipWeapon(std::shared_ptr<Weapon> newWeapon) {
     if (newWeapon != nullptr) {
         weapon = newWeapon;
         CCLOG("Equipped Weapon: %s", weapon->getName().c_str());
@@ -119,14 +150,14 @@ void Player::equipWeapon(Weapon* newWeapon) {
     }
 }
 
-void Player::equipArmor(Armor* newArmor) {
+void Player::equipArmor(std::shared_ptr<Armor> newArmor) {
     if (newArmor != nullptr) {
         armor = newArmor;
         CCLOG("Equipped Armor: %s", armor->getName().c_str());
     }
 }
 
-void Player::equipAccessory(Accessory* newAccessory) {
+void Player::equipAccessory(std::shared_ptr<Accessory> newAccessory) {
     if (newAccessory != nullptr) {
         accessory = newAccessory;
         CCLOG("Equipped Accessory: %s", accessory->getName().c_str());
@@ -144,7 +175,7 @@ float Player::getWeaponAttackSpeed() const {
 }
 
 void Player::unlockSkill(const std::shared_ptr<Skill>& newSkill) {
-    unlockedSkills.push_back(newSkill);
+    unlockedSkills.push_back(newSkill);  
     CCLOG("Unlocked skill: %s", newSkill->getName().c_str());
 }
 
@@ -154,21 +185,7 @@ bool Player::equipSkill(int skillSlot, const std::shared_ptr<Skill>& skill) {
         return false;
     }
 
-    // 检查技能是否已装备
-    auto it = std::find(skillBar.begin(), skillBar.end(), skill);
-    if (it != skillBar.end()) {
-        if (it == skillBar.begin() + skillSlot) {
-            CCLOG("Skill %s is already equipped in the same slot.", skill->getName().c_str());
-            return false; // 技能已在目标槽位
-        }
-
-        // 技能已装备但在不同槽位，交换
-        std::iter_swap(it, skillBar.begin() + skillSlot);
-        CCLOG("Swapped skill %s to slot %d.", skill->getName().c_str(), skillSlot);
-        return true;
-    }
-
-    skillBar[skillSlot] = skill;
+    skillBar[skillSlot] = skill;  // 使用智能指针
     CCLOG("Equipped skill: %s in slot %d", skill->getName().c_str(), skillSlot);
     return true;
 }
@@ -180,7 +197,7 @@ void Player::unequipSkill(int skillSlot) {
     }
 
     CCLOG("Unequipped skill: %s from slot %d", skillBar[skillSlot]->getName().c_str(), skillSlot);
-    skillBar[skillSlot] = nullptr;
+    skillBar[skillSlot] = nullptr;  // 智能指针会自动管理内存
 }
 
 void Player::useSkill(int skillSlot, Enemy& target) {
@@ -189,14 +206,14 @@ void Player::useSkill(int skillSlot, Enemy& target) {
         return;
     }
 
-    auto skill = skillBar[skillSlot];
+    auto skill = skillBar[skillSlot];  
     if (skill->isOnCooldown()) {
         CCLOG("Skill %s is on cooldown.", skill->getName().c_str());
         return;
     }
 
-    skill->activate(this, target);
-    skill->resetCooldown();
+    skill->activate(this, target);  
+    skill->resetCooldown();        
 }
 
 void Player::updateSkillsCooldown(float deltaTime) {
@@ -218,6 +235,7 @@ void Player::removeItemFromBackpack(int itemId) {
 void Player::printBackpackInfo() const {
     backpack.printInfo();
 }
+
 
 void Player::updateshieldTime(float deltaTime)
 {
@@ -369,30 +387,27 @@ void Player::loadFromJson(const std::string& jsonString) {
     // 反序列化装备（通过 ID 恢复指针）
     if (doc.HasMember("weapon")) {
         int weaponid = doc["weapon"].GetInt();
-        Item* item = backpack.idToItemMap[weaponid];
-
-        // 使用 dynamic_cast 将基类指针转换为派生类指针
-        weapon = dynamic_cast<Weapon*>(item);
-        if (weapon == nullptr) {
-            // 处理转换失败的情况（如该物品不是 Weapon 类型）
+        auto item = backpack.idToItemMap[weaponid];
+        weapon = std::dynamic_pointer_cast<Weapon>(item);
+        if (!weapon) {
             CCLOG("Failed to cast item to Weapon.");
         }
     }
+
     if (doc.HasMember("armor")) {
         int armorid = doc["armor"].GetInt();
-        Item* item = backpack.idToItemMap[armorid];
-        armor = dynamic_cast<Armor*>(item);
-        if (armor == nullptr) {
-            // 处理转换失败的情况（如该物品不是 Armor 类型）
+        auto item = backpack.idToItemMap[armorid];
+        armor = std::dynamic_pointer_cast<Armor>(item);
+        if (!armor) {
             CCLOG("Failed to cast item to Armor.");
         }
     }
+
     if (doc.HasMember("accessory")) {
         int accessoryid = doc["accessory"].GetInt();
-        Item* item = backpack.idToItemMap[accessoryid];
-        accessory = dynamic_cast<Accessory*>(item);
-        if (accessory == nullptr) {
-            // 处理转换失败的情况（如该物品不是 Accessory 类型）
+        auto item = backpack.idToItemMap[accessoryid];
+        accessory = std::dynamic_pointer_cast<Accessory>(item);
+        if (!accessory) {
             CCLOG("Failed to cast item to Accessory.");
         }
     }
@@ -401,16 +416,55 @@ void Player::loadFromJson(const std::string& jsonString) {
     if (doc.HasMember("unlockedSkills") && doc["unlockedSkills"].IsArray()) {
         unlockedSkills.clear();
         for (const auto& skillId : doc["unlockedSkills"].GetArray()) {
-            unlockedSkills.push_back(Skill::findById(skillId.GetInt()));
+            int skillIdInt = skillId.GetInt();
+            std::shared_ptr<Skill> skill = creatSkillById(skillIdInt, jsonString);  // 创建技能并加载
+            unlockedSkills.push_back(skill);
         }
     }
 
     if (doc.HasMember("skillBar") && doc["skillBar"].IsArray()) {
         skillBar.clear();
         for (const auto& skillId : doc["skillBar"].GetArray()) {
-            skillBar.push_back(skillId.GetInt() == 0 ? nullptr : Skill::findById(skillId.GetInt()));
+            int skillIdInt = skillId.GetInt();
+            std::shared_ptr<Skill> skill = creatSkillById(skillIdInt, jsonString);  // 创建技能并加载
+            skillBar.push_back(skill);
         }
     }
 
     if (doc.HasMember("currentShield")) currentShield = doc["currentShield"].GetFloat();
+}
+std::shared_ptr<Skill> Player::creatSkillById(int id, const std::string& jsonString) {
+    int skillType = id / 10000;
+    int subType = (id / 100) % 100;
+
+    std::shared_ptr<Skill> skill = nullptr;
+    skill = std::make_shared<ShieldSkill>(id, "Shield Skill", 15.0f, 100.0f, 20.0f);
+
+    switch (skillType) {
+    case 9:
+        switch (subType) {
+        case 1:
+            skill = std::make_shared<AttackSkill>(id, "Attack Skill", 10.0f, 50.0f, 10.0f, Element::FIRE);
+            break;
+        case 2:
+            skill = std::make_shared<HealSkill>(id, "Heal Skill", 5.0f, 30.0f);
+            break;
+        case 3:
+            skill = std::make_shared<ShieldSkill>(id, "Shield Skill", 15.0f, 100.0f, 20.0f);
+            break;
+        default:
+            CCLOG("Unknown skill subtype %d", subType);
+            break;
+        }
+        break;
+    default:
+        CCLOG("Unknown skill type %d", skillType);
+        break;
+    }
+    
+    if (skill) {
+        skill->loadFromJson(jsonString);  // 加载技能的其他数据
+    }
+
+    return skill;
 }

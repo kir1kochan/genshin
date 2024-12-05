@@ -96,6 +96,15 @@
     <ClCompile Include="..\Classes\Common\Item\Equipment\Armor\Armor.cpp">
       <Filter>src\Classes\Common\Item</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Common\Entities\Player\Skill\ShieldSkill\ShieldSkill.cpp">
+      <Filter>src\Classes\Common\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Common\Entities\Player\Skill\HealSkill\HealSkill.cpp">
+      <Filter>src\Classes\Common\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Common\Entities\Player\Skill\AttackSkill\AttackSkill.cpp">
+      <Filter>src\Classes\Common\Skill</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -160,6 +169,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Common\Item\Equipment\Accessory\Accessory.h">
       <Filter>src\Classes\Common\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\Entities\Player\Skill\ShieldSkill\ShieldSkill.h">
+      <Filter>src\Classes\Common\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\Entities\Player\Skill\HealSkill\HealSkill.h">
+      <Filter>src\Classes\Common\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\Entities\Player\Skill\AttackSkill\AttackSkill.h">
+      <Filter>src\Classes\Common\Skill</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

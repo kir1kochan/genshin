@@ -17,6 +17,9 @@ public:
 
     // 激活护甲技能
     void activate(Player* user, Enemy& target) override;
+
+    // 从 JSON 字符串加载数据
+    void loadFromJson(const std::string& jsonString) override;
 };
 
 #endif // SHIELDSKILL_H

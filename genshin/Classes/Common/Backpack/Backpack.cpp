@@ -6,20 +6,18 @@
 #include <fstream>
 #include <sstream>
 
-
 // 构造函数，初始化背包，将所有物品指针数量初始化为0
-Backpack::Backpack(const std::vector<Item*> itemPointers) {
-    for (auto item : itemPointers) {
+Backpack::Backpack(const std::vector<std::shared_ptr<Item>>& itemPointers) {
+    for (auto& item : itemPointers) {
         items[item] = 0;  // 将每个物品指针的数量初始化为0
         idToItemMap[item->getId()] = item;  // 为每个物品创建ID到物品指针的映射
     }
 }
 
-Backpack::Backpack(){
-}
+Backpack::Backpack() {}
 
 // 通过物品指针添加物品
-void Backpack::addItem(Item* item, int count) {
+void Backpack::addItem(const std::shared_ptr<Item>& item, int count) {
     if (items.find(item) != items.end()) {
         items[item] += count;  // 增加数量
     }
@@ -31,7 +29,7 @@ void Backpack::addItem(Item* item, int count) {
 // 通过物品ID添加物品
 void Backpack::addItem(int itemId, int count) {
     if (idToItemMap.find(itemId) != idToItemMap.end()) {
-        Item* item = idToItemMap[itemId];
+        auto item = idToItemMap[itemId];
         addItem(item, count);  // 调用通过物品指针添加物品的函数
     }
     else {
@@ -40,7 +38,7 @@ void Backpack::addItem(int itemId, int count) {
 }
 
 // 通过物品指针移除物品
-void Backpack::removeItem(Item* item, int count) {
+void Backpack::removeItem(const std::shared_ptr<Item>& item, int count) {
     if (items.find(item) != items.end()) {
         if (items[item] >= count) {
             items[item] -= count;  // 减少数量
@@ -58,7 +56,7 @@ void Backpack::removeItem(Item* item, int count) {
 // 通过物品ID移除物品
 void Backpack::removeItem(int itemId, int count) {
     if (idToItemMap.find(itemId) != idToItemMap.end()) {
-        Item* item = idToItemMap[itemId];
+        auto item = idToItemMap[itemId];
         removeItem(item, count);  // 调用通过物品指针移除物品的函数
     }
     else {
@@ -114,7 +112,7 @@ void Backpack::loadFromJson(const std::string& jsonString) {
             std::string jsonStr = buffer.GetString();  // 获取转换后的字符串
 
             // 使用转换后的字符串来创建物品
-            Item* item = createItemById(itemId, jsonStr);
+            auto item = createItemById(itemId, jsonStr);
 
             if (item) {
                 addItem(item, quantity);  // 通过物品指针添加物品到背包
@@ -151,46 +149,46 @@ void Backpack::loadFromFile(const std::string& filePath) {
     }
 }
 
-Item* Backpack::createItemById(int id, const std::string& jsonString) {
+std::shared_ptr<Item> Backpack::createItemById(int id, const std::string& jsonString) {
     int itemType = id / 10000;   // 物品类型：ID的第一部分
     int subType = (id / 100) % 100; // 子类型：ID的第二部分
 
-    // 根据物品类型和子类型和字符串创建不同的物品对象
-    Item* item = nullptr;  // 在这里声明一个指针变量，用于存储物品对象
-
+    std::shared_ptr<Item> item = nullptr;
     switch (itemType) {
     case 1: // 装备类
         switch (subType) {
         case 101: {
-            item = new Weapon(id, "Weapon Name", 5.0f, 10.0f, 1.0f);
-            item->loadFromJson(jsonString);
-            return item;
+            item = std::make_shared<Weapon>(id, "Weapon Name", 5.0f, 10.0f, 1.0f);
+            break;
         }
         case 102: {
-            item = new Armor(id, "Armor Name", 5);
-            item->loadFromJson(jsonString);
-            return item;
+            item = std::make_shared<Armor>(id, "Armor Name", 5);
+            break;
         }
         case 103: {
-            item = new Accessory(id, "Accessory Name", 3);
-            item->loadFromJson(jsonString);
-            return item;
+            item = std::make_shared<Accessory>(id, "Accessory Name", 3);
+            break;
         }
-        default: break;
+        default:
+            CCLOG("Error: Unsupported equipment subtype %d for ID %d", subType, id);
+            break;
         }
         break;
     case 2: // 药剂类
-        item = new Potion(id, "Health Potion", 50);
-        item->loadFromJson(jsonString);
-        return item;
+        item = std::make_shared<Potion>(id, "Health Potion", 50);
+        break;
     case 3: // 食物类
-        item = new Food(id, "Apple", 20);
-        item->loadFromJson(jsonString);
-        return item;
+        item = std::make_shared<Food>(id, "Apple", 20);
+        break;
     default:
+        CCLOG("Error: Unsupported item type %d for ID %d", itemType, id);
         break;
     }
-    
 
-    return nullptr;  // 返回空指针，表示未找到有效类型
+    // 如果创建了物品对象，加载 JSON 数据
+    if (item) {
+        item->loadFromJson(jsonString);
+    }
+
+    return item; 
 }

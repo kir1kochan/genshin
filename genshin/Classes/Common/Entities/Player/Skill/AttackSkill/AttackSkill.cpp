@@ -1,9 +1,11 @@
 #include "AttackSkill.h"
+#include "AttackSkill.h"
 #include "cocos2d.h"
 #include "../../Player.h"
 
 AttackSkill::AttackSkill(int id, const std::string& name, float cooldown, float attackPower, float range, Element element)
     : Skill(id, name, cooldown), attackPower(attackPower), range(range),element(element){}
+ 
 
 // 获取攻击力
 float AttackSkill::getAttackPower() const {
@@ -25,6 +27,31 @@ void AttackSkill::activate(Player* user, Enemy& target) {
     }
 
     // 对目标造成伤害
-    user->attackTarget(target, attackPower,element);
+    user->attackTargetBySkill(target, attackPower,element);
     CCLOG("%s dealt %.2f damage to target.", name.c_str(), attackPower);
+}
+
+void AttackSkill::loadFromJson(const std::string& jsonString) {
+    Skill::loadFromJson(jsonString);  // 加载基类的属性
+
+    rapidjson::Document doc;
+    doc.Parse(jsonString.c_str());
+
+    if (doc.HasParseError() || !doc.IsObject()) {
+        CCLOG("Error parsing JSON for AttackSkill");
+        return;
+    }
+
+    // 解析 AttackSkill 特有的属性
+    if (doc.HasMember("attackPower") && doc["attackPower"].IsFloat()) {
+        attackPower = doc["attackPower"].GetFloat();
+    }
+
+    if (doc.HasMember("range") && doc["range"].IsFloat()) {
+        range = doc["range"].GetFloat();
+    }
+
+    if (doc.HasMember("element") && doc["element"].IsInt()) {
+        element = static_cast<Element>(doc["element"].GetInt());  // 假设 Element 是一个枚举
+    }
 }

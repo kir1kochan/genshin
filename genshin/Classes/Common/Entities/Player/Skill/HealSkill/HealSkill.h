@@ -12,9 +12,13 @@ private:
 
 public:
     HealSkill(int id, const std::string& name, float cooldown, float healAmount);
+    HealSkill();
 
     // 激活治疗技能
     void activate(Player* user, Enemy& target) override;
+
+    // 从 JSON 字符串加载数据
+    void loadFromJson(const std::string& jsonString) override;
 };
 
 #endif // HEAL_SKILL_H

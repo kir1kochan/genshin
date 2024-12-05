@@ -16,13 +16,16 @@ private:
 
 public:
     AttackSkill(int id, const std::string& name, float cooldown, float attackPower, float range, Element element);
-
+    
     // 获取攻击力与范围
     float getAttackPower() const;
     float getRange() const;
 
     // 实现技能激活
     void activate(Player* user, Enemy& target) override;
+
+    // 从 JSON 字符串加载数据
+    void loadFromJson(const std::string& jsonString) override;
 };
 
 #endif // ATTACK_SKILL_H
