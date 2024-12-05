@@ -11,14 +11,14 @@ private:
     int aggressionLevel;         // 敌人的攻击性等级（决定敌人的攻击频率或强度）
     float detectionRadius;       // 索敌半径
     int baseLevel;               // 基准等级
-    std::string spriteFilename;  // 代表怪物图像文件名
+    std::string imagePath;  // 代表怪物图像文件名
     bool spriteGenerated;        // 是否已生成精灵
     bool isAlive;                // 是否存活
     int drop;                    // 掉落物id（若无则为0）
 public:
     // 构造函数
     Enemy(float health, float attack, float defence, Element element, float attackRange, int aggressionLevel, float detectionRadius,
-        int baseLevel, const std::string& spriteFilename, int drop);
+        int baseLevel, const std::string& imagePath, int drop);
 
     // 默认构造函数
     Enemy();

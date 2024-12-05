@@ -2,67 +2,67 @@
 #define __BLOCK_MANAGER_H__
 
 #include "cocos2d.h"
-#include "NonPlayerGenerator.h"
-#include "Enemy.h"
 #include "SceneObject.h"
+#include "Enemy.h"
 #include <unordered_map>
 #include <vector>
 #include <set>
+#include <utility>
 
-// 区块大小定义
-#define BLOCK_SIZE 128
-#define LOAD_RADIUS 3
-#define UNLOAD_RADIUS 4
-
-namespace std {
-    template <typename T1, typename T2>
-    struct hash<pair<T1, T2>> {
-        size_t operator()(const pair<T1, T2>& p) const {
-            return hash<T1>()(p.first) ^ hash<T2>()(p.second);
-        }
-    };
-}
+#define BLOCK_SIZE 1280
+#define LOAD_RADIUS 2
+#define UNLOAD_RADIUS 3
 
 class BlockManager {
 public:
     BlockManager();
     ~BlockManager();
 
-    // 添加怪物到特定区块
-    void addEnemyToBlock(Enemy* enemy);
-
-    // 获取玩家所在的区块
     std::pair<int, int> getBlockCoordinates(const cocos2d::Vec2& position) const;
-
-    // 获取某个区块内的怪物
-    std::vector<Enemy*> getEnemiesInBlock(const std::pair<int, int>& blockCoordinates);
-
-    // 获取某个区块内的场景物体
-    std::vector<SceneObject*> getSceneObjectsInBlock(const std::pair<int, int>& blockCoordinates);
-
-    // 更新区块内容，加载玩家附近的区块，卸载远离的区块
-    void updateBlocksForPlayer(cocos2d::Node* playerNode);
-
-    // 清理区块
+    void updateBlocksForPlayer(Player* playerNode);
+    void handleClickEvent(const cocos2d::Vec2& clickPosition);
     void clear();
+    
+    // 更新玩家所在区域的物体的碰撞箱的映射
+    void updateCollisionMap();
+
+    // 获取指定区块的所有敌人
+    std::vector<Enemy*> getEnemiesInBlock(const std::pair<int, int>& block);
+
+    // 获取指定区块的所有场景物体
+    std::vector<SceneObject*> getSceneObjectsInBlock(const std::pair<int, int>& block);
 
 private:
-    // 用于生成非玩家的场景物体和敌人
-    NonPlayerGenerator* nonPlayerGenerator;
+    struct PairHash {
+        template <class T1, class T2>
+        std::size_t operator()(const std::pair<T1, T2>& pair) const {
+            return std::hash<T1>()(pair.first) ^ std::hash<T2>()(pair.second);
+        }
+    };
 
-    // 存储每个区块中的敌人
-    std::unordered_map<std::pair<int, int>, std::vector<Enemy*>, std::hash<int>> blockToEnemies;
+    // 从 TMX 文件加载对象数据
+    void loadObjectsFromTMX(const std::string& tmxFile);
 
-    // 存储每个区块中的场景物体
-    std::unordered_map<std::pair<int, int>, std::vector<SceneObject*>, std::hash<int>> blockToSceneObjects;
+    // 处理点击事件
+    void checkCollisions(const cocos2d::Vec2& clickPosition);
 
-    // 存储已加载的区块
+    // 存储区块状态（true为加载，false为卸载）
+    std::unordered_map<std::pair<int, int>, bool, PairHash> blockStatus;
+
+    // 已加载区块集合
     std::set<std::pair<int, int>> loadedBlocks;
 
-    // 从 NonPlayerGenerator 中加载所有敌人和场景物体位置并存储到区块中
-    void loadNonPlayerPositions();
+    // 存储区块内的敌人
+    std::unordered_map<std::pair<int, int>, std::vector<Enemy*>, PairHash> blockToEnemies;
 
-    // 未来的地图加载也考虑纳入其中
+    // 存储区块内的场景物体
+    std::unordered_map<std::pair<int, int>, std::vector<SceneObject*>, PairHash> blockToSceneObjects;
+
+    // 玩家当前所在的区块
+    std::pair<int, int> playerBlock = { 0, 0 };
+    // 存储玩家当前区域的所有SceneObject的碰撞框和实例的映射
+    std::unordered_map<std::pair<int, int>, std::unordered_map<SceneObject*, cocos2d::Rect>, PairHash> sceneObjectCollisions;
 };
+
 
 #endif // __BLOCK_MANAGER_H__
