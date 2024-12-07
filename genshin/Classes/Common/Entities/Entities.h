@@ -19,9 +19,18 @@ protected:
 
     float attackRange;     // 攻击范围
 
+    float baseAttack;
+
 
     // 存储实体的状态，如冰冻、中毒、燃烧等
-    std::map<std::string, float> statusEffects; // 状态名 -> 持续时间
+    std::map<std::string, float> statusEffects = {
+          {"Frozen", 0.0f},    // 冰冻状态，初始持续时间为0
+          {"Burning", 0.0f},   // 燃烧状态
+          {"Poisoned", 0.0f},  // 中毒状态
+          {"Paralyzed", 0.0f}, // 麻痹状态
+          {"Weakened", 0.0f},  // 削弱状态
+          {"Drenched", 0.0f},  // 湿润状态
+    };
 
     // 攻击冷却
     float attackCooldownAccumulator = 0.0f;   // 累积时间
@@ -95,6 +104,8 @@ public:
 
     // 更新状态效果
     virtual void updateStatusEffects(float deltaTime);
+    bool hasStatusEffect(const std::string& effect) const;
+    void applyElementalEffects(Entities& target, Element skillElement);
 };
 
 #endif // ENTITIES_H

@@ -111,6 +111,8 @@ void Player::attackTargetBySkill(Enemy& target, float attackValue, Element skill
     target.takeDamage(damage);
     // 更新攻击冷却
     updateAttackCooldown(skillCooldownInterval);
+    // 增加组合技能的逻辑和技能元素的特殊效果
+    applyElementalEffects(target, skillElment);
 }
 
 void Player::printStatus() {
