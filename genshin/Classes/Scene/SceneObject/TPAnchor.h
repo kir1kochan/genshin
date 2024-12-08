@@ -5,7 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
-#include "Player.h"  // 假设 Player 类已经存在
+#include "Player.h"  
 
 class TPAnchor : public cocos2d::Node {
 public:
