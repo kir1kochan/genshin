@@ -216,5 +216,5 @@ void Backpack::sendFoodBroadcast() {
     CCLOG("Backpack updated.");
     cocos2d::EventCustom event("BACKPACK_UPDATED");
     event.setUserData(this);  // 将背包指针传递给监听者
-    Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);  // 发送事件
+    cocos2d::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);  // 发送事件
 }
