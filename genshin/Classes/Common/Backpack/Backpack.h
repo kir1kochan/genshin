@@ -61,6 +61,12 @@ public:
     // 解析 ID 并返回对应的物品类型
     std::shared_ptr<Item> createItemById(int id, const std::string& jsonString);
 
+    // 根据物品ID获取物品数量
+    int getItemCountById(int itemId) const;
+
+    // 发送广播，标识背包食物相关有变动
+    void sendFoodBroadcast();
+
     friend class Player;
 private:
     std::unordered_map<std::shared_ptr<Item>, int> items;  // 物品指针和数量的映射
