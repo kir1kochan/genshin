@@ -2,7 +2,7 @@
 #include "Classes/Common/EventManager/KeyboardEventManager.h" 
 #include "Classes/Common/EventManager/MainGameMouseEventManager.h"
 #include "Classes/Common/Entities/Player/Player.h"
-#include "proj.win32/ToolFunction.h"
+#include "Classes/Tools/ToolFunction.h"
 USING_NS_CC;
 
 Scene* TestScene::createScene()
