@@ -31,6 +31,9 @@ void Backpack::addItem(int itemId, int count) {
     if (idToItemMap.find(itemId) != idToItemMap.end()) {
         auto item = idToItemMap[itemId];
         addItem(item, count);  // 调用通过物品指针添加物品的函数
+        if (itemId / 10000 == 3) {
+            sendFoodBroadcast();
+        }
     }
     else {
         CCLOG("Item with ID %d not found in backpack", itemId);
@@ -58,6 +61,9 @@ void Backpack::removeItem(int itemId, int count) {
     if (idToItemMap.find(itemId) != idToItemMap.end()) {
         auto item = idToItemMap[itemId];
         removeItem(item, count);  // 调用通过物品指针移除物品的函数
+        if (itemId / 10000 == 3) {
+            sendFoodBroadcast();
+        }
     }
     else {
         CCLOG("Item with ID %d not found in backpack", itemId);
@@ -191,4 +197,24 @@ std::shared_ptr<Item> Backpack::createItemById(int id, const std::string& jsonSt
     }
 
     return item; 
+}
+
+// 根据物品ID获取物品数量
+int Backpack::getItemCountById(int itemId) const {
+    if (idToItemMap.find(itemId) != idToItemMap.end()) {
+        auto item = idToItemMap.at(itemId);
+        auto it = items.find(item);
+        if (it != items.end()) {
+            return it->second;  // 返回该物品的数量
+        }
+    }
+    return 0;  // 如果没有找到该物品ID，返回0
+}
+
+// 发送广播，标识背包食物相关有变动
+void Backpack::sendFoodBroadcast() {
+    CCLOG("Backpack updated.");
+    cocos2d::EventCustom event("BACKPACK_UPDATED");
+    event.setUserData(this);  // 将背包指针传递给监听者
+    Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);  // 发送事件
 }
