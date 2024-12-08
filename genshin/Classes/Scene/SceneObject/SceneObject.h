@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 #include <string>
 #include <unordered_map>
-#include "../System/FishingSystem.h"
+#include "../../System/FishingSystem.h"
 
 class SceneObject : public cocos2d::Node {
 public:
