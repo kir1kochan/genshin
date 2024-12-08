@@ -2,7 +2,6 @@
 #include "Classes/Common/EventManager/KeyboardEventManager.h" 
 #include "Classes/Common/EventManager/MainGameMouseEventManager.h"
 #include "Classes/Common/Entities/Player/Player.h"
-#include "Classes/Tools/ToolFunction.h"
 USING_NS_CC;
 
 Scene* TestScene::createScene()
@@ -32,7 +31,7 @@ bool TestScene::init()
     director->getOpenGLView()->setDesignResolutionSize(1920, 1080, ResolutionPolicy::NO_BORDER);
 
     // 如果地图太小，可以调整缩放比例，放大地图
-    auto map = TMXTiledMap::create("/maps/new.tmx");
+    auto map = TMXTiledMap::create("/maps/test.tmx");
     if (map) {
         map->setName("background");
         this->addChild(map, -1);  // 将地图作为背景层添加到场景中
@@ -62,14 +61,13 @@ bool TestScene::init()
 
     // 加入玩家
     scheduleOnce([this,map](float dt) {
-        auto objectLayer = map->getObjectGroup("object 1");  // 获取对应图层
+        auto objectLayer = map->getObjectGroup("Objects");  // 获取对应图层
         auto spawnPoint = objectLayer->getObject("SpawnPoint");  // 获取对象点
         float x = spawnPoint["x"].asFloat();
         float y = spawnPoint["y"].asFloat();
-        Vec2 playerInitialPosition = convertToSecenPoint(map, x, y);  // 转换获取当前点的世界坐标
         auto playerspirt = Sprite::create("player.png");
         auto player = new Player(playerspirt);
-        player->setPosition(playerInitialPosition.x, playerInitialPosition.y);
+        player->setPosition(x, y);
 
         this->addChild(player, 1);  // 将玩家加入到场景中
         player->setVisible(true);
@@ -93,7 +91,7 @@ bool TestScene::init()
 void TestScene::loadBackgroundMap()
 {
     // 加载 TMX 地图
-    auto map = TMXTiledMap::create("/maps/test.tmx");
+    auto map = TMXTiledMap::create("/maps/farm.tmx");
     map->setName("background");
     this->addChild(map, -1);  // 将地图作为背景层添加到场景中
 }
