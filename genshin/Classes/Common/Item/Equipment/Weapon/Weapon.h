@@ -22,6 +22,12 @@ public:
 
     // 重写打印信息函数
     void printInfo() const override;
+
+    // 将武器数据序列化为 JSON 字符串
+    std::string saveToJson() const override;
+
+    // 从 JSON 字符串加载武器数据
+    void loadFromJson(const std::string& jsonString) override;
 };
 
 #endif // WEAPON_H

@@ -1,0 +1,60 @@
+{
+  "attckSkill": [
+    {
+      "id": 910101,
+      "name": "Fireball",
+      "cooldown": 3.0,
+      "attackPower": 80.0,
+      "range": 12.0,
+      "element": 0
+    },
+    {
+      "id": 910102,
+      "name": "Water Blast",
+      "cooldown": 4.0,
+      "attackPower": 70.0,
+      "range": 14.0,
+      "element": 1
+    },
+    {
+      "id": 910103,
+      "name": "Thunderstrike",
+      "cooldown": 5.0,
+      "attackPower": 85.0,
+      "range": 18.0,
+      "element": 2
+    },
+    {
+      "id": 910104,
+      "name": "Earthquake",
+      "cooldown": 6.0,
+      "attackPower": 90.0,
+      "range": 10.0,
+      "element": 3
+    },
+    {
+      "id": 910105,
+      "name": "Air Blast",
+      "cooldown": 3.5,
+      "attackPower": 75.0,
+      "range": 16.0,
+      "element": 4
+    },
+    {
+      "id": 910106,
+      "name": "Ice Shard",
+      "cooldown": 4.5,
+      "attackPower": 65.0,
+      "range": 13.0,
+      "element": 5
+    },
+    {
+      "id": 910107,
+      "name": "Vine Lash",
+      "cooldown": 3.0,
+      "attackPower": 60.0,
+      "range": 11.0,
+      "element": 6
+    }
+  ]
+}

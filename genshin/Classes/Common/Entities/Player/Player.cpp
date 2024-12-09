@@ -67,9 +67,9 @@ void Player::attackTarget(Enemy& target) {
     }
     
     // 默认伤害
-    float damage = 10.0f;
+    float damage = attack;
     if (weapon != nullptr) {
-        damage = weapon->getPower();
+        damage += weapon->getPower();
     }
 
     // 考虑属性相克
@@ -80,6 +80,12 @@ void Player::attackTarget(Enemy& target) {
 
     // 给目标造成伤害
     target.takeDamage(damage);
+
+    //持对方元素的饰品，可以有吸血效果
+    if (accessory != nullptr && target.getElement() == accessory->getElement()) {
+        this->heal(damage *= accessory->getPower());
+    }
+
     // 更新攻击冷却
     updateAttackCooldown(skillCooldownInterval);
 }
@@ -106,6 +112,14 @@ void Player::attackTargetBySkill(Enemy& target, float attackValue, Element skill
 
     // 计算最终伤害
     damage *= elementModifier;
+
+    elementModifier= calculateElementalDamageModifier(element, target.getElement());//技能基础上加上玩家的基础伤害，保证技能的伤害高于普通攻击
+    // 默认伤害
+    float baseDamage = attack;
+    if (weapon != nullptr) {
+        baseDamage += weapon->getPower();
+    }
+    damage += (elementModifier * baseDamage);
 
     // 给目标造成伤害
     target.takeDamage(damage);
@@ -252,6 +266,10 @@ void Player::updateshieldTime(float deltaTime)
 }
 
 void Player::takeDamage(float damage) {
+    if (armor != nullptr) {
+        damage *= armor->getPower();//加入护甲免伤的逻辑
+    }
+
     if (currentShield > 0.0f) {
         // 扣除护甲值
         float absorbed = std::min(damage, currentShield);
