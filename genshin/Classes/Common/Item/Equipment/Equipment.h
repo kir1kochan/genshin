@@ -36,7 +36,7 @@ public:
     // 虚析构函数，确保派生类可以正确析构
     virtual ~Equipment() {}
 
-private:
+protected:
     int power;         // 装备的攻击力或防御力
 };
 

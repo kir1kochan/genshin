@@ -14,7 +14,7 @@ protected:
     float health;          // 当前血量
     float maxHealth;       // 最大血量
     float attack;
-    float defence;
+    float defence;  
     Element element;       // 元素属性
 
     float attackRange;     // 攻击范围
