@@ -172,7 +172,7 @@ std::shared_ptr<Item> Backpack::createItemById(int id, const std::string& jsonSt
             break;
         }
         case 103: {
-            item = std::make_shared<Accessory>(id, "Accessory Name", 3);
+            item = std::make_shared<Accessory>(id, "Accessory Name", 3,Element::FIRE);
             break;
         }
         default:

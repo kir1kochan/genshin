@@ -5,8 +5,8 @@
 
 
 
-ShieldSkill::ShieldSkill(int id, const std::string& name, float cooldown, float shieldValue, float shieldTime) 
-    : Skill(id, name, cooldown), shieldValue(shieldValue), shieldTime(shieldTime){}
+ShieldSkill::ShieldSkill(int id, const std::string& name, float cooldown, float staminaCost, float shieldValue, float shieldTime)
+    : Skill(id, name, cooldown, staminaCost), shieldValue(shieldValue), shieldTime(shieldTime){}
 
 // 激活护盾技能
 void ShieldSkill::activate(Player* user, Enemy& target) {

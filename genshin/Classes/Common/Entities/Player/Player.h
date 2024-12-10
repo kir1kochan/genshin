@@ -21,6 +21,9 @@ private:
     int experience;  // 玩家经验值
     int level;       // 玩家等级
 
+    float stamina;      // 当前体力
+    float maxStamina;   // 最大体力
+
     // 装备（确保一个玩家只能佩戴一个装备）
     std::shared_ptr<Weapon> weapon;      //武器
     std::shared_ptr<Armor> armor;         //护具
@@ -28,7 +31,8 @@ private:
   
     // 技能系统
     std::vector<std::shared_ptr<Skill>> unlockedSkills; // 已解锁技能
-    std::vector<std::shared_ptr<Skill>> skillBar;       // 技能栏（最多3个技能）
+    std::vector<std::shared_ptr<Skill>> skillBar;       // 技能栏（最多4个技能）
+   
 
     float skillCooldownAccumulator = 0.0f;  // 累积时间
     const float skillCooldownInterval = 0.5f;  // 每次更新的时间间隔，单位秒
@@ -44,7 +48,7 @@ private:
 
 
 public:
-    Player(float health, Element element, float attackRange);
+    Player( Element element, float attackRange);
     Player();  // 默认构造函数
     Player(cocos2d::Sprite* sprite);
 
@@ -56,6 +60,9 @@ public:
 
     // 经验增加
     void gainExperience(int exp);
+
+    // 获取升级所需经验
+    float getExperienceForNextLevel() const;
 
     //改变元素
     void chanegElement(Element newElement);
@@ -85,7 +92,10 @@ public:
     void equipWeapon(std::shared_ptr<Weapon> newWeapon);
     void equipArmor(std::shared_ptr<Armor> newArmor);
     void equipAccessory(std::shared_ptr<Accessory> newAccessory);
-
+    // 脱下装备
+    void unequipWeapon();
+    void unequipArmor();
+    void unequipAccessory();
 
     // 获取武器攻击范围
     float getWeaponAttackRange() const;
@@ -99,6 +109,7 @@ public:
     void unequipSkill(int skillSlot);                          // 卸载技能
     void useSkill(int skillSlot, Enemy& target);            // 使用技能
     void updateSkillsCooldown(float deltaTime);                // 更新冷却时间
+    void checkAndUnlockSkills();                               // 根据当前等级解锁技能
 
     float getShield() const;
 
@@ -112,6 +123,12 @@ public:
     void printBackpackInfo() const;
 
     std::shared_ptr<Skill> creatSkillById(int id, const std::string& jsonString);
+
+    // 体力值相关方法
+    void regenerateStamina(float amount);  // 恢复体力
+    void reduceStamina(float amount);      // 消耗体力
+    float getStamina() const;              // 获取当前体力
+    void updateStamina(float deltaTime);   // 每帧更新体力
     
 };
 

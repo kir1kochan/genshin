@@ -3,9 +3,8 @@
 #include "../Player.h"
 #include "../../Enemy/Enemy.h"
 // 构造函数
-Skill::Skill(int id, const std::string& name, float cooldown)
-    : id(id), name(name), cooldown(cooldown), currentCooldown(0.0f) {}
-
+Skill::Skill(int id, const std::string& name, float cooldown,float staminaCost)
+    :id(id), name(name), cooldown(cooldown), currentCooldown(0.0f), staminaCost(staminaCost) {}
 // 获取技能名称
 std::string Skill::getSkillName() const {
     return name;
@@ -35,7 +34,11 @@ void Skill::resetCooldown() {
     currentCooldown = cooldown;
 }
 
-// 从 JSON 字符串加载数据
+float Skill::getStaminaCost() const
+{
+    return staminaCost;
+}
+
 void Skill::loadFromJson(const std::string& jsonString) {
     rapidjson::Document doc;
     doc.Parse(jsonString.c_str());
@@ -45,7 +48,7 @@ void Skill::loadFromJson(const std::string& jsonString) {
         return;
     }
 
-    // 假设 JSON 字符串包含以下键值对: id, name, cooldown
+    // 假设 JSON 字符串包含以下键值对: id, name, cooldown, staminaCost
     if (doc.HasMember("id") && doc["id"].IsInt()) {
         id = doc["id"].GetInt();
     }
@@ -58,5 +61,15 @@ void Skill::loadFromJson(const std::string& jsonString) {
         cooldown = doc["cooldown"].GetFloat();
     }
 
-    currentCooldown = cooldown;  // 可以选择将初始冷却时间设置为最大值
+    // 初始化当前冷却时间为最大冷却时间
+    currentCooldown = cooldown;
+
+    // 检查 staminaCost 是否在 JSON 中
+    if (doc.HasMember("staminaCost") && doc["staminaCost"].IsFloat()) {
+        staminaCost = doc["staminaCost"].GetFloat();
+    }
+    else {
+        // 如果没有提供 staminaCost，可以设置为默认值（如 0）
+        staminaCost = 0.0f;
+    }
 }

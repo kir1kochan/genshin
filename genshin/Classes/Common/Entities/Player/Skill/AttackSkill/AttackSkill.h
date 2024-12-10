@@ -15,7 +15,7 @@ private:
     Element element;
 
 public:
-    AttackSkill(int id, const std::string& name, float cooldown, float attackPower, float range, Element element);
+    AttackSkill(int id, const std::string& name, float cooldown, float staminaCost, float attackPower, float range, Element element);
     
     // 获取攻击力与范围
     float getAttackPower() const;
