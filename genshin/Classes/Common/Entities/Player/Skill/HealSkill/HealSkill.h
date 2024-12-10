@@ -11,8 +11,7 @@ private:
     float healAmount; // 恢复的生命值
 
 public:
-    HealSkill(int id, const std::string& name, float cooldown, float healAmount);
-    HealSkill();
+    HealSkill(int id, const std::string& name, float cooldown, float staminaCost,float healAmount);
 
     // 激活治疗技能
     void activate(Player* user, Enemy& target) override;

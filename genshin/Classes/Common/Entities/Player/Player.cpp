@@ -11,13 +11,13 @@
 #include "Classes/Common/Backpack/Backpack.h"
 #include <memory>
 
-Player::Player(float health, Element element, float attackRange)
-    : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), backpack(){
+Player::Player( Element element, float attackRange)
+    :Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), maxStamina(100.0f), stamina(100.0f), backpack() {
     skillBar.resize(3, nullptr); // 初始化技能栏为空
 }
 
 
-Player::Player() : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), backpack() {
+Player::Player() : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), maxStamina(100.0f), stamina(100.0f), backpack() {
     skillBar.resize(3, nullptr); // 初始化技能栏为空
 }
 
@@ -28,11 +28,13 @@ Player::Player(cocos2d::Sprite* sprite) {
 
 void Player::levelUp() {
     level++;
-    maxHealth += 20.0f;  // 每次升级增加最大血量
-    health = maxHealth;   // 血量恢复
+    maxHealth += 20.0f + (level / 5);  // 随等级增加血量增幅
+    health = maxHealth;                // 升级时血量恢复
+    attack += 5.0f + (level / 3); // 随等级增加攻击力
     CCLOG("Level up! Now level %d", level);
 
-    // 解锁新技能暂未实现
+    // 根据当前等级解锁技能
+    checkAndUnlockSkills();
 }
 
 int Player::getLevel() const {
@@ -41,10 +43,16 @@ int Player::getLevel() const {
 
 void Player::gainExperience(int exp) {
     experience += exp;
-    if (experience >= 100) {  // 假设100经验值升级
-        experience = 0;
+    int expToLevelUp = getExperienceForNextLevel();
+    if (experience >= expToLevelUp) {
+        experience -= expToLevelUp;
         levelUp();
     }
+}
+
+float Player::getExperienceForNextLevel() const
+{
+    return 100 + (level * 10);  // 每次升级，所需经验逐渐增加
 }
 
 void Player::chanegElement(Element newElement)
@@ -68,9 +76,7 @@ void Player::attackTarget(Enemy& target) {
     
     // 默认伤害
     float damage = attack;
-    if (weapon != nullptr) {
-        damage += weapon->getPower();
-    }
+   
 
     // 考虑属性相克
     float elementModifier = calculateElementalDamageModifier(element, target.getElement());
@@ -114,12 +120,8 @@ void Player::attackTargetBySkill(Enemy& target, float attackValue, Element skill
     damage *= elementModifier;
 
     elementModifier= calculateElementalDamageModifier(element, target.getElement());//技能基础上加上玩家的基础伤害，保证技能的伤害高于普通攻击
-    // 默认伤害
-    float baseDamage = attack;
-    if (weapon != nullptr) {
-        baseDamage += weapon->getPower();
-    }
-    damage += (elementModifier * baseDamage);
+  
+    damage += (elementModifier * attack);
 
     // 给目标造成伤害
     target.takeDamage(damage);
@@ -161,6 +163,7 @@ void Player::equipWeapon(std::shared_ptr<Weapon> newWeapon) {
     if (newWeapon != nullptr) {
         weapon = newWeapon;
         CCLOG("Equipped Weapon: %s", weapon->getName().c_str());
+        attack += weapon->getPower();
         attackRange = weapon->getAttackRange();
         CDtoSet = 1.0f / weapon->getAttackSpeed();  // 攻击频率影响攻击冷却时间
     }
@@ -176,7 +179,36 @@ void Player::equipArmor(std::shared_ptr<Armor> newArmor) {
 void Player::equipAccessory(std::shared_ptr<Accessory> newAccessory) {
     if (newAccessory != nullptr) {
         accessory = newAccessory;
+        maxHealth += newAccessory->getPower();
         CCLOG("Equipped Accessory: %s", accessory->getName().c_str());
+    }
+}
+
+// 脱下武器
+void Player::unequipWeapon() {
+    if (weapon != nullptr) {
+        CCLOG("Unequipped Weapon: %s", weapon->getName().c_str());
+        attack -= weapon->getPower();
+        attackRange = 0.0f;  // 恢复原来的攻击范围
+        CDtoSet = 0.0f;  // 恢复原来的攻击冷却时间
+        weapon = nullptr;  // 解除装备引用
+    }
+}
+
+// 脱下护甲
+void Player::unequipArmor() {
+    if (armor != nullptr) {
+        CCLOG("Unequipped Armor: %s", armor->getName().c_str());
+        armor = nullptr;  // 解除装备引用
+    }
+}
+
+// 脱下饰品
+void Player::unequipAccessory() {
+    if (accessory != nullptr) {
+        CCLOG("Unequipped Accessory: %s", accessory->getName().c_str());
+        maxHealth -= accessory->getPower();  // 恢复原来的最大生命值
+        accessory = nullptr;  // 解除装备引用
     }
 }
 
@@ -196,7 +228,7 @@ void Player::unlockSkill(const std::shared_ptr<Skill>& newSkill) {
 }
 
 bool Player::equipSkill(int skillSlot, const std::shared_ptr<Skill>& skill) {
-    if (skillSlot < 0 || skillSlot >= 3) {
+    if (skillSlot < 0 || skillSlot >= 4) {
         CCLOG("Invalid skill slot: %d", skillSlot);
         return false;
     }
@@ -207,7 +239,7 @@ bool Player::equipSkill(int skillSlot, const std::shared_ptr<Skill>& skill) {
 }
 
 void Player::unequipSkill(int skillSlot) {
-    if (skillSlot < 0 || skillSlot >= 3 || !skillBar[skillSlot]) {
+    if (skillSlot < 0 || skillSlot >= 4 || !skillBar[skillSlot]) {
         CCLOG("Invalid or empty skill slot: %d", skillSlot);
         return;
     }
@@ -217,7 +249,7 @@ void Player::unequipSkill(int skillSlot) {
 }
 
 void Player::useSkill(int skillSlot, Enemy& target) {
-    if (skillSlot < 0 || skillSlot >= 3 || !skillBar[skillSlot]) {
+    if (skillSlot < 0 || skillSlot >= 4 || !skillBar[skillSlot]) {
         CCLOG("Invalid or empty skill slot: %d", skillSlot);
         return;
     }
@@ -227,7 +259,16 @@ void Player::useSkill(int skillSlot, Enemy& target) {
         CCLOG("Skill %s is on cooldown.", skill->getName().c_str());
         return;
     }
+    // 检查体力是否足够
+    float requiredStamina = skill->getStaminaCost(); //获取技能消耗的体力
 
+    if (stamina < requiredStamina) {
+        CCLOG("Not enough stamina to use skill.");
+        return;
+    }
+
+    // 执行技能
+    reduceStamina(requiredStamina); // 使用技能后减少体力
     skill->activate(this, target);  
     skill->resetCooldown();        
 }
@@ -236,6 +277,37 @@ void Player::updateSkillsCooldown(float deltaTime) {
     for (const auto& skill : skillBar) {
         if (skill) {
             skill->updateCooldown(deltaTime);
+        }
+    }
+}
+
+void Player::checkAndUnlockSkills()
+{
+    // allSkills 存储技能解锁等级与技能
+    static std::map<int, std::shared_ptr<Skill>> allSkills = {
+     {5, std::make_shared<AttackSkill>(910101, "Fireball", 3.0f, 25.0f, 80.0f, 12.0f, static_cast<Element>(0))},  // 火焰攻击
+     {10, std::make_shared<AttackSkill>(910102, "Water Blast", 4.0f, 20.0f, 70.0f, 14.0f, static_cast<Element>(1))},  // 水之冲击
+     {15, std::make_shared<AttackSkill>(910103, "Thunderstrike", 5.0f, 30.0f, 85.0f, 18.0f, static_cast<Element>(2))},  // 雷电攻击
+     {20, std::make_shared<AttackSkill>(910104, "Earthquake", 6.0f, 35.0f, 90.0f, 10.0f, static_cast<Element>(3))},  // 地震攻击
+     {25, std::make_shared<AttackSkill>(910105, "Air Blast", 3.5f, 22.0f, 75.0f, 16.0f, static_cast<Element>(4))},  // 空气冲击
+     {30, std::make_shared<AttackSkill>(910106, "Ice Shard", 4.5f, 18.0f, 65.0f, 13.0f, static_cast<Element>(5))},  // 冰霜碎片
+     {35, std::make_shared<AttackSkill>(910107, "Vine Lash", 3.0f, 20.0f, 60.0f, 11.0f, static_cast<Element>(6))},  // 藤鞭
+     {10, std::make_shared<ShieldSkill>(920101, "Shield Block", 10.0f, 40.0f, 150.0f, 5.0f)},  // 护盾技能
+     {6, std::make_shared<HealSkill>(930101, "Healing Touch", 6.0f, 30.0f, 120.0f)}  // 治疗技能
+    };
+
+    // 遍历 allSkills，根据玩家等级解锁技能
+    for (const auto& skillEntry : allSkills) {
+        if (level >= skillEntry.first) {
+            // 检查是否已经解锁过技能
+            auto it = std::find_if(unlockedSkills.begin(), unlockedSkills.end(),
+                [&skillEntry](const std::shared_ptr<Skill>& skill) {
+                    return skill->getName() == skillEntry.second->getName();
+                });
+
+            if (it == unlockedSkills.end()) { // 如果没有解锁过该技能
+                unlockSkill(skillEntry.second);
+            }
         }
     }
 }
@@ -305,9 +377,33 @@ float Player::getShield() const {
     return currentShield;
 }
 
+void Player::regenerateStamina(float amount) {
+    stamina = std::min(stamina + amount, maxStamina); // 体力恢复但不超过最大体力
+    CCLOG("Player regenerates %.2f stamina. Current stamina: %.2f", amount, stamina);
+}
 
+void Player::reduceStamina(float amount) {
+    if (stamina >= amount) {
+        stamina -= amount;
+        CCLOG("Player loses %.2f stamina. Current stamina: %.2f", amount, stamina);
+    }
+    else {
+        CCLOG("Not enough stamina. Current stamina: %.2f", stamina);
+    }
+}
+
+float Player::getStamina() const {
+    return stamina;
+}
+
+void Player::updateStamina(float deltaTime) {
+    // 每帧自动恢复少量体力（例如 0.1 每秒）
+    regenerateStamina(0.1f * deltaTime);
+}
 // 用于定时更新玩家状态
 void Player::update(float deltaTime) {
+    // 更新体力
+    updateStamina(deltaTime);
     // 累积技能冷却更新的时间
     skillCooldownAccumulator += deltaTime;
     if (skillCooldownAccumulator >= skillCooldownInterval) {
@@ -458,19 +554,18 @@ std::shared_ptr<Skill> Player::creatSkillById(int id, const std::string& jsonStr
     int subType = (id / 100) % 100;
 
     std::shared_ptr<Skill> skill = nullptr;
-    skill = std::make_shared<ShieldSkill>(id, "Shield Skill", 15.0f, 100.0f, 20.0f);
 
     switch (skillType) {
     case 9:
         switch (subType) {
         case 1:
-            skill = std::make_shared<AttackSkill>(id, "Attack Skill", 10.0f, 50.0f, 10.0f, Element::FIRE);
+            skill = std::make_shared<AttackSkill>(id, "Attack Skill", 10.0f, 5.0f, 50.0f, 10.0f, Element::FIRE);
             break;
         case 2:
-            skill = std::make_shared<HealSkill>(id, "Heal Skill", 5.0f, 30.0f);
+            skill = std::make_shared<HealSkill>(id, "Heal Skill", 5.0f,5.0f, 30.0f);
             break;
         case 3:
-            skill = std::make_shared<ShieldSkill>(id, "Shield Skill", 15.0f, 100.0f, 20.0f);
+            skill = std::make_shared<ShieldSkill>(id, "Shield Skill", 15.0f, 5.0f, 100.0f, 20.0f);
             break;
         default:
             CCLOG("Unknown skill subtype %d", subType);

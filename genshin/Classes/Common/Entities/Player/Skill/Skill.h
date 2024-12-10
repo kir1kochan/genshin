@@ -16,9 +16,11 @@ protected:
     float cooldown;         // 技能冷却时间（秒）
     float currentCooldown;  // 当前剩余冷却时间
 
+    float staminaCost;          // 技能消耗体力值
+
 public:
     // 构造函数
-    Skill(int id, const std::string& name, float cooldown);
+    Skill(int id, const std::string& name, float cooldown, float staminaCost);
     virtual ~Skill() = default;
 
     // 获取技能名称
@@ -27,6 +29,9 @@ public:
     bool isOnCooldown() const;       // 检查技能是否在冷却
     void updateCooldown(float deltaTime);  // 更新冷却时间
     void resetCooldown();            // 重置冷却
+
+    // 获取技能消耗的体力
+    float getStaminaCost() const;
 
     virtual void activate(Player* user, Enemy& target) = 0;
 
