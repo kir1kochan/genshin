@@ -31,7 +31,7 @@ bool TestScene::init()
     director->getOpenGLView()->setDesignResolutionSize(1920, 1080, ResolutionPolicy::NO_BORDER);
 
     // 如果地图太小，可以调整缩放比例，放大地图
-    auto map = TMXTiledMap::create("/maps/farm.tmx");
+    auto map = TMXTiledMap::create("/maps/forest.tmx");
     if (map) {
         map->setName("background");
         this->addChild(map, -1);  // 将地图作为背景层添加到场景中
@@ -91,7 +91,7 @@ bool TestScene::init()
 void TestScene::loadBackgroundMap()
 {
     // 加载 TMX 地图
-    auto map = TMXTiledMap::create("/maps/farm.tmx");
+    auto map = TMXTiledMap::create("/maps/forest.tmx");
     map->setName("background");
     this->addChild(map, -1);  // 将地图作为背景层添加到场景中
 }
