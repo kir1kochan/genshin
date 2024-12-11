@@ -353,6 +353,11 @@ void Player::takeDamage(float damage) {
     if (damage > 0.0f) {
         // 扣除生命值
         Entities::takeDamage(damage);
+        // 玩家死亡时发送死亡信息
+        if (health == 0) {
+            cocos2d::EventCustom event("PLAYER_DIED");
+            cocos2d::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);  // 发送事件
+        }
         CCLOG("Player takes %.2f damage. Current health: %.2f.", damage, health);
     }
     else {
@@ -445,6 +450,8 @@ std::string Player::saveToJson() const {
     // 序列化 Player 特有数据
     doc.AddMember("experience", experience, allocator);
     doc.AddMember("level", level, allocator);
+    doc.AddMember("maxStamina", maxStamina, allocator);
+    doc.AddMember("stamina", stamina, allocator);
 
     // 序列化装备（仅保存指针是否为空）
     doc.AddMember("weapon", weapon ? weapon->getId() : 0, allocator);
@@ -499,6 +506,8 @@ void Player::loadFromJson(const std::string& jsonString) {
     // 反序列化 Player 特有数据
     if (doc.HasMember("experience")) experience = doc["experience"].GetInt();
     if (doc.HasMember("level")) level = doc["level"].GetInt();
+    if (doc.HasMember("maxStamina")) maxStamina = doc["maxStamina"].GetInt();
+    if (doc.HasMember("stamina")) stamina = doc["stamina"].GetInt();
 
     // 反序列化装备（通过 ID 恢复指针）
     if (doc.HasMember("weapon")) {
@@ -549,6 +558,7 @@ void Player::loadFromJson(const std::string& jsonString) {
 
     if (doc.HasMember("currentShield")) currentShield = doc["currentShield"].GetFloat();
 }
+
 std::shared_ptr<Skill> Player::creatSkillById(int id, const std::string& jsonString) {
     int skillType = id / 10000;
     int subType = (id / 100) % 100;
