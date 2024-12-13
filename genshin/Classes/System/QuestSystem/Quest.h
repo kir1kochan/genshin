@@ -21,6 +21,9 @@ public:
     // 获取任务 ID
     int getQuestId() const;
 
+    // 获取任务奖励
+    int getQuestReward() const;
+
     // 获取当前任务进度
     int getQuestProgress() const;
 
@@ -53,6 +56,7 @@ private:
     int questProgress;                           // 当前任务进度（从 0 开始，表示当前阶段）
     bool questComplete;                          // 任务是否完成
     std::vector<QuestStage> stages;              // 任务阶段信息
+    int reward;                                 // 货币奖励数
 };
 
 #endif  // __QUEST_H__
