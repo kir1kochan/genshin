@@ -6,12 +6,16 @@
 #include <sstream>
 
 Quest::Quest(int id)
-    : questId(id), questProgress(0), questComplete(false) {}
+    : questId(id), questProgress(0), questComplete(false), reward(0){}
 
 Quest::~Quest() = default;
 
 int Quest::getQuestId() const {
     return questId;
+}
+
+int Quest::getQuestReward() const {
+    return reward;
 }
 
 int Quest::getQuestProgress() const {
@@ -92,6 +96,11 @@ void Quest::loadFromJson(const std::string& jsonFilePath) {
         // 解析任务 ID
         if (doc.HasMember("questId") && doc["questId"].IsInt()) {
             questId = doc["questId"].GetInt();
+        }
+
+        // 解析任务奖励
+        if (doc.HasMember("reward") && doc["reward"].IsInt()) {
+            reward = doc["reward"].GetInt();
         }
 
         // 解析任务阶段
