@@ -13,7 +13,7 @@ SLSystem::SLSystem()
     : mainMajorProgress(0),
     mainMinorProgress(0),
     player(nullptr),
-    treasureChestManager(nullptr),
+    treasureChest(nullptr),
     tpAnchor(nullptr),
     playerPosition(cocos2d::Vec2::ZERO) {}
 
@@ -46,12 +46,12 @@ Player* SLSystem::getPlayer() const {
     return player;
 }
 
-void SLSystem::setTreasureChestManager(TreasureChest* treasureChest) {
-    this->treasureChestManager = treasureChest;
+void SLSystem::setTreasureChest(TreasureChest* treasureChest) {
+    this->treasureChest = treasureChest;
 }
 
-TreasureChest* SLSystem::getTreasureChestManager() const {
-    return treasureChestManager;
+TreasureChest* SLSystem::getTreasureChest() const {
+    return treasureChest;
 }
 
 void SLSystem::setTPAnchor(TPAnchor* tpAnchor) {
@@ -102,10 +102,10 @@ void SLSystem::saveToJson(const std::string& jsonFilePath) const {
     }
 
     // Save treasure chest data
-    if (treasureChestManager) {
+    if (treasureChest) {
         std::string chestJson;
-        treasureChestManager->saveToJson(chestJson);
-        doc.AddMember("treasureChests", Value(chestJson.c_str(), allocator).Move(), allocator);
+        treasureChest->saveToJson(chestJson);
+        doc.AddMember("treasureChest", Value(chestJson.c_str(), allocator).Move(), allocator);
     }
 
     // Save TPAnchor data
@@ -183,8 +183,8 @@ void SLSystem::loadFromJson(const std::string& jsonFilePath) {
     }
 
     // Load treasure chest data
-    if (treasureChestManager && doc.HasMember("treasureChests")) {
-        treasureChestManager->loadFromJson(doc["treasureChests"].GetString());
+    if (treasureChest && doc.HasMember("treasureChest")) {
+        treasureChest->loadFromJson(doc["treasureChest"].GetString());
     }
 
     // Load TPAnchor data

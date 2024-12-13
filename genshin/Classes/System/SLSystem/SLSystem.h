@@ -13,48 +13,51 @@ public:
     SLSystem();
     ~SLSystem();
 
-    // Main progress
+    // 设定和读取主线任务的进度
     void setMainProgress(int major, int minor);
     void getMainProgress(int& major, int& minor) const;
 
-    // Side quest status
+    // 设定和读取支线任务的完成情况
     void setSideQuestStatus(int questId, bool isCompleted);
     bool getSideQuestStatus(int questId) const;
 
-    // Player
+    // 设定和读取玩家类指针
     void setPlayer(Player* player);
     Player* getPlayer() const;
 
-    // Player position
+    // 设定和读取保存用的玩家位置
     void setPlayerPosition(const cocos2d::Vec2& position);
     cocos2d::Vec2 getPlayerPosition() const;
 
-    // Treasure chest manager
-    void setTreasureChestManager(TreasureChest* treasureChest);
-    TreasureChest* getTreasureChestManager() const;
+    // 设定和读取宝箱类指针
+    void setTreasureChest(TreasureChest* treasureChest);
+    TreasureChest* getTreasureChest() const;
 
-    // TPAnchor
+    // 设定和读取锚点类指针
     void setTPAnchor(TPAnchor* tpAnchor);
     TPAnchor* getTPAnchor() const;
 
-    // Save & Load
+    // 进行所有类和其他需要一并保存的内容的保存和读取
     void saveToJson(const std::string& jsonFilePath) const;
     void loadFromJson(const std::string& jsonFilePath);
 
 private:
-    // Main progress tracking
+    // 主线任务的进度
     int mainMajorProgress;
     int mainMinorProgress;
 
-    // Side quest statuses
+    // 支线任务的完成情况
     std::unordered_map<int, bool> sideQuestStatus;
 
-    // Player-related data
+    // 玩家类指针
     Player* player;
+
     cocos2d::Vec2 playerPosition;
 
-    // Other managers
-    TreasureChest* treasureChestManager;
+    // 宝箱类指针
+    TreasureChest* treasureChest;
+
+    // 锚点类指针
     TPAnchor* tpAnchor;
 };
 
