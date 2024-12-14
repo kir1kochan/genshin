@@ -112,6 +112,9 @@ void TestScene::addTestModule1()
     if (this->getChildByName("module1")) {
         return;
     }
+    if (player) {
+        player->unequipWeapon();
+    }
     auto label = Label::createWithTTF("Test Module 1", "fonts/Marker Felt.ttf", 24);
     label->setName("module1");  // 给模块命名
     label->setPosition(Director::getInstance()->getVisibleSize() / 2);
@@ -124,6 +127,9 @@ void TestScene::addTestModule2()
     if (this->getChildByName("module2")) {
         return;
     }
+    std::shared_ptr<Weapon> newWeapon = std::make_shared<Weapon>(100101, "Copper_Broadsword", 10, 1.5, 1.2);
+    player->equipWeapon(newWeapon);
+    player->levelUp();
     auto label = Label::createWithTTF("Test Module 2", "fonts/Marker Felt.ttf", 24);
     label->setName("module2");  // 给模块命名
     label->setPosition(Director::getInstance()->getVisibleSize() / 2);

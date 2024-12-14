@@ -57,6 +57,20 @@ public:
 
     // 获取当前等级
     int getLevel() const;
+    // 获取经验值
+    float getExp() const { return experience; }
+    // 获取攻击力
+    float getAttack() const { return attack; }
+    // 获取防御力
+    float getDefence() const { return defence; }
+    // 获取装备内容
+    std::shared_ptr<Weapon> getWeapon() const { return weapon; }
+    std::shared_ptr<Armor> getArmor() const { return armor; }
+    std::shared_ptr<Accessory> getAccessory() const { return accessory; }
+
+    // 获取技能内容
+    std::vector<std::shared_ptr<Skill>> getunlockedSkills() const { return unlockedSkills; }
+    std::vector<std::shared_ptr<Skill>> getskillBar() const { return skillBar; }
 
     // 经验增加
     void gainExperience(int exp);
@@ -128,6 +142,7 @@ public:
     void regenerateStamina(float amount);  // 恢复体力
     void reduceStamina(float amount);      // 消耗体力
     float getStamina() const;              // 获取当前体力
+    float getMaxStamina() const { return maxStamina; }              // 获取最大体力
     void updateStamina(float deltaTime);   // 每帧更新体力
     
 };
