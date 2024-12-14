@@ -46,7 +46,7 @@ bool BackpackMainLayer::init() {
     // 初始化技能图标的容器节点
     skillIconsContainer = Node::create();
     this->addChild(skillIconsContainer);
-    /*
+    
     // 创建并初始化背包界面
     backpackLayer = BackpackLayer::create();
     this->addChild(backpackLayer);
@@ -54,7 +54,8 @@ bool BackpackMainLayer::init() {
     // 创建并初始化技能界面
     skillLayer = SkillLayer::create();
     this->addChild(skillLayer);
-    
+
+    /*
     // 创建并初始化装备界面
     equipmentLayer = EquipmentLayer::create();
     this->addChild(equipmentLayer);
@@ -181,27 +182,27 @@ void BackpackMainLayer::createPlayerDataDisplay() {
     float startY = Director::getInstance()->getVisibleSize().height - 500; // 格子的起始位置
     playerInfoContainer->removeAllChildren();
 
-    auto levelLabel = Label::createWithTTF("Level: " + std::to_string((int)player->getLevel()), "fonts/Marker Felt.ttf", 24);
+    auto levelLabel = Label::createWithSystemFont("Level: " + std::to_string((int)player->getLevel()), "fonts/Marker Felt.ttf", 24);
     levelLabel->setPosition(Vec2(startX, startY));
     playerInfoContainer->addChild(levelLabel);
 
-    auto expLabel = Label::createWithTTF("Exp: " + std::to_string((int)player->getExp()) + "/" + std::to_string((int)player->getExperienceForNextLevel()), "fonts/Marker Felt.ttf", 24);
+    auto expLabel = Label::createWithSystemFont("Exp: " + std::to_string((int)player->getExp()) + "/" + std::to_string((int)player->getExperienceForNextLevel()), "fonts/Marker Felt.ttf", 24);
     expLabel->setPosition(Vec2(startX, startY - 50));
     playerInfoContainer->addChild(expLabel);
 
-    auto healthLabel = Label::createWithTTF("Health: " + std::to_string((int)player->getHealth())+"/"+std::to_string((int)player->getMaxHealth()), "fonts/Marker Felt.ttf", 24);
+    auto healthLabel = Label::createWithSystemFont("Health: " + std::to_string((int)player->getHealth())+"/"+std::to_string((int)player->getMaxHealth()), "fonts/Marker Felt.ttf", 24);
     healthLabel->setPosition(Vec2(startX, startY - 100));
     playerInfoContainer->addChild(healthLabel);
 
-    auto staminaLabel = Label::createWithTTF("Stamina: " + std::to_string((int)player->getStamina()) + "/" + std::to_string((int)player->getMaxStamina()), "fonts/Marker Felt.ttf", 24);
+    auto staminaLabel = Label::createWithSystemFont("Stamina: " + std::to_string((int)player->getStamina()) + "/" + std::to_string((int)player->getMaxStamina()), "fonts/Marker Felt.ttf", 24);
     staminaLabel->setPosition(Vec2(startX, startY - 150));
     playerInfoContainer->addChild(staminaLabel);
 
-    auto attackLabel = Label::createWithTTF("Attack: " + std::to_string((int)player->getAttack()), "fonts/Marker Felt.ttf", 24);
+    auto attackLabel = Label::createWithSystemFont("Attack: " + std::to_string((int)player->getAttack()), "fonts/Marker Felt.ttf", 24);
     attackLabel->setPosition(Vec2(startX, startY - 200));
     playerInfoContainer->addChild(attackLabel);
 
-    auto elementLabel = Label::createWithTTF("Element: " + elementToString(player->getElement()), "fonts/Marker Felt.ttf", 24);
+    auto elementLabel = Label::createWithSystemFont("Element: " + elementToString(player->getElement()), "fonts/Marker Felt.ttf", 24);
     elementLabel->setPosition(Vec2(startX, startY - 300));
     playerInfoContainer->addChild(elementLabel);
     std::shared_ptr<Armor> armor = player->getArmor();
@@ -211,7 +212,7 @@ void BackpackMainLayer::createPlayerDataDisplay() {
     }
     else
         defence = 0;
-    auto defenceLabel = Label::createWithTTF("Defence: " + std::to_string(defence), "fonts/Marker Felt.ttf", 24);
+    auto defenceLabel = Label::createWithSystemFont("Defence: " + std::to_string(defence), "fonts/Marker Felt.ttf", 24);
     defenceLabel->setPosition(Vec2(startX, startY - 250));
     playerInfoContainer->addChild(defenceLabel);
 }
