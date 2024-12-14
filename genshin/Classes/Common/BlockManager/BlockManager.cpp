@@ -105,9 +105,6 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
         std::string type = objectData["type"].asString();
         float x = objectData["x"].asFloat();
         float y = objectData["y"].asFloat();
-        // 将等距坐标转换为屏幕坐标（即真实的游戏世界坐标）
-        float realX = (x - y) * tileWidth / 2;
-        float realY = (x + y) * tileHeight / 2;
         // 将对象添加到相应的区块中
         std::pair<int, int> block = getBlockCoordinates(Vec2(x, y));
         if (type == "SpecialEnemy") {
@@ -115,24 +112,74 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
             // 创建敌人并加入到区块
             Enemy* enemy = new Enemy();
             enemy->loadFromFile(jsonpath);
-            enemy->setPosition(Vec2(realX, realY));
+            enemy->setPosition(Vec2(x, y));
             blockToEnemies[block].push_back(enemy);
         }
         else if (type == "Enemy") {
             Enemy* enemy = new Enemy();
-            enemy->setPosition(Vec2(realX, realY));
+            // 读取敌人特有数据，如生命值、攻击力等
+            float health = objectData["health"].asFloat();
+            float attack = objectData["attack"].asFloat();
+            float defence = objectData["defence"].asFloat();
+            std::string element = objectData["element"].asString();  
+            float attackRange = objectData["attackRange"].asFloat();
+            int aggressionLevel = objectData["aggressionLevel"].asInt();
+            float detectionRadius = objectData["detectionRadius"].asFloat();
+            int baseLevel = objectData["baseLevel"].asInt();
+            std::string imagePath = objectData["imagePath"].asString();  // 纹理路径
+            int drop = objectData["drop"].asInt();  // 掉落物品ID
+
+            // 创建敌人并加入到区块
+            Enemy* enemy = new(std::nothrow) Enemy(
+                health, attack, defence,
+                static_cast<Element>(std::stoi(element)), attackRange,
+                aggressionLevel, detectionRadius,
+                baseLevel, imagePath, drop
+            );
+            enemy->setPosition(Vec2(x, y));
             blockToEnemies[block].push_back(enemy);
         }
         else if (type == "SceneObject") {
             SceneObject* sceneObject = new SceneObject();
             std::string subtype = objectData["subtype"].asString();
-            if (subtype == "chest" || subtype == "door") {    // 目前设想的特殊物体
+            if (subtype == "door") {    // 目前设想的特殊物体
                 std::string jsonpath = objectData["jsonpath"].asString();
                 SceneObject* sceneObject = new SceneObject();
                 sceneObject->loadFromFile(jsonpath);
             }
-            sceneObject->setPosition(Vec2(realX, realY));
+            else {
+                // 读取场景物体特有数据
+                std::string imagePath = objectData["imagePath"].asString();  // 物体纹理路径
+                // 创建场景物体
+                SceneObject* sceneObject = new(std::nothrow) SceneObject(stringToObjectType(subtype), Vec2(x, y), imagePath);
+                // 解析并存储多个物品ID
+                std::string itemIdsStr = objectData["itemIds"].asString();  // 存储为逗号分隔的字符串
+                std::istringstream itemIdsStream(itemIdsStr);
+                std::string itemId;
+                while (std::getline(itemIdsStream, itemId, ',')) {
+                    if (!itemId.empty()) {
+                        sceneObject->addItemId(std::stoi(itemId));
+                    }
+                }      
+                
+                // 添加到区块
+                blockToSceneObjects[block].push_back(sceneObject);
+            }
+            sceneObject->setPosition(Vec2(x, y));
             blockToSceneObjects[block].push_back(sceneObject);
+        }
+        else if (type == "Collision") { // 碰撞区域处理
+            // 检查是否有 width 和 height 字段
+            if (objectData.find("width") != objectData.end() && objectData.find("height") != objectData.end()) {
+                float width = objectData["width"].asFloat();
+                float height = objectData["height"].asFloat();
+
+                // 创建一个矩形碰撞区域
+                Rect collisionRect(x, y, width, height);
+
+                // 保存到碰撞区域列表
+                collisionAreas.push_back(collisionRect);
+            }
         }
     }
 }
@@ -174,13 +221,13 @@ std::vector<Enemy*> BlockManager::getEnemiesInBlock(const std::pair<int, int>& b
 void BlockManager::clear() {
     for (auto& block : blockToEnemies) {
         for (auto& enemy : block.second) {
-            enemy->release(); // 替代 delete
+            delete enemy; 
         }
     }
 
     for (auto& block : blockToSceneObjects) {
         for (auto& sceneObject : block.second) {
-            sceneObject->release(); // 替代 delete
+            delete sceneObject;
         }
     }
 

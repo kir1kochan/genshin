@@ -1,5 +1,5 @@
 #include "TestScene.h"
-#include "Classes/Common/EventManager/KeyboardEventManager.h" 
+#include "Classes/Common/EventManager/KeyboardEventManager.h"
 #include "Classes/Common/EventManager/MainGameMouseEventManager.h"
 #include "Classes/Common/Entities/Player/Player.h"
 USING_NS_CC;
@@ -60,13 +60,13 @@ bool TestScene::init()
         }, 0.1f, "init_mouse_manager_key");
 
     // 加入玩家
-    scheduleOnce([this,map](float dt) {
+    scheduleOnce([this, map](float dt) {
         auto objectLayer = map->getObjectGroup("Objects");  // 获取对应图层
         auto spawnPoint = objectLayer->getObject("SpawnPoint");  // 获取对象点
         float x = spawnPoint["x"].asFloat();
         float y = spawnPoint["y"].asFloat();
         auto playerspirt = Sprite::create("player.png");
-        auto player = new Player(playerspirt);
+        player = new Player(playerspirt);
         player->setPosition(x, y);
 
         this->addChild(player, 1);  // 将玩家加入到场景中
@@ -79,6 +79,16 @@ bool TestScene::init()
             keyboardEventManager->initialize();
             keyboardEventManager->setPlayer(player);  // 将玩家对象传递给事件管理器
         }
+
+        // 创建并设置背包主层
+        backpackMainLayer = BackpackMainLayer::create(player);  // 使用 create 方法传入 player
+        this->addChild(backpackMainLayer);  // 将 BackpackMainLayer 添加到场景中
+        // 将背包层的 z 轴增高，确保它在前面
+        backpackMainLayer->setLocalZOrder(10);
+        // 初始化背包层时，放在屏幕外
+        backpackMainLayer->setPosition(Vec2(-Director::getInstance()->getVisibleSize().width, 0));
+
+
         }, 0.1f, "init_player_key");
 
     schedule([this](float deltaTime) {
@@ -134,15 +144,58 @@ void TestScene::setupKeyboardListener()
             this->removeChildByName("module1"); // 移除 Test Module 1
             addTestModule2();
         }
+        else if (keyCode == EventKeyboard::KeyCode::KEY_B) {
+            CCLOG("Switching to Backpack");
+            switchToBackpack();  // 切换到背包
+            keyboardEventManager->setBackpackActive(true);
+            mouseInputManager->setIsListening(false);
+        }
+        else if (keyCode == EventKeyboard::KeyCode::KEY_E) {
+            CCLOG("Exiting Backpack");
+            exitBackpack();  // 退出背包
+            keyboardEventManager->setBackpackActive(false);
+            mouseInputManager->setIsListening(true);
+        }
         };
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventListener, this);
+}
 
+// 切换到背包
+void TestScene::switchToBackpack()
+{
+    backpackMainLayer->setVisible(true);
+    backpackMainLayer->setPosition(Vec2(-Director::getInstance()->getVisibleSize().width, 0));
+    backpackMainLayer->adjustSizeForTransition();
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Camera* camera = Camera::getDefaultCamera();
+    Vec3 cameraPosition = camera->getPosition3D();
+    Vec3 targetPosition = cameraPosition - Vec3(visibleSize.width / 2 - 275, visibleSize.height / 2 - 155, 380);
+    // 背包层移动到目标位置
+    auto moveTo = MoveTo::create(0.5f, targetPosition);  // 目标位置设置为 3D 坐标
+    backpackMainLayer->runAction(moveTo);
+
+    // 暂停玩家
+    // player->setPaused(true);
+}
+
+// 退出背包
+void TestScene::exitBackpack()
+{
+    auto moveOut = MoveTo::create(0.5f, Vec2(-Director::getInstance()->getVisibleSize().width, 0));
+    auto spawn = Spawn::create(moveOut, nullptr);
+    backpackMainLayer->runAction(Sequence::create(spawn, CallFunc::create([this]() {
+        // 动画完成后，确保背包层完全不可见并隐藏
+        backpackMainLayer->setVisible(false);
+        }), nullptr));
+    // 恢复玩家
+    // player->setPaused(false);
 }
 
 TestScene::~TestScene()
 {
     delete mouseInputManager;  // 释放鼠标输入管理器
     delete keyboardEventManager;  // 释放键盘事件管理器
+    delete backpackMainLayer;  // 释放背包层
 }
 
 void TestScene::update(float deltaTime)
@@ -150,5 +203,4 @@ void TestScene::update(float deltaTime)
     if (keyboardEventManager) {
         keyboardEventManager->update(deltaTime);  // 调用键盘事件管理器的 update 方法
     }
-
 }

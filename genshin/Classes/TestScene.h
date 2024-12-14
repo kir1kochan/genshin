@@ -4,6 +4,8 @@
 #include "cocos2d.h"
 #include "Classes/Common/EventManager/KeyboardEventManager.h" 
 #include "Classes/Common/EventManager/MainGameMouseEventManager.h" 
+#include "Classes/Scene/BackpackScene/BackpackMainLayer.h"
+#include "Classes/Common/Entities/Player/Player.h"
 
 class TestScene : public cocos2d::Scene
 {
@@ -13,7 +15,7 @@ public:
 
     virtual bool init();
 
-    // 添加测试内容
+    // 添加测试模块
     void addTestModule1();
     void addTestModule2();
 
@@ -23,14 +25,18 @@ public:
     // 加载 TMX 地图背景
     void loadBackgroundMap();
 
+    void switchToBackpack();
+    void exitBackpack();
+    // 每帧更新
     void update(float deltaTime);
 
     CREATE_FUNC(TestScene);
 
 private:
     MainGameMouseEventManager* mouseInputManager;  // 鼠标输入管理器
-    KeyboardEventManager* keyboardEventManager;
-    Player player;
+    KeyboardEventManager* keyboardEventManager;  // 键盘事件管理器
+    Player* player;  // 玩家对象指针
+    BackpackMainLayer* backpackMainLayer;  // 背包主层
 };
 
 #endif // TESTSCENE_H

@@ -7,8 +7,8 @@ void KeyboardEventManager::initialize() {
     listener->onKeyPressed = CC_CALLBACK_2(KeyboardEventManager::onKeyPressed, this);
     listener->onKeyReleased = CC_CALLBACK_2(KeyboardEventManager::onKeyReleased, this);
     Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, Director::getInstance()->getRunningScene());
-    moveDirection.y = 0;  
-    moveDirection.x = 0;  
+    moveDirection.y = 0;
+    moveDirection.x = 0;
 }
 
 void KeyboardEventManager::handleEvent() {
@@ -17,7 +17,7 @@ void KeyboardEventManager::handleEvent() {
 
 // 键盘按下事件处理
 void KeyboardEventManager::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
-    if (player == nullptr) return;  // 确保玩家对象存在
+    if (player == nullptr || isBackpackActive) return;  // 如果背包界面激活，忽略事件
 
     // 在按下某个按键时，记录该按键的方向
     if (keyCode == EventKeyboard::KeyCode::KEY_W) {
@@ -52,7 +52,7 @@ void KeyboardEventManager::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* 
 
 // 每帧更新玩家位置
 void KeyboardEventManager::update(float deltaTime) {
-    if (player == nullptr) return;  // 确保玩家对象存在
+    if (player == nullptr || isBackpackActive) return;  // 如果背包界面激活，忽略更新
 
     Vec3 currentPos = player->getPosition3D();  // 获取当前玩家位置
     Vec3 targetPos = currentPos;  // 默认目标位置为当前玩家位置
@@ -83,4 +83,8 @@ void KeyboardEventManager::setPlayer(Player* theplayer) {
         destination = playerPos;
         camera->setPosition3D(cocos2d::Vec3(playerPos.x, playerPos.y, camera->getPosition3D().z));
     }
+}
+
+void KeyboardEventManager::setBackpackActive(bool active) {
+    isBackpackActive = active;  // 设置背包界面是否激活
 }
