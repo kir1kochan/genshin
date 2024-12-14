@@ -171,6 +171,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Common\Item\Food\Food.cpp" />
     <ClCompile Include="..\Classes\Common\Item\Item.cpp" />
     <ClCompile Include="..\Classes\Common\Item\Potion\Potion.cpp" />
+    <ClCompile Include="..\Classes\Scene\BackpackScene\BackpackLayer.cpp" />
+    <ClCompile Include="..\Classes\Scene\BackpackScene\BackpackMainLayer.cpp" />
+    <ClCompile Include="..\Classes\Scene\BackpackScene\EquipmentLayer.cpp" />
+    <ClCompile Include="..\Classes\Scene\BackpackScene\SkillLayer.cpp" />
     <ClCompile Include="..\Classes\TestScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -197,6 +201,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Common\Item\Food\Food.h" />
     <ClInclude Include="..\Classes\Common\Item\Item.h" />
     <ClInclude Include="..\Classes\Common\Item\Potion\Potion.h" />
+    <ClInclude Include="..\Classes\Scene\BackpackScene\BackpackLayer.h" />
+    <ClInclude Include="..\Classes\Scene\BackpackScene\BackpackMainLayer.h" />
+    <ClInclude Include="..\Classes\Scene\BackpackScene\EquipmentLayer.h" />
+    <ClInclude Include="..\Classes\Scene\BackpackScene\SkillLayer.h" />
     <ClInclude Include="..\Classes\TestScene.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

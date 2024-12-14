@@ -34,6 +34,12 @@
     <Filter Include="src\Classes\Common\Backpack">
       <UniqueIdentifier>{3fce192b-ab84-40a0-9739-36addf0ec79b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Classes\Scene">
+      <UniqueIdentifier>{f2f823c5-d2d9-4949-b919-9a0e28c34f05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Classes\Scene\BackpackScene">
+      <UniqueIdentifier>{0ed7165d-70b2-42f5-a8f4-d6b16803a69a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -104,6 +110,18 @@
     </ClCompile>
     <ClCompile Include="..\Classes\Common\Entities\Player\Skill\AttackSkill\AttackSkill.cpp">
       <Filter>src\Classes\Common\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Scene\BackpackScene\BackpackLayer.cpp">
+      <Filter>src\Classes\Scene\BackpackScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Scene\BackpackScene\BackpackMainLayer.cpp">
+      <Filter>src\Classes\Scene\BackpackScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Scene\BackpackScene\EquipmentLayer.cpp">
+      <Filter>src\Classes\Scene\BackpackScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Scene\BackpackScene\SkillLayer.cpp">
+      <Filter>src\Classes\Scene\BackpackScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +196,18 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Common\Entities\Player\Skill\AttackSkill\AttackSkill.h">
       <Filter>src\Classes\Common\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Scene\BackpackScene\BackpackLayer.h">
+      <Filter>src\Classes\Scene\BackpackScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Scene\BackpackScene\BackpackMainLayer.h">
+      <Filter>src\Classes\Scene\BackpackScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Scene\BackpackScene\EquipmentLayer.h">
+      <Filter>src\Classes\Scene\BackpackScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Scene\BackpackScene\SkillLayer.h">
+      <Filter>src\Classes\Scene\BackpackScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

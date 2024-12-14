@@ -14,6 +14,21 @@ public:
         FISHING   // 钓鱼
     };
 
+    // 将字符串转换为 ObjectType 枚举
+    ObjectType stringToObjectType(const std::string& str) {
+        if (str == "PICKUP") {
+            return ObjectType::PICKUP;
+        }
+        else if (str == "COOKING") {
+            return ObjectType::COOKING;
+        }
+        else if (str == "FISHING") {
+            return ObjectType::FISHING;
+        }
+        else {
+            throw std::invalid_argument("Invalid ObjectType string: " + str);
+        }
+    }
 private:
     ObjectType type;               // 物体类型
     std::string imagePath;         // 物体纹理路径

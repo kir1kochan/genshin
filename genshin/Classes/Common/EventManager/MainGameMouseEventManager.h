@@ -9,6 +9,14 @@ public:
     void handleEvent() override;
     void onMouseDown(cocos2d::Event* event);
     void onMouseScroll(cocos2d::Event* event);
+
+    // 设置是否监听鼠标事件
+    void setIsListening(bool isListening) {
+        _isListening = isListening;
+    }
+
+private:
+    bool _isListening = true;  // 默认为监听
 };
 
 #endif // __MAIN_GAME_MOUSE_EVENT_MANAGER_H__
