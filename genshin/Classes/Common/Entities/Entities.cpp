@@ -201,7 +201,7 @@ void Entities::updateStatusEffects(float deltaTime) {
             }
             else if (status.first == "Poisoned" && status.second > 0.0f) {
                 // 中毒状态：每秒造成2点伤害
-                takeDamage(2.0f);
+                takeDamage(3.0f);
                 CCLOG("Poisoned effect deals 2 damage.");
             }
             else if (status.first == "Paralyzed" && status.second > 0.0f) {
@@ -242,6 +242,8 @@ bool Entities::hasStatusEffect(const std::string& effect) const {
 
 
 void Entities::applyElementalEffects(Entities& target, Element skillElement) {
+    if (target.getElement() == skillElement)    //若技能元素与敌方元素一致，则无法起效
+        return;
     switch (skillElement) {
         // 火系技能：使目标燃烧
     case Element::FIRE:
@@ -300,6 +302,7 @@ void Entities::applyElementalEffects(Entities& target, Element skillElement) {
     case Element::AIR:
         if (target.hasStatusEffect("Burning")) {
             target.takeDamage(5.0f);  // 火焰持续时间延长或增加额外伤害
+            target.applyStatusEffect("Burning", 2.0f);  // 火焰持续2秒
             CCLOG("Wind skill increases damage on Burning target.");
         }
         break;
@@ -315,7 +318,7 @@ void Entities::applyElementalEffects(Entities& target, Element skillElement) {
         // 草系技能：使目标进入“中毒”状态
     case Element::GRASS:
         if (!target.hasStatusEffect("Poisoned")) {
-            target.applyStatusEffect("Poisoned", 5.0f);  // 中毒持续5秒
+            target.applyStatusEffect("Poisoned", 8.0f);  // 中毒持续5秒
             CCLOG("Target is now Poisoned for 5 seconds.");
         }
         break;
