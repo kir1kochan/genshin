@@ -7,14 +7,14 @@
 #include <sstream>
 
 // 构造函数，初始化背包，将所有物品指针数量初始化为0
-Backpack::Backpack(const std::vector<std::shared_ptr<Item>>& itemPointers) {
+Backpack::Backpack(const std::vector<std::shared_ptr<Item>>& itemPointers): coins(0) {
     for (auto& item : itemPointers) {
         items[item] = 0;  // 将每个物品指针的数量初始化为0
         idToItemMap[item->getId()] = item;  // 为每个物品创建ID到物品指针的映射
     }
 }
 
-Backpack::Backpack() {}
+Backpack::Backpack() : coins(0) {}
 
 // 通过物品指针添加物品
 void Backpack::addItem(const std::shared_ptr<Item>& item, int count) {
@@ -91,6 +91,9 @@ std::string Backpack::saveToJson() const {
     }
     doc.AddMember("items", itemArray, allocator);
 
+    doc.AddMember("coins", coins, allocator);
+
+
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
     doc.Accept(writer);
@@ -124,6 +127,9 @@ void Backpack::loadFromJson(const std::string& jsonString) {
                 addItem(item, quantity);  // 通过物品指针添加物品到背包
             }
         }
+    }
+    if (doc.HasMember("coins") && doc["coins"].IsInt()) {
+        coins = doc["coins"].GetInt();
     }
 }
 
@@ -217,4 +223,22 @@ void Backpack::sendFoodBroadcast() {
     cocos2d::EventCustom event("BACKPACK_UPDATED");
     event.setUserData(this);  // 将背包指针传递给监听者
     cocos2d::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);  // 发送事件
+}
+
+int Backpack::getCoins() const {
+    return coins;
+}
+
+void Backpack::addCoins(int amount) {
+    if (amount > 0) {
+        coins += amount;
+    }
+}
+
+bool Backpack::useCoins(int amount) {
+    if (coins >= amount && amount > 0) {
+        coins -= amount;
+        return true;
+    }
+    return false;
 }

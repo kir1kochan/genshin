@@ -4,14 +4,17 @@
 #include "../Item.h"
 
 class Player;
-// 药剂类
+// 药剂类,当前设计为恢复人物的体力值
 class Potion : public Item {
 public:
     // 构造函数
-    Potion(int id, const std::string& name, float effectValue);
+    Potion(int id, const std::string& name, float healAmount);
 
-    // 使用药剂的效果
-    void use(Player& player) const;
+    // 使用药剂
+    void use(Player& user) const;
+
+    // 获取恢复量
+    float getHealAmount() const;
 
     // 重写打印信息函数
     void printInfo() const override;
@@ -23,11 +26,7 @@ public:
     void loadFromJson(const std::string& jsonString) override;
 
 private:
-    // 药剂效果值（例如：恢复血量、增加攻击力等）
-    // 药效的类型可以通过id或者药品的名字确定
-    float effectValue;     
-    
-    
+    float healAmount; // 恢复的量 
 };
 
 #endif // POTION_H

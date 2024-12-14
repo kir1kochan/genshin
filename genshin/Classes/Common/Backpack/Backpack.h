@@ -67,10 +67,20 @@ public:
     // 发送广播，标识背包食物相关有变动
     void sendFoodBroadcast();
 
+    // 获取金币数量
+    int getCoins() const;
+
+    // 增加金币
+    void addCoins(int amount);
+
+    // 使用金币，成功返回true，失败返回false（金币不足）
+    bool useCoins(int amount);
+
     friend class Player;
 private:
     std::unordered_map<std::shared_ptr<Item>, int> items;  // 物品指针和数量的映射
     std::unordered_map<int, std::shared_ptr<Item>> idToItemMap;  // 物品ID到物品指针的映射
+    int coins;  // 存储金币数量
 };
 
 #endif // BACKPACK_H
