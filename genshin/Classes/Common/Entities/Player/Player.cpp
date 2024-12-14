@@ -121,7 +121,7 @@ void Player::attackTargetBySkill(Enemy& target, float attackValue, Element skill
     // 计算最终伤害
     damage *= elementModifier;
 
-    elementModifier= calculateElementalDamageModifier(element, target.getElement());//技能基础上加上玩家的基础伤害，保证技能的伤害高于普通攻击
+    elementModifier= calculateElementalDamageModifier(element, target.getElement());      //技能基础上加上玩家的基础伤害，保证技能的伤害高于普通攻击
   
     damage += (elementModifier * attack);
 
@@ -307,6 +307,10 @@ void Player::checkAndUnlockSkills()
 
             if (it == unlockedSkills.end()) { // 如果没有解锁过该技能
                 unlockSkill(skillEntry.second);
+                for (int i = 0; i < 4; i++) {
+                    if (skillbar[i] != nullptr)
+                        equipSkill(i, skillEntry.second); //若技能栏没有满，则自动装备技能
+                }
             }
         }
     }

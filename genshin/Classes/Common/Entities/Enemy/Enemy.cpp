@@ -91,6 +91,10 @@ void Enemy::aiBehavior(float distance, Player* player) {
     if (distance > detectionRadius) {
         return;
     }
+    //  如果此时处于麻痹或者冰冻状态，则无法移动和攻击
+    if (this->hasStatusEffect("Frozen") || this->hasStatusEffect("Paralyzed")) {
+        return;
+    }
 
     // 计算敌人和玩家之间的向量
     cocos2d::Vec2 enemyPosition = getPosition();
