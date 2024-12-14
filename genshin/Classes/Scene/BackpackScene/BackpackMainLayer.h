@@ -57,6 +57,15 @@ private:
     // 切换到上一个界面按钮
     cocos2d::ui::Button* prevButton;
 
+    cocos2d::Node* equipmentIconsContainer; // 存储装备图标的容器
+
+    cocos2d::Node* playerInfoContainer; // 存储装备图标的容器
+
+    cocos2d::Node* skillIconsContainer; // 存储装备图标的容器
+
+    // 创建碰撞盒
+    void createBoundingBoxForIcons(cocos2d::Sprite* sprite);
+
     // 更新玩家数据UI（经验、等级、体力等）
     void updatePlayerData();
 
@@ -71,6 +80,15 @@ private:
 
     // 创建玩家数据显示
     void createPlayerDataDisplay();
+
+    // 生成装备图标
+    void createEquipmentIcons();
+
+    // 双击事件监听器
+    void addDoubleClickListener(cocos2d::Sprite* target, const std::function<void()>& callback);
+
+    // 刷新装备图标
+    void refreshEquipmentIcons();
 };
 
 #endif // BACKPACK_MAIN_LAYER_H
