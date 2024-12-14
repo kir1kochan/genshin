@@ -62,6 +62,8 @@ private:
     std::pair<int, int> playerBlock = { 0, 0 };
     // 存储玩家当前区域的所有SceneObject的碰撞框和实例的映射
     std::unordered_map<std::pair<int, int>, std::unordered_map<SceneObject*, cocos2d::Rect>, PairHash> sceneObjectCollisions;
+    // 存储碰撞区域
+    std::vector<cocos2d::Rect> collisionAreas;
 };
 
 
