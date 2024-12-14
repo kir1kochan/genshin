@@ -1,0 +1,132 @@
+{
+  "weapons": [
+    {
+      "id": 100101,
+      "name": "Copper_Broadsword",
+      "power": 10,
+      "attackRange": 1.5,
+      "attackSpeed": 1.2
+    },
+    {
+      "id": 100102,
+      "name": "Night's Edge",
+      "power": 40,
+      "attackRange": 1.5,
+      "attackSpeed": 1.4
+    },
+    {
+      "id": 100103,
+      "name": "Tizona",
+      "power": 85,
+      "attackRange": 1.5,
+      "attackSpeed": 1.6
+    },
+    {
+      "id": 100104,
+      "name": "Amethyst_Staff",
+      "power": 40,
+      "attackRange": 3.0,
+      "attackSpeed": 0.8
+    },
+    {
+      "id": 100105,
+      "name": "Spectre_Staff",
+      "power": 80,
+      "attackRange": 3.0,
+      "attackSpeed": 0.8
+    },
+    {
+      "id": 100106,
+      "name": "Trident",
+      "power": 45,
+      "attackRange": 2.0,
+      "attackSpeed": 1.3
+    },
+    {
+      "id": 100107,
+      "name": "Gungnir",
+      "power": 80,
+      "attackRange": 2.0,
+      "attackSpeed": 1.4
+    },
+    {
+      "id": 100108,
+      "name": "Orichalcum_Halberd",
+      "power": 35,
+      "attackRange": 2.0,
+      "attackSpeed": 1.3
+    }
+  ],
+  "armors": [
+    {
+      "id": 100201,
+      "name": "Amethyst_Armor",
+      "power": 50
+    },
+    {
+      "id": 100202,
+      "name": "Topaz_Armor",
+      "power": 100
+    },
+    {
+      "id": 100203,
+      "name": "Emerald_Armor",
+      "power": 150
+    },
+    {
+      "id": 100204,
+      "name": "Diamond_Armor",
+      "power": 200
+    },
+    {
+      "id": 100205,
+      "name": "Amber_Armor",
+      "power": 250
+    }
+  ],
+  "accessories": [
+    {
+      "id": 100301,
+      "name": "Fire_Necklace",
+      "power": 0.5
+      "element": 0
+    },
+    {
+      "id": 100302,
+      "name": "Water_Stone",
+      "power": 0.5,
+      "element": 1
+    },
+    {
+      "id": 100303,
+      "name": "Earth_Necklace",
+      "power": 0.5,
+      "element": 2
+    },
+    {
+      "id": 100304,
+      "name": "Air_Insignia",
+      "power": 0.5,
+      "element": 3
+    },
+    {
+      "id": 100305,
+      "name": "Thunder_Stone",
+      "power": 0.5,
+      "element": 4
+    },
+    {
+      "id": 100306,
+      "name": "Grass_Talisman",
+      "power": 0.5,
+      "element": 5
+
+    },
+    {
+      "id": 100307,
+      "name": "Ice_Flower",
+      "power": 0.5,
+      "element": 6
+    }
+  ]
+}

@@ -30,6 +30,8 @@ void Player::levelUp() {
     level++;
     maxHealth += 20.0f + (level / 5);  // 随等级增加血量增幅
     health = maxHealth;                // 升级时血量恢复
+    maxStamina += 20.0f + (level / 5);  // 随等级增加体力值增幅
+    stamina = maxStamina;           // 升级时体力值恢复
     attack += 5.0f + (level / 3); // 随等级增加攻击力
     CCLOG("Level up! Now level %d", level);
 
@@ -179,7 +181,6 @@ void Player::equipArmor(std::shared_ptr<Armor> newArmor) {
 void Player::equipAccessory(std::shared_ptr<Accessory> newAccessory) {
     if (newAccessory != nullptr) {
         accessory = newAccessory;
-        maxHealth += newAccessory->getPower();
         CCLOG("Equipped Accessory: %s", accessory->getName().c_str());
     }
 }
@@ -207,7 +208,6 @@ void Player::unequipArmor() {
 void Player::unequipAccessory() {
     if (accessory != nullptr) {
         CCLOG("Unequipped Accessory: %s", accessory->getName().c_str());
-        maxHealth -= accessory->getPower();  // 恢复原来的最大生命值
         accessory = nullptr;  // 解除装备引用
     }
 }
@@ -402,8 +402,11 @@ float Player::getStamina() const {
 }
 
 void Player::updateStamina(float deltaTime) {
-    // 每帧自动恢复少量体力（例如 0.1 每秒）
-    regenerateStamina(0.1f * deltaTime);
+    if (accessory == nullptr)
+        // 每帧自动恢复少量体力（例如 0.1 每秒）
+        regenerateStamina(0.1f * deltaTime);
+    else
+        regenerateStamina(accessory->getPower() * deltaTime);
 }
 // 用于定时更新玩家状态
 void Player::update(float deltaTime) {
