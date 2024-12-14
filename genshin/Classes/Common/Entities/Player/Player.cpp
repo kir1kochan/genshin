@@ -21,10 +21,16 @@ Player::Player() : Entities(), experience(0), level(1), weapon(nullptr), armor(n
     skillBar.resize(3, nullptr); // 初始化技能栏为空
 }
 
-Player::Player(cocos2d::Sprite* sprite) { 
-    Player();
-    this->addChild(sprite, 1);
+Player::Player(cocos2d::Sprite* sprite)
+    : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr),
+    currentShield(0), maxStamina(100.0f), stamina(100.0f), backpack() {
+    skillBar.resize(3, nullptr); // 初始化技能栏为空
+
+    if (sprite != nullptr) {
+        this->addChild(sprite, 1);  // 添加到当前节点
+    }
 }
+
 
 void Player::levelUp() {
     level++;
@@ -343,7 +349,7 @@ void Player::updateshieldTime(float deltaTime)
 
 void Player::takeDamage(float damage) {
     if (armor != nullptr) {
-        damage *= armor->getPower();//加入护甲免伤的逻辑
+        damage *= (500.0f - armor->getPower()) / 500.0f;//加入护甲免伤的逻辑
     }
 
     if (currentShield > 0.0f) {
