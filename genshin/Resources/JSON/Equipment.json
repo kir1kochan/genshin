@@ -9,7 +9,7 @@
     },
     {
       "id": 100102,
-      "name": "Night's Edge",
+      "name": "Night's_Edge",
       "power": 40,
       "attackRange": 1.5,
       "attackSpeed": 1.4
@@ -24,7 +24,7 @@
     {
       "id": 100104,
       "name": "Amethyst_Staff",
-      "power": 40,
+      "power":75 ,
       "attackRange": 3.0,
       "attackSpeed": 0.8
     },
@@ -33,7 +33,7 @@
       "name": "Spectre_Staff",
       "power": 80,
       "attackRange": 3.0,
-      "attackSpeed": 0.8
+      "attackSpeed": 0.6
     },
     {
       "id": 100106,
