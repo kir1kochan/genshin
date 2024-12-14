@@ -314,7 +314,7 @@ void Player::checkAndUnlockSkills()
             if (it == unlockedSkills.end()) { // 如果没有解锁过该技能
                 unlockSkill(skillEntry.second);
                 for (int i = 0; i < 4; i++) {
-                    if (skillbar[i] != nullptr)
+                    if (skillBar[i] != nullptr)
                         equipSkill(i, skillEntry.second); //若技能栏没有满，则自动装备技能
                 }
             }
