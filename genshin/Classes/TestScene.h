@@ -40,6 +40,7 @@ private:
     BackpackMainLayer* backpackMainLayer;  // ±³°üÖ÷²ã
     SpiritManager* spiritManager;
     BlockManager* blockManager;
+    float gaptime=0;
 };
 
 #endif // TESTSCENE_H

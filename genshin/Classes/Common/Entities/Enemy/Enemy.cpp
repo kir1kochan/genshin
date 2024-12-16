@@ -16,7 +16,7 @@ Enemy::Enemy(float health, float attack, float defence, Element element, float a
 
 // 默认构造函数
 Enemy::Enemy()
-    : Entities(100, 10, 2, Element::FIRE,2.0f),// 默认攻击范围为2
+    : Entities(100, 10, 2, Element::FIRE, 10.0f),// 默认攻击范围为2
     aggressionLevel(1),
     detectionRadius(100.0f),
     baseLevel(1),
