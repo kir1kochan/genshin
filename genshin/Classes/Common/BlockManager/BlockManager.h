@@ -2,8 +2,9 @@
 #define __BLOCK_MANAGER_H__
 
 #include "cocos2d.h"
-#include "SceneObject.h"
-#include "Enemy.h"
+#include "../../Scene/SceneObject/SceneObject.h"
+#include "../Entities/Enemy/Enemy.h"
+#include "../Entities/Player/Player.h"
 #include <unordered_map>
 #include <vector>
 #include <set>
@@ -15,6 +16,12 @@
 
 class BlockManager {
 public:
+    struct PairHash {
+        template <class T1, class T2>
+        std::size_t operator()(const std::pair<T1, T2>& pair) const {
+            return std::hash<T1>()(pair.first) ^ std::hash<T2>()(pair.second);
+        }
+    };
     BlockManager();
     ~BlockManager();
 
@@ -26,19 +33,20 @@ public:
     // 更新玩家所在区域的物体的碰撞箱的映射
     void updateCollisionMap();
 
+    // 添加怪物
+    void addEnemy(Enemy* enemy);
+
     // 获取指定区块的所有敌人
     std::vector<Enemy*> getEnemiesInBlock(const std::pair<int, int>& block);
+    // 获取玩家所在区块的敌人
+    std::vector<Enemy*> getEnemyInPlayerBlock();
 
     // 获取指定区块的所有场景物体
     std::vector<SceneObject*> getSceneObjectsInBlock(const std::pair<int, int>& block);
+    std::unordered_map<std::pair<int, int>, bool, BlockManager::PairHash> getBlockStatus() const;
 
 private:
-    struct PairHash {
-        template <class T1, class T2>
-        std::size_t operator()(const std::pair<T1, T2>& pair) const {
-            return std::hash<T1>()(pair.first) ^ std::hash<T2>()(pair.second);
-        }
-    };
+    
 
     // 从 TMX 文件加载对象数据
     void loadObjectsFromTMX(const std::string& tmxFile);

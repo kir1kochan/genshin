@@ -1,7 +1,7 @@
 #include "TPAnchor.h"
-#include "rapidjson/document.h"
-#include "rapidjson/prettywriter.h"
-#include "rapidjson/stringbuffer.h"
+#include "json/document.h"
+#include "json/prettywriter.h"
+#include "json/stringbuffer.h"
 #include <fstream>
 #include <sstream>
 

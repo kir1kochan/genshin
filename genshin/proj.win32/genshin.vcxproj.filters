@@ -40,6 +40,15 @@
     <Filter Include="src\Classes\Scene\BackpackScene">
       <UniqueIdentifier>{0ed7165d-70b2-42f5-a8f4-d6b16803a69a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Classes\Common\Managers">
+      <UniqueIdentifier>{292695be-e3ce-4ad5-8cab-28e851b23edd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Classes\Scene\SceneObject">
+      <UniqueIdentifier>{973ce1f4-73cf-46e0-9224-dc6b12bf5b55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Classes\System">
+      <UniqueIdentifier>{27b30626-8437-4365-bede-5ee26bff495a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -122,6 +131,24 @@
     </ClCompile>
     <ClCompile Include="..\Classes\Scene\BackpackScene\SkillLayer.cpp">
       <Filter>src\Classes\Scene\BackpackScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Common\SpiritManager\SpiritManager.cpp">
+      <Filter>src\Classes\Common\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Common\BlockManager\BlockManager.cpp">
+      <Filter>src\Classes\Common\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Scene\SceneObject\SceneObject.cpp">
+      <Filter>src\Classes\Scene\SceneObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Scene\SceneObject\TPAnchor.cpp">
+      <Filter>src\Classes\Scene\SceneObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Scene\SceneObject\TreasureChest.cpp">
+      <Filter>src\Classes\Scene\SceneObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\System\FishingSystem\FishingSystem.cpp">
+      <Filter>src\Classes\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -208,6 +235,24 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Scene\BackpackScene\SkillLayer.h">
       <Filter>src\Classes\Scene\BackpackScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\SpiritManager\SpiritManager.h">
+      <Filter>src\Classes\Common\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\BlockManager\BlockManager.h">
+      <Filter>src\Classes\Common\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Scene\SceneObject\SceneObject.h">
+      <Filter>src\Classes\Scene\SceneObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Scene\SceneObject\TPAnchor.h">
+      <Filter>src\Classes\Scene\SceneObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Scene\SceneObject\TreasureChest.h">
+      <Filter>src\Classes\Scene\SceneObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\System\FishingSystem\FishingSystem.h">
+      <Filter>src\Classes\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

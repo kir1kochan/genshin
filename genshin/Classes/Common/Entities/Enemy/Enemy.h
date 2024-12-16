@@ -3,9 +3,10 @@
 
 #include "../Entities.h"
 #include "../../Element/Element.h"
+#include <vector>
 //#include "../Player/Player.h"
 class Player;
-
+USING_NS_CC;
 class Enemy : public Entities {
 private:
     int aggressionLevel;         // 敌人的攻击性等级（决定敌人的攻击频率或强度）
@@ -15,6 +16,12 @@ private:
     bool spriteGenerated;        // 是否已生成精灵
     bool isAlive;                // 是否存活
     int drop;                    // 掉落物id（若无则为0）
+    Vector<SpriteFrame*> frames; // 动画帧容器
+    Vector<Animate*> animates; // 动画容器
+
+    Vector<SpriteFrame*> attackFrames; // 攻击动作帧容器
+    Sprite* sprite; // 角色精灵
+
 public:
     // 构造函数
     Enemy(float health, float attack, float defence, Element element, float attackRange, int aggressionLevel, float detectionRadius,
@@ -65,6 +72,15 @@ public:
 
     // 根据文件名生成精灵
     cocos2d::Sprite* generateSprite() ;
+
+    // 根据属性调整上色
+    void applyElementColor();
+
+    // 设置精灵文件位置
+    void setSpriteFilename(std::string filename);
+
+    // 更改动画
+    Animate* getDirectionAnimate(float angle, bool isAttacking);
 
     // 检查是否生成了精灵
     bool isSpriteGenerated() const {

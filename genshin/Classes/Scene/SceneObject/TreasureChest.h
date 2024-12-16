@@ -5,7 +5,19 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
-#include "Backpack.h"  
+#include "../../Common/Backpack/Backpack.h"  
+
+
+// 自定义哈希函数
+namespace std {
+    template <>
+    struct hash<cocos2d::Vec2> {
+        size_t operator()(const cocos2d::Vec2& vec) const {
+            // 简单哈希：将 x 和 y 转换为整数并混合
+            return hash<float>()(vec.x) ^ (hash<float>()(vec.y) << 1);
+        }
+    };
+}
 
 class TreasureChest : public cocos2d::Node {
 public:
@@ -16,7 +28,7 @@ public:
     void setItemInChest(const cocos2d::Vec2& chestPosition, int itemID);
 
     // 开启宝箱
-    int openChest(Backpack& backpack, const cocos2d::Vec2& chestPosition);
+    void openChest(Backpack& backpack, const cocos2d::Vec2& chestPosition);
 
     // 从 JSON 文件加载宝箱数据
     void loadFromJson(const std::string& jsonFilePath);
