@@ -1,0 +1,191 @@
+[
+  //钓鱼相关
+  {
+    "id": 300101,
+    "name": "Shrimp", //虾
+    "healAmount": 5
+  },
+  {
+    "id": 300102,
+    "name": "Red_Snapper", //红鲷鱼
+    "healAmount": 5
+  },
+  {
+    "id": 300103,
+    "name": "Bass", //鲈鱼
+    "healAmount": 5
+  },
+  {
+    "id": 300104,
+    "name": "Damselfish", //雀鲷
+    "healAmount": 5
+  },
+  {
+    "id": 300105,
+    "name": "Tuna", //金枪鱼
+    "healAmount": 5
+  },
+  {
+    "id": 300106,
+    "name": "Golden_Carp", //金鲤鱼
+    "healAmount": 5
+  },
+  {
+    "id": 300107,
+    "name": "Clownfish", //小丑鱼
+    "healAmount": 5
+  },
+  {
+    "id": 300108,
+    "name": "Rock_Lobster", //岩石龙虾
+    "healAmount": 5
+  },
+  {
+    "id": 300109,
+    "name": "Oyster", //牡蠣
+    "healAmount": 5
+  },
+
+
+  //制作后的菜品
+  {
+    "id": 300201,
+    "name": "Cooked_Fish", //熟鱼
+    "healAmount": 20
+  },
+  {
+    "id": 300202,
+    "name": "Cooked_Shrimp", //熟虾
+    "healAmount": 20
+  },
+  {
+    "id": 300203,
+    "name": "Lobster_Tail", //龙虾尾
+    "healAmount": 25
+  },
+  {
+    "id": 300204,
+    "name": "Seafood_Dinner", //海鲜大餐
+    "healAmount": 50
+  },
+  {
+    "id": 300205,
+    "name": "Sashimi", //生鱼片
+    "healAmount": 15
+  },
+  {
+    "id": 300206,
+    "name": "Shucked_Oyster", //去殼牡蠣
+    "healAmount": 15
+  },
+
+  {
+    "id": 300207,
+    "name": "Fruit_Salad", //水果沙拉
+    "healAmount": 35
+  },
+  {
+    "id": 300208,
+    "name": "Fruit_Juice", //果汁
+    "healAmount": 15
+  },
+  {
+    "id": 300209,
+    "name": "Shrimp_Po'_Boy", //鲜虾三明治
+    "healAmount": 35
+  },
+  {
+    "id": 300210,
+    "name": "Apple_Pie", //苹果派
+    "healAmount": 25
+  },
+  {
+    "id": 300211,
+    "name": "Roasted_Duck", //烤鸭
+    "healAmount": 35
+  },
+  {
+    "id": 300212,
+    "name": "Burger", //汉堡
+    "healAmount": 35
+  },
+  {
+    "id": 300213,
+    "name": "Fried_Egg", //煎蛋
+    "healAmount": 35
+  },
+  {
+    "id": 300214,
+    "name": "Fruit_Pudding", //水果布丁
+    "healAmount": 25
+  },
+  {
+    "id": 300215,
+    "name": "Loaf", //面包
+    "healAmount": 25
+  },
+
+
+
+
+
+  // 采集相关
+  {
+    "id": 300301,
+    "name": "Banana",
+    "healAmount": 10
+  },
+  {
+    "id": 300302,
+    "name": "Apple",
+    "healAmount": 10
+  },
+  {
+    "id": 300303,
+    "name": "Blood_Orange",
+    "healAmount": 10
+  },
+  {
+    "id": 300304,
+    "name": "Grapes",
+    "healAmount": 10
+  },
+  {
+    "id": 300305,
+    "name": "Lemon",
+    "healAmount": 10
+  },
+  {
+    "id": 300306,
+    "name": "Wheat", //小麦
+    "healAmount": 10
+  },
+
+
+  // 养殖相关
+  {
+    "id": 300401,
+    "name": "Duck",
+    "healAmount": 5
+  },
+  {
+    "id": 300402,
+    "name": "Mallard_Duck",
+    "healAmount": 5
+  },
+  {
+    "id": 300403,
+    "name": "Steak",
+    "healAmount": 5
+  },
+  {
+    "id": 300404,
+    "name": "Bunny",
+    "healAmount": 5
+  },
+  {
+    "id": 300405,
+    "name": "Egg",
+    "healAmount": 5
+  }
+]

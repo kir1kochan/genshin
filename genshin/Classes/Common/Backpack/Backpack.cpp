@@ -162,22 +162,22 @@ void Backpack::loadFromFile(const std::string& filePath) {
 }
 
 std::shared_ptr<Item> Backpack::createItemById(int id, const std::string& jsonString) {
-    int itemType = id / 10000;   // 物品类型：ID的第一部分
-    int subType = (id / 100) % 100; // 子类型：ID的第二部分
+    int itemType = id / 100000;   // 物品类型：ID的第一部分
+    int subType = id % 1000 / 100; // 子类型：ID的第二部分
 
     std::shared_ptr<Item> item = nullptr;
     switch (itemType) {
     case 1: // 装备类
         switch (subType) {
-        case 101: {
+        case 1: {
             item = std::make_shared<Weapon>(id, "Weapon Name", 5.0f, 10.0f, 1.0f);
             break;
         }
-        case 102: {
+        case 2: {
             item = std::make_shared<Armor>(id, "Armor Name", 5);
             break;
         }
-        case 103: {
+        case 3: {
             item = std::make_shared<Accessory>(id, "Accessory Name", 3,Element::FIRE);
             break;
         }

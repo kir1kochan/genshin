@@ -1,0 +1,22 @@
+[
+	{
+		"id": 200001,
+		"name": "Minor Mana Potion",
+		"healAmount": 30
+	},
+	{
+		"id": 200002,
+		"name": "Basic Mana Potion",
+		"healAmount": 50
+	},
+	{
+		"id": 200003,
+		"name": "Medium Mana Potion",
+		"healAmount": 75
+	},
+	{
+		"id": 200004,
+		"name": "Major Mana Potion",
+		"healAmount": 100
+	}
+]
