@@ -233,7 +233,12 @@ void TestScene::update(float deltaTime)
         blockManager->updateBlocksForPlayer(player);
     }
     if (spiritManager) {
-        spiritManager->update(deltaTime);
+        if (gaptime < 0.2) {
+            gaptime += deltaTime;
+            return;
+        }
+        spiritManager->update(gaptime);
+        gaptime = 0;
     }
     
 }
