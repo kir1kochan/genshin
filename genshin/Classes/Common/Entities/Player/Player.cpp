@@ -573,7 +573,7 @@ void Player::loadFromJson(const std::string& jsonString) {
 }
 
 std::shared_ptr<Skill> Player::creatSkillById(int id, const std::string& jsonString) {
-    int itemType = id / 100000;   // ID的第一部分
+    int skillType = id / 100000;   // ID的第一部分
     int subType = id % 1000 / 100; // ID的第二部分
 
     std::shared_ptr<Skill> skill = nullptr;
