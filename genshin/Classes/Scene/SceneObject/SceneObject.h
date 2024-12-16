@@ -4,31 +4,20 @@
 #include "cocos2d.h"
 #include <string>
 #include <unordered_map>
-#include "../../System/FishingSystem.h"
+#include "../../System/FishingSystem/FishingSystem.h"
+#include "../../Common/Backpack/Backpack.h"
+enum class ObjectType {
+    PICKUP,   // 采摘
+    COOKING,  // 烹饪
+    FISHING   // 钓鱼
+};
+
+// 将字符串转换为 ObjectType 枚举
+ObjectType stringToObjectType(const std::string& str);
 
 class SceneObject : public cocos2d::Node {
 public:
-    enum class ObjectType {
-        PICKUP,   // 采摘
-        COOKING,  // 烹饪
-        FISHING   // 钓鱼
-    };
-
-    // 将字符串转换为 ObjectType 枚举
-    ObjectType stringToObjectType(const std::string& str) {
-        if (str == "PICKUP") {
-            return ObjectType::PICKUP;
-        }
-        else if (str == "COOKING") {
-            return ObjectType::COOKING;
-        }
-        else if (str == "FISHING") {
-            return ObjectType::FISHING;
-        }
-        else {
-            throw std::invalid_argument("Invalid ObjectType string: " + str);
-        }
-    }
+    
 private:
     ObjectType type;               // 物体类型
     std::string imagePath;         // 物体纹理路径

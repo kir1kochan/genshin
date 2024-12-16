@@ -2,9 +2,9 @@
 #define __SPIRIT_MANAGER_H__
 
 #include "cocos2d.h"
-#include "Enemy.h"
-#include "Player.h"
-#include "BlockManager.h"
+#include "../Entities/Enemy/Enemy.h"
+#include "../Entities/Player/Player.h"
+#include "../BlockManager/BlockManager.h"
 #include <unordered_map>
 
 class SpiritManager {
@@ -13,7 +13,7 @@ private:
     Player* player = nullptr;
 
     // 区块管理器，用于管理区块和怪物
-    BlockManager blockManager;
+    BlockManager* blockManager = nullptr;
 
     // 存储最近的怪物
     Enemy* nearestEnemy = nullptr;
@@ -24,6 +24,8 @@ private:
 public:
     // 构造函数
     SpiritManager();
+
+    void init(BlockManager* bm, Player* theplayer);
 
     // 设置玩家精灵的指针
     void setPlayer(Player* player);
@@ -38,13 +40,13 @@ public:
     const std::unordered_map<Enemy*, float>& getEnemyDistances() const;
 
     // 更新玩家和区块内怪物的状态
-    void update();
+    void update(float deltatime);
 
     // 更新玩家与怪物之间的最近距离
     void updateDistances();
 
     // 更新怪物行为
-    void updateEnemy()
+    void updateEnemy(float deltatime);
 };
 
 #endif // __SPIRIT_MANAGER_H__
