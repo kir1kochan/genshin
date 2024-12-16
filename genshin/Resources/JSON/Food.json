@@ -1,127 +1,127 @@
 [
-  //钓鱼相关
+  //Fishing-related
   {
     "id": 300101,
-    "name": "Shrimp", //虾
+    "name": "Shrimp",
     "healAmount": 5
   },
   {
     "id": 300102,
-    "name": "Red_Snapper", //红鲷鱼
+    "name": "Red_Snapper",
     "healAmount": 5
   },
   {
     "id": 300103,
-    "name": "Bass", //鲈鱼
+    "name": "Bass",
     "healAmount": 5
   },
   {
     "id": 300104,
-    "name": "Damselfish", //雀鲷
+    "name": "Damselfish",
     "healAmount": 5
   },
   {
     "id": 300105,
-    "name": "Tuna", //金枪鱼
+    "name": "Tuna",
     "healAmount": 5
   },
   {
     "id": 300106,
-    "name": "Golden_Carp", //金鲤鱼
+    "name": "Golden_Carp",
     "healAmount": 5
   },
   {
     "id": 300107,
-    "name": "Clownfish", //小丑鱼
+    "name": "Clownfish",
     "healAmount": 5
   },
   {
     "id": 300108,
-    "name": "Rock_Lobster", //岩石龙虾
+    "name": "Rock_Lobster",
     "healAmount": 5
   },
   {
     "id": 300109,
-    "name": "Oyster", //牡蠣
+    "name": "Oyster",
     "healAmount": 5
   },
 
 
-  //制作后的菜品
+  //Recipe related
   {
     "id": 300201,
-    "name": "Cooked_Fish", //熟鱼
+    "name": "Cooked_Fish",
     "healAmount": 20
   },
   {
     "id": 300202,
-    "name": "Cooked_Shrimp", //熟虾
+    "name": "Cooked_Shrimp",
     "healAmount": 20
   },
   {
     "id": 300203,
-    "name": "Lobster_Tail", //龙虾尾
+    "name": "Lobster_Tail",
     "healAmount": 25
   },
   {
     "id": 300204,
-    "name": "Seafood_Dinner", //海鲜大餐
+    "name": "Seafood_Dinner",
     "healAmount": 50
   },
   {
     "id": 300205,
-    "name": "Sashimi", //生鱼片
+    "name": "Sashimi",
     "healAmount": 15
   },
   {
     "id": 300206,
-    "name": "Shucked_Oyster", //去殼牡蠣
+    "name": "Shucked_Oyster",
     "healAmount": 15
   },
 
   {
     "id": 300207,
-    "name": "Fruit_Salad", //水果沙拉
+    "name": "Fruit_Salad",
     "healAmount": 35
   },
   {
     "id": 300208,
-    "name": "Fruit_Juice", //果汁
+    "name": "Fruit_Juice",
     "healAmount": 15
   },
   {
     "id": 300209,
-    "name": "Shrimp_Po'_Boy", //鲜虾三明治
+    "name": "Shrimp_Po'_Boy",
     "healAmount": 35
   },
   {
     "id": 300210,
-    "name": "Apple_Pie", //苹果派
+    "name": "Apple_Pie",
     "healAmount": 25
   },
   {
     "id": 300211,
-    "name": "Roasted_Duck", //烤鸭
+    "name": "Roasted_Duck",
     "healAmount": 35
   },
   {
     "id": 300212,
-    "name": "Burger", //汉堡
+    "name": "Burger",
     "healAmount": 35
   },
   {
     "id": 300213,
-    "name": "Fried_Egg", //煎蛋
+    "name": "Fried_Egg",
     "healAmount": 35
   },
   {
     "id": 300214,
-    "name": "Fruit_Pudding", //水果布丁
+    "name": "Fruit_Pudding",
     "healAmount": 25
   },
   {
     "id": 300215,
-    "name": "Loaf", //面包
+    "name": "Loaf",
     "healAmount": 25
   },
 
@@ -129,7 +129,7 @@
 
 
 
-  // 采集相关
+  //Collection-related
   {
     "id": 300301,
     "name": "Banana",
@@ -157,12 +157,12 @@
   },
   {
     "id": 300306,
-    "name": "Wheat", //小麦
+    "name": "Wheat",
     "healAmount": 10
   },
 
 
-  // 养殖相关
+  //Breeding-related
   {
     "id": 300401,
     "name": "Duck",

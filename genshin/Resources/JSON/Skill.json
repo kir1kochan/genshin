@@ -1,7 +1,7 @@
 {
   "skills": [
     {
-      "id": 910101,
+      "id": 900101,
       "name": "Fireball",
       "cooldown": 3.0,
       "staminaCost": 25,
@@ -10,7 +10,7 @@
       "element": 0
     },
     {
-      "id": 910102,
+      "id": 900102,
       "name": "Water Blast",
       "cooldown": 4.0,
       "staminaCost": 20,
@@ -19,7 +19,7 @@
       "element": 1
     },
     {
-      "id": 910103,
+      "id": 900103,
       "name": "Thunderstrike",
       "cooldown": 5.0,
       "staminaCost": 30,
@@ -28,7 +28,7 @@
       "element": 2
     },
     {
-      "id": 910104,
+      "id": 900104,
       "name": "Earthquake",
       "cooldown": 6.0,
       "staminaCost": 35,
@@ -37,7 +37,7 @@
       "element": 3
     },
     {
-      "id": 910105,
+      "id": 900105,
       "name": "Air Blast",
       "cooldown": 3.5,
       "staminaCost": 22,
@@ -46,7 +46,7 @@
       "element": 4
     },
     {
-      "id": 910106,
+      "id": 900106,
       "name": "Ice Shard",
       "cooldown": 4.5,
       "staminaCost": 18,
@@ -55,7 +55,7 @@
       "element": 5
     },
     {
-      "id": 910107,
+      "id": 900107,
       "name": "Vine Lash",
       "cooldown": 3.0,
       "staminaCost": 20,
@@ -64,7 +64,7 @@
       "element": 6
     },
     {
-      "id": 920101,
+      "id": 900201,
       "name": "Shield Block",
       "cooldown": 10.0,
       "staminaCost": 40,
@@ -72,7 +72,7 @@
       "shieldTime": 5.0
     },
     {
-      "id": 930101,
+      "id": 900301,
       "name": "Healing Touch",
       "cooldown": 6.0,
       "staminaCost": 30,
