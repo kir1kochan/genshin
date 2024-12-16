@@ -2,12 +2,12 @@
 
 // 构造函数
 Entities::Entities(float health, float attack, float defence, Element element,float attackRange)
-    : health(health), maxHealth(health), attack(attack), defence(defence), element(element), attackRange(attackRange) {}
+    : health(health), maxHealth(health), attack(attack), defence(defence), element(element), attackRange(attackRange),baseAttack(attack) {}
 
 
 // 默认构造函数
 Entities::Entities()
-    : health(100), maxHealth(100), attack(10), defence(2), element(Element::FIRE), attackRange(1.5f) {}
+    : health(100), maxHealth(100), attack(10), defence(2), element(Element::FIRE), attackRange(1.5f), baseAttack(10) {}
 
 // 虚析构函数
 Entities::~Entities() {}
@@ -134,6 +134,7 @@ void Entities::loadFromJson(const std::string& jsonString) {
     if (doc.HasMember("defence")) defence = doc["defence"].GetFloat();
     if (doc.HasMember("element")) element = static_cast<Element>(doc["element"].GetInt());
     if (doc.HasMember("attackRange")) attackRange = doc["attackRange"].GetFloat();  
+    baseAttack = attack;
 }
 
 // 将成员变量序列化为 JSON 格式，并保存到本地
@@ -170,10 +171,6 @@ void Entities::loadFromFile(const std::string& filePath) {
 // 添加状态效果
 void Entities::applyStatusEffect(const std::string& effect, float duration) {
     statusEffects[effect] = duration;
-    if (effect == "Weakened") {
-        // 保存攻击力的初始值以便恢复
-        baseAttack = attack;
-    }
 }
 
 // 移除状态效果

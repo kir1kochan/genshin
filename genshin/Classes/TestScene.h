@@ -6,6 +6,7 @@
 #include "Classes/Common/EventManager/MainGameMouseEventManager.h" 
 #include "Classes/Scene/BackpackScene/BackpackMainLayer.h"
 #include "Classes/Common/Entities/Player/Player.h"
+#include "Classes/Common/SpiritManager/SpiritManager.h"
 
 class TestScene : public cocos2d::Scene
 {
@@ -37,6 +38,9 @@ private:
     KeyboardEventManager* keyboardEventManager;  // 键盘事件管理器
     Player* player;  // 玩家对象指针
     BackpackMainLayer* backpackMainLayer;  // 背包主层
+    SpiritManager* spiritManager;
+    BlockManager* blockManager;
+    float gaptime=0;
 };
 
 #endif // TESTSCENE_H

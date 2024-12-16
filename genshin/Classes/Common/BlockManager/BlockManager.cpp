@@ -5,21 +5,20 @@ USING_NS_CC;
 
 BlockManager::BlockManager() {
     // 加载 TMX 文件的对象层数据
-    loadObjectsFromTMX("your_tmx_file.tmx");
+    //loadObjectsFromTMX("your_tmx_file.tmx");
 }
 
 BlockManager::~BlockManager() {
     clear();
 }
 
-// 获取玩家所在的区块
+// 获取位置所在的区块
 std::pair<int, int> BlockManager::getBlockCoordinates(const Vec2& position) const {
     int x = static_cast<int>(std::floor(position.x / BLOCK_SIZE));
     int y = static_cast<int>(std::floor(position.y / BLOCK_SIZE));
     return std::make_pair(x, y);
 }
 
-// 更新区块内容，加载玩家附近的区块，卸载远离的区块
 // 更新区块内容，加载玩家附近的区块，卸载远离的区块
 void BlockManager::updateBlocksForPlayer(Player* playerNode) {
     if (!playerNode) return;
@@ -116,7 +115,6 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
             blockToEnemies[block].push_back(enemy);
         }
         else if (type == "Enemy") {
-            Enemy* enemy = new Enemy();
             // 读取敌人特有数据，如生命值、攻击力等
             float health = objectData["health"].asFloat();
             float attack = objectData["attack"].asFloat();
@@ -145,7 +143,7 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
             if (subtype == "door") {    // 目前设想的特殊物体
                 std::string jsonpath = objectData["jsonpath"].asString();
                 SceneObject* sceneObject = new SceneObject();
-                sceneObject->loadFromFile(jsonpath);
+                // sceneObject->loadFromFile(jsonpath);
             }
             else {
                 // 读取场景物体特有数据
@@ -263,4 +261,9 @@ void BlockManager::updateCollisionMap() {
             }
         }
     }
+}
+
+void BlockManager::addEnemy(Enemy* enemy) {
+    std::pair<int, int>block= getBlockCoordinates(enemy->getPosition());
+    blockToEnemies[block].push_back(enemy);
 }

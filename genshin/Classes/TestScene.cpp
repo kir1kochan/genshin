@@ -91,6 +91,20 @@ bool TestScene::init()
 
         }, 0.1f, "init_player_key");
 
+    scheduleOnce([this](float dt) {
+        if (!blockManager) {
+            blockManager=new BlockManager;
+        }
+        }, 0.1f, "init_bm_key");
+
+    scheduleOnce([this](float dt) {
+        if (!spiritManager) {
+            spiritManager = new SpiritManager();
+            spiritManager->init(blockManager,player);
+            spiritManager->setPlayer(player);
+        }
+        }, 0.1f, "init_SM_key");
+
     schedule([this](float deltaTime) {
         this->update(deltaTime);  // 每帧调用 update 方法
         }, 0.5f, "update_key");
@@ -133,7 +147,13 @@ void TestScene::addTestModule2()
     auto label = Label::createWithTTF("Test Module 2", "fonts/Marker Felt.ttf", 24);
     label->setName("module2");  // 给模块命名
     label->setPosition(Director::getInstance()->getVisibleSize() / 2);
+    auto slime = new Enemy();
+    slime->setSpriteFilename("monsters/slime.png");
+    slime->generateSprite();
+    slime->setPosition(400, 300);
     this->addChild(label);
+    this->addChild(slime);
+    blockManager->addEnemy(slime);
 }
 
 void TestScene::setupKeyboardListener()
@@ -209,4 +229,16 @@ void TestScene::update(float deltaTime)
     if (keyboardEventManager) {
         keyboardEventManager->update(deltaTime);  // 调用键盘事件管理器的 update 方法
     }
+    if (blockManager) {
+        blockManager->updateBlocksForPlayer(player);
+    }
+    if (spiritManager) {
+        if (gaptime < 0.2) {
+            gaptime += deltaTime;
+            return;
+        }
+        spiritManager->update(gaptime);
+        gaptime = 0;
+    }
+    
 }

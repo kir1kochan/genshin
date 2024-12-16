@@ -1,5 +1,7 @@
 #include "Enemy.h"
 #include "../Player/Player.h"
+#include <vector>
+
 // 构造函数
 Enemy::Enemy(float health, float attack, float defence, Element element, float attackRange, int aggressionLevel, float detectionRadius,
      int baseLevel, const std::string& imagePath, int drop)
@@ -14,9 +16,9 @@ Enemy::Enemy(float health, float attack, float defence, Element element, float a
 
 // 默认构造函数
 Enemy::Enemy()
-    : Entities(100, 10, 2, Element::FIRE,2.0f),// 默认攻击范围为2
+    : Entities(100, 10, 2, Element::FIRE, 10.0f),// 默认攻击范围为2
     aggressionLevel(1),
-    detectionRadius(10.0f),
+    detectionRadius(100.0f),
     baseLevel(1),
     imagePath(""),
     spriteGenerated(false),
@@ -49,6 +51,25 @@ void Enemy::takeDamage(float amount) {
     if (health < 0) {
         health = 0;
         setIsAlive(false);
+        sprite->stopActionByTag(100);
+
+        // 创建闪烁动作：2秒内闪烁5次
+        auto blinkAction = Blink::create(1.0f, 5);
+
+        // 闪烁完成后的回调：让怪物消失
+        auto disappearCallback = CallFunc::create([this]() {
+            // 将精灵从父节点移除
+            sprite->removeFromParent();
+            this->removeFromParent(); // 移除敌人节点本身
+            CCLOG("Enemy has died.");
+            });
+
+        // 组合动作：闪烁 -> 消失
+        auto deathSequence = Sequence::create(blinkAction, disappearCallback, nullptr);
+
+        // 运行动作
+        sprite->runAction(deathSequence);
+
     }
     currentCooldown = 0.5; // 受击的攻击僵直
 }
@@ -95,17 +116,37 @@ void Enemy::aiBehavior(float distance, Player* player) {
     if (this->hasStatusEffect("Frozen") || this->hasStatusEffect("Paralyzed")) {
         return;
     }
-
+    bool isAttacking = false;
     // 计算敌人和玩家之间的向量
     cocos2d::Vec2 enemyPosition = getPosition();
     cocos2d::Vec2 playerPosition = player->getPosition();
     cocos2d::Vec2 directionToPlayer = playerPosition - enemyPosition;
+
+    // 计算敌人朝向（基于方向）
+    cocos2d::Vec2 normalizedDirection = directionToPlayer.getNormalized();
+    float angle = normalizedDirection.getAngle();  // 获取角度（弧度）
 
     // 如果距离玩家小于攻击范围，敌人发动攻击
     if (distance < attackRange) {
         if (canAttack()) {
             attackTarget(*player);  // 假设有攻击函数
             CCLOG("Enemy attacks player, distance: %.2f", distance);
+            isAttacking = true;
+            // 停止当前动画
+            sprite->stopActionByTag(100);
+
+            // 执行攻击动画（只播放一次）
+            auto attackAnimate = getDirectionAnimate(angle, isAttacking);
+            auto resetToNormal = CallFunc::create([this, angle]() {
+                auto repeatNormalAnimate = RepeatForever::create(getDirectionAnimate(angle, false));
+                repeatNormalAnimate->setTag(100); // 给动作设置Tag
+                sprite->runAction(repeatNormalAnimate); // 重新开始移动动画
+                });
+
+            // 使用 Sequence 动作链：攻击动画 + 重置动画
+            auto attackSequence = Sequence::create(attackAnimate, resetToNormal, nullptr);
+            sprite->runAction(attackSequence);
+            return;
         }
     }
     // 如果玩家等级高于敌人，敌人可能会做出逃避行为
@@ -114,7 +155,7 @@ void Enemy::aiBehavior(float distance, Player* player) {
         // 逃跑逻辑
         // 计算逃跑方向：逃跑方向就是玩家位置的反向
         cocos2d::Vec2 fleeDirection = -directionToPlayer.getNormalized();  // 反向，单位化
-
+        angle *= -1;
         // 移动敌人
         float fleeSpeed = 200.0f; // 逃跑速度
         setPosition(enemyPosition + fleeDirection * fleeSpeed * 0.1f);  // 每帧按速度移动
@@ -128,6 +169,10 @@ void Enemy::aiBehavior(float distance, Player* player) {
         float pursuitSpeed = 100.0f * aggressionLevel; // 追击速度
         setPosition(enemyPosition + pursuitDirection * pursuitSpeed * 0.1f);  // 每帧按速度移动
     }
+    auto repeatAnimate = RepeatForever::create(getDirectionAnimate(angle,isAttacking));
+    repeatAnimate->setTag(100); // 方便后续停止
+    sprite->stopActionByTag(100);
+    sprite->runAction(repeatAnimate);
 }
 
 // 打印敌人状态
@@ -201,12 +246,114 @@ Enemy* Enemy::clone(const cocos2d::Vec2& newPosition) {
 // 根据文件名生成精灵
 cocos2d::Sprite* Enemy::generateSprite() {
     if (!spriteGenerated) {
-        auto sprite = cocos2d::Sprite::create(imagePath);
-        if (sprite) {
-            spriteGenerated = true;  // 精灵生成成功后标记为 true
-            this->addChild(sprite, 1);
-            return sprite;
+        // 加载纹理
+        auto texture = cocos2d::Director::getInstance()->getTextureCache()->addImage(imagePath);
+
+        // 每帧的尺寸
+        int frameWidth = 64;
+        int frameHeight = 64;
+
+
+        // 动画方向和动作设置 (4个方向，2种状态：正常、攻击)
+        const int rows = 4;  // 4个方向
+        const int cols = 6;  // 每个方向6帧 (前三帧为普通动作，后三帧为攻击动作)
+
+
+        // 裁剪四个方向的动画帧
+        for (int row = 0; row < rows; ++row) {
+            for (int col = 0; col < 3; ++col) { // 前三帧是普通动作
+                Rect rect(col * frameWidth, row * frameHeight, frameWidth, frameHeight);
+                auto frame = SpriteFrame::createWithTexture(texture, rect);
+                frames.pushBack(frame);
+            }
+            for (int col = 3; col < 6; ++col) { // 后三帧是攻击动作
+                Rect rect(col * frameWidth, row * frameHeight, frameWidth, frameHeight);
+                auto frame = SpriteFrame::createWithTexture(texture, rect);
+                attackFrames.pushBack(frame); // 存储攻击帧
+            }
         }
+
+        // 创建精灵并设置默认帧
+        sprite = Sprite::createWithSpriteFrame(frames.front());
+        this->addChild(sprite);
+
+        for (int i = 0; i < 4; ++i) {
+            Vector<SpriteFrame*> directionFrames;
+            for (int j = i * 3; j < (i + 1) * 3; ++j) {
+                directionFrames.pushBack(frames.at(j)); // 普通动作帧
+            }
+            auto animation = Animation::createWithSpriteFrames(directionFrames, 0.2f); // 0.2秒每帧
+            auto animate = Animate::create(animation); // 创建 Animate
+            animates.pushBack(animate);
+        }
+
+        for (int i = 0; i < 4; ++i) {
+            Vector<SpriteFrame*> directionAttackFrames;
+            for (int j = i * 3; j < (i + 1) * 3; ++j) {
+                directionAttackFrames.pushBack(attackFrames.at(j)); // 攻击动作帧
+            }
+            auto attackAnimation = Animation::createWithSpriteFrames(directionAttackFrames, 0.2f); // 0.2秒每帧
+            auto animate = Animate::create(attackAnimation); // 创建 Animate
+            animates.pushBack(animate);
+        }
+
+        auto defaultAnimate = RepeatForever::create(animates.at(2));
+        defaultAnimate->setTag(100); // 给动作设置Tag
+        // 根据敌人朝向切换动画
+        sprite->runAction(defaultAnimate); // 默认朝下
+        applyElementColor();
+        spriteGenerated = true;
+        return sprite;
     }
-    return nullptr;  // 如果精灵已经生成或失败，返回空指针
+    return nullptr; // 如果精灵已经生成，返回空指针
+}
+
+void Enemy::applyElementColor() {
+    // 根据敌人的属性来设置颜色
+     // 根据敌人的属性来设置颜色
+    switch (element) {
+    case Element::FIRE:
+        this->sprite->setColor(cocos2d::Color3B::RED);
+        break;
+    case Element::WATER:
+        this->sprite->setColor(cocos2d::Color3B::BLUE);
+        break;
+    case Element::EARTH:
+        this->sprite->setColor(cocos2d::Color3B(139, 69, 19)); // 土黄色
+        break;
+    case Element::ICE:
+        this->sprite->setColor(cocos2d::Color3B::WHITE);
+        break;
+    case Element::THUNDER:
+        this->sprite->setColor(cocos2d::Color3B::YELLOW);
+        break;
+    case Element::AIR:
+        this->sprite->setColor(cocos2d::Color3B(144, 238, 144)); // 浅绿色
+        break;
+    case Element::GRASS:
+        this->sprite->setColor(cocos2d::Color3B(34, 139, 34)); // 深绿色
+        break;
+    default:
+        this->sprite->setColor(cocos2d::Color3B::WHITE);
+        break;
+    }
+}
+
+cocos2d::Animate* Enemy::getDirectionAnimate(float angle, bool isAttacking) {
+    if (angle >= -M_PI_4 && angle < M_PI_4) {
+        return animates.at(isAttacking ? 7 : 3); // 攻击朝右 or 普通朝右
+    }
+    else if (angle >= M_PI_4 && angle < 3 * M_PI_4) {
+        return animates.at(isAttacking ? 4 : 0); // 攻击朝上 or 普通朝上
+    }
+    else if (angle >= -3 * M_PI_4 && angle < -M_PI_4) {
+        return animates.at(isAttacking ? 6 : 2); // 攻击朝下 or 普通朝下
+    }
+    else {
+        return animates.at(isAttacking ? 5 : 1); // 攻击朝左 or 普通朝左
+    }
+}
+
+void Enemy::setSpriteFilename(std::string filename) {
+    imagePath = filename;
 }

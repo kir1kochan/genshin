@@ -1,10 +1,26 @@
 #include "SceneObject.h"
 #include "cocos2d.h"
-#include "rapidjson/document.h"
+#include "json/document.h"
 #include <fstream>
-#include "Backpack.h"
+#include "../../Common/Backpack/Backpack.h"
 
 using namespace cocos2d;
+
+// 将字符串转换为 ObjectType 枚举
+ObjectType stringToObjectType(const std::string& str) {
+    if (str == "PICKUP") {
+        return ObjectType::PICKUP;
+    }
+    else if (str == "COOKING") {
+        return ObjectType::COOKING;
+    }
+    else if (str == "FISHING") {
+        return ObjectType::FISHING;
+    }
+    else {
+        throw std::invalid_argument("Invalid ObjectType string: " + str);
+    }
+}
 
 SceneObject::SceneObject()
     : type(ObjectType::PICKUP), spriteGenerated(false) {
@@ -16,7 +32,7 @@ SceneObject::SceneObject(ObjectType type, const Vec2& position, const std::strin
 }
 
 // 获取物体类型
-SceneObject::ObjectType SceneObject::getType() const {
+ObjectType SceneObject::getType() const {
     return type;
 }
 
@@ -98,7 +114,7 @@ void SceneObject::interactWithPlayer(Backpack* backpack) {
         // 钓鱼交互，触发钓鱼过程
         srand(time(0)); // 初始化随机种子
         // 创建并启动钓鱼系统
-        FishingSystem* fishingSystem = FishingSystem::create();
+        FishingSystem* fishingSystem = new FishingSystem;
         fishingSystem->startFishing();
 
         // 设置钓鱼结果的回调函数
