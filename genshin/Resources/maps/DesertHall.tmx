@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="25" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="28">
- <tileset firstgid="1" source="lpc-tavern/lpc-tavern/preview/walls.tsx"/>
- <tileset firstgid="6145" source="lpc-tavern/lpc-tavern/preview/floors.tsx"/>
- <tileset firstgid="8193" source="../Genshion/gen3/genshin/genshin/Resources/maps/decorations-medieval.tsx"/>
+ <tileset firstgid="1" source="walls.tsx"/>
+ <tileset firstgid="6145" source="floors.tsx"/>
+ <tileset firstgid="8193" source="decorations-medieval.tsx"/>
  <tileset firstgid="9217" name="tavern-cooking" tilewidth="32" tileheight="32" tilecount="256" columns="16">
-  <image source="lpc-tavern/lpc-tavern/tavern-cooking.png" trans="ff00ff" width="512" height="512"/>
+  <image source="../images/tavern-cooking.png" trans="ff00ff" width="512" height="512"/>
   <tile id="82">
    <animation>
     <frame tileid="82" duration="100"/>
@@ -67,7 +67,7 @@
   </tile>
  </tileset>
  <tileset firstgid="9473" source="upholstery.tsx"/>
- <tileset firstgid="9985" source="../Genshion/gen3/genshin/genshin/Resources/maps/container.tsx"/>
+ <tileset firstgid="9985" source="container.tsx"/>
  <layer id="2" name="Floor" width="25" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

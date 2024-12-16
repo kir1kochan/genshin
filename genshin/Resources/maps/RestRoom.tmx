@@ -3,9 +3,9 @@
  <tileset firstgid="1" source="floors.tsx"/>
  <tileset firstgid="2049" source="upholstery.tsx"/>
  <tileset firstgid="2561" source="windows.tsx"/>
- <tileset firstgid="2817" source="../Genshion/gen3/genshin/genshin/Resources/maps/container.tsx"/>
- <tileset firstgid="3841" source="lpc-tavern/lpc-tavern/preview/walls.tsx"/>
- <tileset firstgid="9985" source="../Genshion/gen3/genshin/genshin/Resources/maps/decorations-medieval.tsx"/>
+ <tileset firstgid="2817" source="container.tsx"/>
+ <tileset firstgid="3841" source="walls.tsx"/>
+ <tileset firstgid="9985" source="decorations-medieval.tsx"/>
  <tileset firstgid="11009" source="blonde-wood.tsx"/>
  <tileset firstgid="11521" source="tavern-deco.tsx"/>
  <tileset firstgid="12417" source="tavern-cooking.tsx"/>

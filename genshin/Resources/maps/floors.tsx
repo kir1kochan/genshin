@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.10" tiledversion="1.11.0" name="floors" tilewidth="32" tileheight="32" tilecount="2048" columns="32">
- <image source="lpc-floors/lpc-floors/floors.png" width="1024" height="2048"/>
+ <image source="../images/floors.png" width="1024" height="2048"/>
  <tile id="1062">
   <objectgroup draworder="index" id="7">
    <object id="8" x="0.181818" y="0.363636" width="31.4545" height="31.2727"/>
