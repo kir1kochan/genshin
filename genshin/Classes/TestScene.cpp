@@ -31,7 +31,7 @@ bool TestScene::init()
     director->getOpenGLView()->setDesignResolutionSize(1920, 1080, ResolutionPolicy::NO_BORDER);
 
     // 如果地图太小，可以调整缩放比例，放大地图
-    auto map = TMXTiledMap::create("/maps/forest.tmx");
+    auto map = TMXTiledMap::create("/maps/world.tmx");
     if (map) {
         map->setName("background");
         this->addChild(map, -1);  // 将地图作为背景层添加到场景中
@@ -62,7 +62,7 @@ bool TestScene::init()
     // 加入玩家
     scheduleOnce([this, map](float dt) {
         auto objectLayer = map->getObjectGroup("Objects");  // 获取对应图层
-        auto spawnPoint = objectLayer->getObject("SpawnPoint");  // 获取对象点
+        auto spawnPoint = objectLayer->getObject("spawnPoint");  // 获取对象点
         float x = spawnPoint["x"].asFloat();
         float y = spawnPoint["y"].asFloat();
         auto playerspirt = Sprite::create("player.png");
@@ -72,7 +72,6 @@ bool TestScene::init()
         this->addChild(player, 1);  // 将玩家加入到场景中
         player->setVisible(true);
         player->setScale(1.0f);
-
         // 设置玩家输入管理器（例如键盘控制）
         if (!keyboardEventManager) {
             keyboardEventManager = new KeyboardEventManager;
@@ -233,12 +232,11 @@ void TestScene::update(float deltaTime)
         blockManager->updateBlocksForPlayer(player);
     }
     if (spiritManager) {
-        if (gaptime < 0.2) {
+        if (gaptime < 5) {
             gaptime += deltaTime;
             return;
         }
         spiritManager->update(gaptime);
         gaptime = 0;
-    }
-    
+    }    
 }

@@ -14,7 +14,9 @@ Backpack::Backpack(const std::vector<std::shared_ptr<Item>>& itemPointers): coin
     }
 }
 
-Backpack::Backpack() : coins(0) {}
+Backpack::Backpack() : coins(0) {
+    loadFromFile("JSON/Backpack.json");
+}
 
 // 通过物品指针添加物品
 void Backpack::addItem(const std::shared_ptr<Item>& item, int count) {
