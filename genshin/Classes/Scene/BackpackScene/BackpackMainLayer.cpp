@@ -669,7 +669,7 @@ void BackpackMainLayer::addHoverListener() {
                 }
             }
         }
-       
+
         };
 
     listener->onMouseDown = [this](EventMouse* event) {
@@ -755,8 +755,8 @@ void BackpackMainLayer::addHoverListener() {
                 }
             }
         }
-        
 
+        };
     // ×¢²á¼àÌýÆ÷
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 }
