@@ -112,7 +112,8 @@
       "id": 100303,
       "name": "Earth_Necklace",
       "power": 0.5,
-      "element": 2
+      "element": 2,
+      "quantity": 0
     },
     {
       "id": 100304,

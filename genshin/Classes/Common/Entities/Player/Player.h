@@ -69,8 +69,8 @@ public:
     std::shared_ptr<Accessory> getAccessory() const { return accessory; }
 
     // 获取技能内容
-    std::vector<std::shared_ptr<Skill>> getunlockedSkills() const { return unlockedSkills; }
-    std::vector<std::shared_ptr<Skill>> getskillBar() const { return skillBar; }
+    std::vector<std::shared_ptr<Skill>>& getunlockedSkills() { return unlockedSkills; }
+    std::vector<std::shared_ptr<Skill>>& getskillBar() { return skillBar; }
 
     // 经验增加
     void gainExperience(int exp);

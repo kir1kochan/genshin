@@ -40,7 +40,7 @@ void Accessory::loadFromJson(const std::string& jsonString) {
     // 加载父类装备数据
     if (doc.HasMember("id")) id = doc["id"].GetInt();
     if (doc.HasMember("name")) name = doc["name"].GetString();
-    if (doc.HasMember("power")) power = doc["power"].GetInt();
+    if (doc.HasMember("power")) power = doc["power"].GetFloat();
 
     // 加载元素属性
     if (doc.HasMember("element")) {
