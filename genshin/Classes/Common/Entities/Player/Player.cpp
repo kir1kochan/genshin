@@ -293,11 +293,11 @@ void Player::checkAndUnlockSkills()
     static std::map<int, std::shared_ptr<Skill>> allSkills = {
      {5, std::make_shared<AttackSkill>(910101, "Fireball", 3.0f, 25.0f, 80.0f, 12.0f, static_cast<Element>(0))},  // »ğÑæ¹¥»÷
      {10, std::make_shared<AttackSkill>(910102, "Water Blast", 4.0f, 20.0f, 70.0f, 14.0f, static_cast<Element>(1))},  // Ë®Ö®³å»÷
-     {15, std::make_shared<AttackSkill>(910103, "Thunderstrike", 5.0f, 30.0f, 85.0f, 18.0f, static_cast<Element>(2))},  // À×µç¹¥»÷
-     {20, std::make_shared<AttackSkill>(910104, "Earthquake", 6.0f, 35.0f, 90.0f, 10.0f, static_cast<Element>(3))},  // µØÕğ¹¥»÷
-     {25, std::make_shared<AttackSkill>(910105, "Air Blast", 3.5f, 22.0f, 75.0f, 16.0f, static_cast<Element>(4))},  // ¿ÕÆø³å»÷
-     {30, std::make_shared<AttackSkill>(910106, "Ice Shard", 4.5f, 18.0f, 65.0f, 13.0f, static_cast<Element>(5))},  // ±ùËªËéÆ¬
-     {35, std::make_shared<AttackSkill>(910107, "Vine Lash", 3.0f, 20.0f, 60.0f, 11.0f, static_cast<Element>(6))},  // ÌÙ±Ş
+     {15, std::make_shared<AttackSkill>(910103, "Thunderstrike", 5.0f, 30.0f, 85.0f, 18.0f, static_cast<Element>(4))},  // À×µç¹¥»÷
+     {20, std::make_shared<AttackSkill>(910104, "Earthquake", 6.0f, 35.0f, 90.0f, 10.0f, static_cast<Element>(2))},  // µØÕğ¹¥»÷
+     {25, std::make_shared<AttackSkill>(910105, "Air Blast", 3.5f, 22.0f, 75.0f, 16.0f, static_cast<Element>(3))},  // ¿ÕÆø³å»÷
+     {30, std::make_shared<AttackSkill>(910106, "Ice Shard", 4.5f, 18.0f, 65.0f, 13.0f, static_cast<Element>(6))},  // ±ùËªËéÆ¬
+     {35, std::make_shared<AttackSkill>(910107, "Vine Lash", 3.0f, 20.0f, 60.0f, 11.0f, static_cast<Element>(5))},  // ÌÙ±Ş
      {10, std::make_shared<ShieldSkill>(920101, "Shield Block", 10.0f, 40.0f, 150.0f, 5.0f)},  // »¤¶Ü¼¼ÄÜ
      {6, std::make_shared<HealSkill>(930101, "Healing Touch", 6.0f, 30.0f, 120.0f)}  // ÖÎÁÆ¼¼ÄÜ
     };

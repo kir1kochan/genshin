@@ -25,7 +25,7 @@
       "staminaCost": 30,
       "attackPower": 85.0,
       "range": 18.0,
-      "element": 2
+      "element": 4
     },
     {
       "id": 900104,
@@ -34,7 +34,7 @@
       "staminaCost": 35,
       "attackPower": 90.0,
       "range": 10.0,
-      "element": 3
+      "element": 2
     },
     {
       "id": 900105,
@@ -43,7 +43,7 @@
       "staminaCost": 22,
       "attackPower": 75.0,
       "range": 16.0,
-      "element": 4
+      "element": 3
     },
     {
       "id": 900106,
@@ -52,7 +52,7 @@
       "staminaCost": 18,
       "attackPower": 65.0,
       "range": 13.0,
-      "element": 5
+      "element": 6
     },
     {
       "id": 900107,
@@ -61,7 +61,7 @@
       "staminaCost": 20,
       "attackPower": 60.0,
       "range": 11.0,
-      "element": 6
+      "element": 5
     },
     {
       "id": 900201,
