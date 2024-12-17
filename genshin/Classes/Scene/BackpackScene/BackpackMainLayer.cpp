@@ -56,6 +56,7 @@ bool BackpackMainLayer::init() {
     
     // 创建并初始化技能界面
     skillLayer = SkillLayer::create();
+    skillLayer->setPlayer(player);
     this->addChild(skillLayer);
 
     /*
@@ -160,16 +161,19 @@ void BackpackMainLayer::createEquipmentGrid() {
     // 创建武器格子
     auto weaponBox = Sprite::create("UI/item_slot.png");
     weaponBox->setPosition(Vec2(startX, startY));
+    weaponBox->setScale(1.3f);
     this->addChild(weaponBox);
 
     // 创建盔甲格子
     auto armorBox = Sprite::create("UI/item_slot.png");
-    armorBox->setPosition(Vec2(startX, startY - 90));
+    armorBox->setPosition(Vec2(startX, startY - 110));
+    armorBox->setScale(1.3f);
     this->addChild(armorBox);
 
     // 创建饰品格子
     auto accessoryBox = Sprite::create("UI/item_slot.png");
-    accessoryBox->setPosition(Vec2(startX, startY - 180));
+    accessoryBox->setPosition(Vec2(startX, startY - 220));
+    accessoryBox->setScale(1.3f);
     this->addChild(accessoryBox);
 }
 
@@ -180,7 +184,8 @@ void BackpackMainLayer::createSkillGrid() {
 
     for (int i = 0; i < 4; i++) {
         auto skillBox = Sprite::create("UI/item_slot.png");
-        skillBox->setPosition(Vec2(startX, startY - i * 90));
+        skillBox->setPosition(Vec2(startX, startY - i * 110));
+        skillBox->setScale(1.3f);
         this->addChild(skillBox);
     }
 }
@@ -311,31 +316,33 @@ void BackpackMainLayer::createEquipmentIcons() {
         std::string weaponFilePath = "Equipment/" + weapon->getName() + ".jpg";
         auto weaponIcon = Sprite::create(weaponFilePath);
         weaponIcon->setPosition(Vec2(startX, startY));
+        weaponIcon->setScale(1.3f);
         equipmentIconsContainer->addChild(weaponIcon);
         // 显示包围盒
         createBoundingBoxForIcons(weaponIcon);
-
-        // 延迟添加双击卸下的监听器和悬停监听
+        addHoverListenerForIcons(weaponIcon, weapon.get()->getName(), std::to_string(weapon.get()->getPower()), weapon.get()->getId());
+        /* 延迟添加双击卸下的监听器和悬停监听
         scheduleOnce([this, weaponIcon,weapon](float) {
             if (weaponIcon) {  // 确保 weaponIcon 仍然有效
                 addDoubleClickListener(weaponIcon, [this]() {
                     player->unequipWeapon();
                     this->refreshEquipmentIcons();
                     });
-                addHoverListenerForIcons(weaponIcon, weapon.get()->getName(), std::to_string(weapon.get()->getPower()), weapon.get()->getId());
+                
             }
-            }, 1.0f, "weaponListener");
+            }, 1.0f, "weaponListener");*/
     }
 
     // 生成盔甲图标
     if (armor) {
         std::string armorFilePath = "Equipment/" + armor->getName() + ".jpg";
         auto armorIcon = Sprite::create(armorFilePath);
-        armorIcon->setPosition(Vec2(startX, startY - 90));
+        armorIcon->setPosition(Vec2(startX, startY - 110));
+        armorIcon->setScale(1.3f);
         equipmentIconsContainer->addChild(armorIcon);
-
+        addHoverListenerForIcons(armorIcon, armor.get()->getName(), std::to_string(armor.get()->getPower()), armor.get()->getId());
         // 延迟添加双击卸下的监听器
-        scheduleOnce([this, armorIcon](float) {
+        /*scheduleOnce([this, armorIcon](float) {
             if (armorIcon) {  // 确保 armorIcon 仍然有效
                 addDoubleClickListener(armorIcon, [this]() {
                     player->unequipArmor();
@@ -343,16 +350,18 @@ void BackpackMainLayer::createEquipmentIcons() {
                     });
             }
             }, 1.0f, "armorListener");
+    */
     }
 
     // 生成饰品图标
     if (accessory) {
         std::string accessoryFilePath = "Equipment/" + accessory->getName() + ".jpg";
         auto accessoryIcon = Sprite::create(accessoryFilePath);
-        accessoryIcon->setPosition(Vec2(startX, startY - 180));
+        accessoryIcon->setPosition(Vec2(startX, startY - 220));
+        accessoryIcon->setScale(1.3f);
         equipmentIconsContainer->addChild(accessoryIcon);
-
-        // 延迟添加双击卸下的监听器
+        addHoverListenerForIcons(accessoryIcon, accessory.get()->getName(), std::to_string(accessory.get()->getPower()), accessory.get()->getId());
+        /* 延迟添加双击卸下的监听器
         scheduleOnce([this, accessoryIcon](float) {
             if (accessoryIcon) {  // 确保 accessoryIcon 仍然有效
                 addDoubleClickListener(accessoryIcon, [this]() {
@@ -360,42 +369,25 @@ void BackpackMainLayer::createEquipmentIcons() {
                     this->refreshEquipmentIcons();
                     });
             }
-            }, 1.0f, "accessoryListener");
+            }, 1.0f, "accessoryListener");*/
     }
 }
 
 void BackpackMainLayer::refreshEquipmentIcons() {
     createEquipmentIcons();
+    topLeftGrid.clear();
 }
 
-void BackpackMainLayer::addDoubleClickListener(cocos2d::Sprite* target, const std::function<void()>& callback) {
-    static const float DOUBLE_CLICK_INTERVAL = 0.3f; // 双击的时间间隔（秒）
-    static float lastClickTime = 0.0f; // 上一次点击时间
+/*void BackpackMainLayer::addDoubleClickListener(cocos2d::Sprite* target, const std::function<void()>& callback) {
+    
 
     auto listener = EventListenerMouse::create();
 
-    listener->onMouseDown = [target, callback](EventMouse* event) {
-        // 获取鼠标的位置
-        Vec2 cursorPosition(event->getCursorX(), event->getCursorY());
-        Vec2 locationInNode = cursorPosition;
-        Rect rect = target->getBoundingBox();
-
-        if ((locationInNode.x <= rect.origin.x && locationInNode.x >= rect.origin.x - rect.size.width) &&
-            (locationInNode.y >= rect.origin.y && locationInNode.y <= rect.origin.y + rect.size.height)) {
-            float currentTime = Director::getInstance()->getTotalFrames() / 60.0f;
-
-            if (currentTime - lastClickTime < DOUBLE_CLICK_INTERVAL) {
-                callback(); // 双击触发回调
-                lastClickTime = 0.0f;
-            }
-            else {
-                lastClickTime = currentTime; // 记录时间
-            }
-        }
-        };
+    
 
     Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, target);
 }
+*/
 
 
 // 调试用包围盒绘制
@@ -442,29 +434,30 @@ void BackpackMainLayer::createBackpackUI() {
     this->addChild(label);
 
     // 物品格子的起始位置
-    float startX = 650.0f;
+    float startX = 700.0f;
     float startY = 960.0f;
 
     // 每行显示多少个格子
-    int itemsPerRow = 13;
-    float itemWidth = 90.0f;
-    float itemHeight = 90.0f;
+    int itemsPerRow = 9;
+    float itemWidth = 110.0f;
+    float itemHeight = 110.0f;
 
     // 创建并平铺格子
-    for (int i = 0; i < 130; ++i) { // 假设你要创建 20 个格子
+    for (int i = 0; i < 63; ++i) { 
         // 计算当前格子的位置
-        float x = startX + (i % itemsPerRow) * (itemWidth + 5); // 每个格子之间有 5 的间隔
-        float y = startY - (i / itemsPerRow) * (itemHeight + 5); // 每行的格子间隔 5
+        float x = startX + (i % itemsPerRow) * (itemWidth + 25); // 每个格子之间有 5 的间隔
+        float y = startY - (i / itemsPerRow) * (itemHeight + 25); // 每行的格子间隔 5
 
         // 创建格子的 Sprite 并设置位置
         auto itemSprite = Sprite::create("UI/item_slot.png");
         itemSprite->setPosition(Vec2(x, y));
+        itemSprite->setScale(1.3f);
         this->addChild(itemSprite);
     }
 }
 
 // 添加到鼠标悬停监听队列
-void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id) {
+void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id, std::function<void()> cb = nullptr) {
 
     // 显示物品的名称和效果
     int type = id / 100000;
@@ -501,20 +494,7 @@ void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string
         effect = effectValue + " Health  regen";
         break;
     case 9: // 技能
-        switch (subType) {
-        case 1: {
-            break;
-        }
-        case 2: {
-            break;
-        }
-        case 3: {
-            break;
-        }
-        default:
-            CCLOG("Error: Unsupported equipment subtype %d for ID %d", subType, id);
-            break;
-        }
+        effect = "StaminaCost: " + effectValue;
         break;
     default:
         CCLOG("Error: Unsupported type %d for ID %d", type, id);
@@ -524,21 +504,21 @@ void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string
     HoverInfo hoverInfo;
     hoverInfo.name = name;
     hoverInfo.effectValue = effect;
-
+    hoverInfo.callback = cb;
     // 根据 Rect 的位置划分到对应区域
-    if (boundingBox.getMidX() <= 1160 && boundingBox.getMidY() > 525) {
+    if (boundingBox.getMidX() <= 1160 && boundingBox.getMidY() > 490) {
         // 左上区域
         topLeftGrid[boundingBox] = hoverInfo;
     }
-    else if (boundingBox.getMidX() > 1160 && boundingBox.getMidY() > 525) {
+    else if (boundingBox.getMidX() > 1160 && boundingBox.getMidY() > 490) {
         // 右上区域
         topRightGrid[boundingBox] = hoverInfo;
     }
-    else if (boundingBox.getMidX() <= 1160 && boundingBox.getMidY() <= 525) {
+    else if (boundingBox.getMidX() <= 1160 && boundingBox.getMidY() <= 490) {
         // 左下区域
         bottomLeftGrid[boundingBox] = hoverInfo;
     }
-    else if (boundingBox.getMidX() > 1160 && boundingBox.getMidY() <= 525) {
+    else if (boundingBox.getMidX() > 1160 && boundingBox.getMidY() <= 490) {
         // 右下区域
         bottomRightGrid[boundingBox] = hoverInfo;
     }
@@ -624,13 +604,16 @@ void BackpackMainLayer::update(float deltatime) {
 }
 
 void BackpackMainLayer::addHoverListener() {
-    auto hoverListener = EventListenerMouse::create();
+    static const float DOUBLE_CLICK_INTERVAL = 0.3f; // 双击的时间间隔（秒）
+    static float lastClickTime = 0.0f; // 上一次点击时间
 
-    hoverListener->onMouseMove = [this](EventMouse* event) {
+    auto listener = EventListenerMouse::create();
+
+    listener->onMouseMove = [this](EventMouse* event) {
         // 获取鼠标位置
         Vec2 cursorPosition(event->getCursorX(), event->getCursorY());
         // 根据 Rect 的位置划分到对应区域
-        if (cursorPosition.x <= 1160 && cursorPosition.y > 525) {
+        if (cursorPosition.x <= 1160 && cursorPosition.y > 490) {
             mouseArea = 0;
             // 左上区域
             for (auto entry : topLeftGrid) {
@@ -644,7 +627,7 @@ void BackpackMainLayer::addHoverListener() {
                 }
             }
         }
-        else if (cursorPosition.x > 1160 && cursorPosition.y > 525) {
+        else if (cursorPosition.x > 1160 && cursorPosition.y > 490) {
             mouseArea = 1;
             // 右上区域
             for (auto& entry : topRightGrid) {
@@ -658,7 +641,7 @@ void BackpackMainLayer::addHoverListener() {
                 }
             }
         }
-        else if (cursorPosition.x <= 1160 && cursorPosition.y <= 525) {
+        else if (cursorPosition.x <= 1160 && cursorPosition.y <= 490) {
             mouseArea = 2;
             // 左下区域
             for (auto& entry : bottomLeftGrid) {
@@ -672,7 +655,7 @@ void BackpackMainLayer::addHoverListener() {
                 }
             }
         }
-        else if (cursorPosition.x > 1160 && cursorPosition.y <= 525) {
+        else if (cursorPosition.x > 1160 && cursorPosition.y <= 490) {
             mouseArea = 3;
             // 右下区域
             for (auto& entry : topRightGrid) {
@@ -686,9 +669,94 @@ void BackpackMainLayer::addHoverListener() {
                 }
             }
         }
-       
+
         };
 
+    listener->onMouseDown = [this](EventMouse* event) {
+        // 获取鼠标位置
+        Vec2 cursorPosition(event->getCursorX(), event->getCursorY());
+        // 根据 Rect 的位置划分到对应区域
+        if (cursorPosition.x <= 1160 && cursorPosition.y > 490) {
+            mouseArea = 0;
+            // 左上区域
+            for (auto entry : topLeftGrid) {
+                if (entry.first.containsPoint(cursorPosition)) {
+                    float currentTime = Director::getInstance()->getTotalFrames() / 60.0f;
+                    if (currentTime - lastClickTime < DOUBLE_CLICK_INTERVAL) {
+                        if (entry.second.callback) {
+                            entry.second.callback(); // 双击触发回调
+                            refreshEquipmentIcons();
+                        }
+                        lastClickTime = 0.0f;
+                    }
+                    else {
+                        lastClickTime = currentTime; // 记录时间
+                    }
+                    return;
+                }
+            }
+        }
+        else if (cursorPosition.x > 1160 && cursorPosition.y > 490) {
+            mouseArea = 1;
+            // 右上区域
+            for (auto& entry : topRightGrid) {
+                if (entry.first.containsPoint(cursorPosition)) {
+                    float currentTime = Director::getInstance()->getTotalFrames() / 60.0f;
+                    if (currentTime - lastClickTime < DOUBLE_CLICK_INTERVAL) {
+                        if (entry.second.callback) {
+                            entry.second.callback(); // 双击触发回调
+                            refreshEquipmentIcons();
+                        }
+                        lastClickTime = 0.0f;
+                    }
+                    else {
+                        lastClickTime = currentTime; // 记录时间
+                    }
+                    return;
+                }
+            }
+        }
+        else if (cursorPosition.x <= 1160 && cursorPosition.y <= 490) {
+            mouseArea = 2;
+            // 左下区域
+            for (auto& entry : bottomLeftGrid) {
+                if (entry.first.containsPoint(cursorPosition)) {
+                    float currentTime = Director::getInstance()->getTotalFrames() / 60.0f;
+                    if (currentTime - lastClickTime < DOUBLE_CLICK_INTERVAL) {
+                        if (entry.second.callback) {
+                            entry.second.callback(); // 双击触发回调
+                            refreshEquipmentIcons();
+                        }
+                        lastClickTime = 0.0f;
+                    }
+                    else {
+                        lastClickTime = currentTime; // 记录时间
+                    }
+                    return;
+                }
+            }
+        }
+        else if (cursorPosition.x > 1160 && cursorPosition.y <= 490) {
+            // 右下区域
+            for (auto& entry : topRightGrid) {
+                if (entry.first.containsPoint(cursorPosition)) {
+                    float currentTime = Director::getInstance()->getTotalFrames() / 60.0f;
+                    if (currentTime - lastClickTime < DOUBLE_CLICK_INTERVAL) {
+                        if (entry.second.callback) {
+                            entry.second.callback(); // 双击触发回调
+                            refreshEquipmentIcons();
+                        }
+                        lastClickTime = 0.0f;
+                    }
+                    else {
+                        lastClickTime = currentTime; // 记录时间
+                    }
+                    return;
+                }
+            }
+        }
+
+        };
     // 注册监听器
-    _eventDispatcher->addEventListenerWithSceneGraphPriority(hoverListener, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 }

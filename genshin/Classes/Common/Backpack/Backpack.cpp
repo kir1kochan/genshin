@@ -24,6 +24,8 @@ void Backpack::addItem(const std::shared_ptr<Item>& item, int count) {
         items[item] += count;  // 增加数量
     }
     else {
+        items[item] = 0;  
+        idToItemMap[item->getId()] = item;  
         CCLOG("Item not initialized in backpack: %s", item->getName().c_str());
     }
 }

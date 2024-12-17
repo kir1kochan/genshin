@@ -33,6 +33,9 @@ public:
     // 获取技能消耗的体力
     float getStaminaCost() const;
 
+    // 获取CD
+    float getCD() const { return cooldown; }
+
     virtual void activate(Player* user, Enemy& target) = 0;
 
     // 从 JSON 字符串加载数据

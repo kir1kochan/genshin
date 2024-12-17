@@ -4,14 +4,16 @@
 #include "cocos2d.h"
 #include "ui/UIButton.h"
 #include "BackpackLayer.h"
-#include "SkillLayer.h"
 #include "EquipmentLayer.h"
 #include "../../Common/Entities/Player/Player.h"
+
+class SkillLayer;
 
 struct HoverInfo {
     bool isHovering;             // 是否正在悬停
     std::string name;            // 图标名称
     std::string effectValue;     // 效果
+    std::function<void()> callback = nullptr;  // 可选的回调函数
 };
 
 
@@ -73,8 +75,8 @@ public:
 
     void adjustSizeForTransition();
 
-    // 装备信息显示器和技能信息显示器
-    void showHoverInfo(const std::string& name, const std::string& effectValue, const Vec2& position);
+    // 鼠标悬停监听器
+    void addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id, std::function<void()> cb = nullptr);
 private:
     // 玩家对象
     Player* player;
@@ -147,8 +149,8 @@ private:
     void onLeftArrowClicked();
     void onRightArrowClicked();
 
-    // 鼠标悬停监听器
-    void addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id);
+    // 装备信息显示器和技能信息显示器
+    void showHoverInfo(const std::string& name, const std::string& effectValue, const Vec2& position);
 
     // 隐藏悬停信息
     void hideHoverInfo();
