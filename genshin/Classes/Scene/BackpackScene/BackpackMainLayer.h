@@ -106,6 +106,8 @@ private:
 
     // 装备信息显示器和技能信息显示器
     void showHoverInfo(const std::string& name, const std::string& effectValue, const Vec2& position);
+    // 隐藏悬停信息
+    void hideHoverInfo()
 };
 
 #endif // BACKPACK_MAIN_LAYER_H

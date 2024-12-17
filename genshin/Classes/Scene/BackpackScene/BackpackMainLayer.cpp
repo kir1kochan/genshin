@@ -521,6 +521,10 @@ void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string
              }
             showHoverInfo(name, effect, cursorPosition);
         }
+        else {
+            // 鼠标离开图标时隐藏信息
+            hideHoverInfo();
+        }
         };
 
     // 注册监听器
@@ -553,4 +557,14 @@ void BackpackMainLayer::showHoverInfo(const std::string& name, const std::string
     // 更新背景和文本的位置
     _hoverLabelBackground->setPosition(position + Vec2(50, 50)); // 背景位置
     _hoverLabel->setPosition(Vec2(_hoverLabelBackground->getContentSize().width / 2, _hoverLabelBackground->getContentSize().height / 2)); // 文字居中
+}
+
+// 隐藏悬停信息
+void BackpackMainLayer::hideHoverInfo() {
+    if (_hoverLabel) {
+        _hoverLabel->setString("");  // 清空文本
+    }
+    if (_hoverLabelBackground) {
+        _hoverLabelBackground->setVisible(false);  // 隐藏背景
+    }
 }
