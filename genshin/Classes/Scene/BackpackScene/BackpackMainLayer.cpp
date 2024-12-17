@@ -457,7 +457,7 @@ void BackpackMainLayer::createBackpackUI() {
 }
 
 // 添加到鼠标悬停监听队列
-void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id, std::function<void()> cb = nullptr) {
+void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id, std::function<void()> cb) {
 
     // 显示物品的名称和效果
     int type = id / 100000;
