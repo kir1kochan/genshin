@@ -111,6 +111,12 @@ bool BackpackMainLayer::init() {
     this->addChild(prevButton);
     */
 
+    schedule([this](float deltaTime) {
+        this->update(deltaTime);  // 每帧调用 update 方法
+        }, 0.5f, "update_key");
+
+    // 增加悬停监听器
+    addHoverListener();
     return true;
 }
 
@@ -309,13 +315,14 @@ void BackpackMainLayer::createEquipmentIcons() {
         // 显示包围盒
         createBoundingBoxForIcons(weaponIcon);
 
-        // 延迟添加双击卸下的监听器
-        scheduleOnce([this, weaponIcon](float) {
+        // 延迟添加双击卸下的监听器和悬停监听
+        scheduleOnce([this, weaponIcon,weapon](float) {
             if (weaponIcon) {  // 确保 weaponIcon 仍然有效
                 addDoubleClickListener(weaponIcon, [this]() {
                     player->unequipWeapon();
                     this->refreshEquipmentIcons();
                     });
+                addHoverListenerForIcons(weaponIcon, weapon.get()->getName(), std::to_string(weapon.get()->getPower()), weapon.get()->getId());
             }
             }, 1.0f, "weaponListener");
     }
@@ -368,7 +375,7 @@ void BackpackMainLayer::addDoubleClickListener(cocos2d::Sprite* target, const st
     auto listener = EventListenerMouse::create();
 
     listener->onMouseDown = [target, callback](EventMouse* event) {
-        // 获取鼠标的位置（世界坐标）
+        // 获取鼠标的位置
         Vec2 cursorPosition(event->getCursorX(), event->getCursorY());
         Vec2 locationInNode = cursorPosition;
         Rect rect = target->getBoundingBox();
@@ -456,79 +463,85 @@ void BackpackMainLayer::createBackpackUI() {
     }
 }
 
-// 鼠标悬停监听
+// 添加到鼠标悬停监听队列
 void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id) {
-    auto hoverListener = EventListenerMouse::create();
 
-    hoverListener->onMouseMove = [this, icon, name, effectValue, id](EventMouse* event) {
-        // 获取鼠标位置
-        Vec2 cursorPosition(event->getCursorX(), event->getCursorY());
-
-        // 获取图标的边界
-        Rect boundingBox = icon->getBoundingBox();
-
-        // 检查鼠标是否悬停在图标上
-        if (boundingBox.containsPoint(cursorPosition)) {
-            // 显示物品的名称和效果
-            int type = id / 10000;
-            int subType = id % 1000 / 100; 
-            std::string effect;
-            switch (type){
-            case 1: // 装备类
-                switch (subType) {
-                case 1: {
-                    effect = "Attack: " + effectValue;
-                    break;
-                }
-                case 2: {
-                    effect = "Defence: " + effectValue;
-                    break;
-                }
-                case 3: {
-                    effect = effectValue + " Stamina  regen per second";
-                    break;
-                }
-                default:
-                    CCLOG("Error: Unsupported equipment subtype %d for ID %d", subType, id);
-                    break;
-                }
-                break;
-            case 2: // 药剂类
-                effect = effectValue + " Stamina  regen";
-                break;
-            case 3: // 食物类
-                effect = effectValue + " Health  regen";
-                break;
-            case 9: // 技能
-                switch (subType) {
-                case 1: {
-                    break;
-                }
-                case 2: {
-                    break;
-                }
-                case 3: {
-                    break;
-                }
-                default:
-                    CCLOG("Error: Unsupported equipment subtype %d for ID %d", subType, id);
-                    break;
-                }
-                break;
-            default:
-                CCLOG("Error: Unsupported type %d for ID %d", type, id);
-                break;
-             }
-            showHoverInfo(name, effect, cursorPosition);
+    // 显示物品的名称和效果
+    int type = id / 100000;
+    int subType = id % 1000 / 100;
+    std::string effect;
+    // 获取图标的边界
+    Rect boundingBox = icon->getBoundingBox();
+    // 调整boundingBox的偏移
+    boundingBox.origin = boundingBox.origin - Vec2(boundingBox.size.width, 0);
+    switch (type) {
+    case 1: // 装备类
+        switch (subType) {
+        case 1: {
+            effect = "Attack: " + effectValue;
+            break;
         }
-        else {
-            // 鼠标离开图标时隐藏信息
-            hideHoverInfo();
+        case 2: {
+            effect = "Defence: " + effectValue;
+            break;
         }
-        };
+        case 3: {
+            effect = effectValue + " Stamina  regen per second";
+            break;
+        }
+        default:
+            CCLOG("Error: Unsupported equipment subtype %d for ID %d", subType, id);
+            break;
+        }
+        break;
+    case 2: // 药剂类
+        effect = effectValue + " Stamina  regen";
+        break;
+    case 3: // 食物类
+        effect = effectValue + " Health  regen";
+        break;
+    case 9: // 技能
+        switch (subType) {
+        case 1: {
+            break;
+        }
+        case 2: {
+            break;
+        }
+        case 3: {
+            break;
+        }
+        default:
+            CCLOG("Error: Unsupported equipment subtype %d for ID %d", subType, id);
+            break;
+        }
+        break;
+    default:
+        CCLOG("Error: Unsupported type %d for ID %d", type, id);
+        break;
+    }
+    // 根据物品类型生成效果信息
+    HoverInfo hoverInfo;
+    hoverInfo.name = name;
+    hoverInfo.effectValue = effect;
 
-    // 注册监听器
-    _eventDispatcher->addEventListenerWithSceneGraphPriority(hoverListener, icon);
+    // 根据 Rect 的位置划分到对应区域
+    if (boundingBox.getMidX() <= 1160 && boundingBox.getMidY() > 525) {
+        // 左上区域
+        topLeftGrid[boundingBox] = hoverInfo;
+    }
+    else if (boundingBox.getMidX() > 1160 && boundingBox.getMidY() > 525) {
+        // 右上区域
+        topRightGrid[boundingBox] = hoverInfo;
+    }
+    else if (boundingBox.getMidX() <= 1160 && boundingBox.getMidY() <= 525) {
+        // 左下区域
+        bottomLeftGrid[boundingBox] = hoverInfo;
+    }
+    else if (boundingBox.getMidX() > 1160 && boundingBox.getMidY() <= 525) {
+        // 右下区域
+        bottomRightGrid[boundingBox] = hoverInfo;
+    }
 }
 
 // 主背包层部分的技能信息显示
@@ -546,7 +559,7 @@ void BackpackMainLayer::showHoverInfo(const std::string& name, const std::string
         _hoverLabel->setColor(Color3B::WHITE);
         _hoverLabelBackground->addChild(_hoverLabel);  // 将 Label 添加到背景上
     }
-
+    _hoverLabelBackground->setVisible(true);
     // 更新 Label 的内容
     std::string hoverText = name + "\n" + effectValue;
     _hoverLabel->setString(hoverText);
@@ -555,16 +568,127 @@ void BackpackMainLayer::showHoverInfo(const std::string& name, const std::string
     _hoverLabelBackground->setContentSize(Size(_hoverLabel->getContentSize().width + 20, _hoverLabel->getContentSize().height + 20));
 
     // 更新背景和文本的位置
-    _hoverLabelBackground->setPosition(position + Vec2(50, 50)); // 背景位置
+    _hoverLabelBackground->setPosition(position + Vec2(50, 0)); // 背景位置
     _hoverLabel->setPosition(Vec2(_hoverLabelBackground->getContentSize().width / 2, _hoverLabelBackground->getContentSize().height / 2)); // 文字居中
 }
 
 // 隐藏悬停信息
 void BackpackMainLayer::hideHoverInfo() {
+    if (mouseArea==0) {
+        // 左上区域
+        for (const auto entry : topLeftGrid) {
+            if (entry.second.isHovering == true) {
+                return;
+            }
+        }
+    }
+    else if (mouseArea == 1) {        
+        // 右上区域
+        for (const auto& entry : topRightGrid) {
+            if (entry.second.isHovering == true) {
+                return;
+            }
+        }
+    }
+    else if (mouseArea = 2) {
+        // 左下区域
+        for (const auto& entry : bottomLeftGrid) {
+            if (entry.second.isHovering == true) {
+                return;
+            }
+        }
+    }
+    else if (mouseArea == 3) {       
+        // 右下区域
+        for (const auto& entry : topRightGrid) {
+            if (entry.second.isHovering == true) {
+                return;
+            }
+        }
+    }
     if (_hoverLabel) {
         _hoverLabel->setString("");  // 清空文本
     }
     if (_hoverLabelBackground) {
         _hoverLabelBackground->setVisible(false);  // 隐藏背景
     }
+}
+
+void BackpackMainLayer::update(float deltatime) {
+    if (gaptime < 2.0f) {
+        gaptime += deltatime;
+        return;
+    }
+    hideHoverInfo();
+    gaptime = 0;
+}
+
+void BackpackMainLayer::addHoverListener() {
+    auto hoverListener = EventListenerMouse::create();
+
+    hoverListener->onMouseMove = [this](EventMouse* event) {
+        // 获取鼠标位置
+        Vec2 cursorPosition(event->getCursorX(), event->getCursorY());
+        // 根据 Rect 的位置划分到对应区域
+        if (cursorPosition.x <= 1160 && cursorPosition.y > 525) {
+            mouseArea = 0;
+            // 左上区域
+            for (auto entry : topLeftGrid) {
+                if (entry.first.containsPoint(cursorPosition)) {
+                    entry.second.isHovering = true;  // 更新当前悬停信息
+                    showHoverInfo(entry.second.name, entry.second.effectValue, cursorPosition);
+                    return;
+                }
+                else {
+                    entry.second.isHovering = false;
+                }
+            }
+        }
+        else if (cursorPosition.x > 1160 && cursorPosition.y > 525) {
+            mouseArea = 1;
+            // 右上区域
+            for (auto& entry : topRightGrid) {
+                if (entry.first.containsPoint(cursorPosition)) {
+                    showHoverInfo(entry.second.name, entry.second.effectValue, cursorPosition);
+                    entry.second.isHovering = true;  // 更新当前悬停信息
+                    return;
+                }
+                else {
+                    entry.second.isHovering = false;
+                }
+            }
+        }
+        else if (cursorPosition.x <= 1160 && cursorPosition.y <= 525) {
+            mouseArea = 2;
+            // 左下区域
+            for (auto& entry : bottomLeftGrid) {
+                if (entry.first.containsPoint(cursorPosition)) {
+                    showHoverInfo(entry.second.name, entry.second.effectValue, cursorPosition);
+                    entry.second.isHovering = true;  // 更新当前悬停信息
+                    return;
+                }
+                else {
+                    entry.second.isHovering = false;
+                }
+            }
+        }
+        else if (cursorPosition.x > 1160 && cursorPosition.y <= 525) {
+            mouseArea = 3;
+            // 右下区域
+            for (auto& entry : topRightGrid) {
+                if (entry.first.containsPoint(cursorPosition)) {
+                    showHoverInfo(entry.second.name, entry.second.effectValue, cursorPosition);
+                    entry.second.isHovering = true;  // 更新当前悬停信息
+                    return;
+                }
+                else {
+                    entry.second.isHovering = false;
+                }
+            }
+        }
+       
+        };
+
+    // 注册监听器
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(hoverListener, this);
 }

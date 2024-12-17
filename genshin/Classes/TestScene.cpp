@@ -72,7 +72,6 @@ bool TestScene::init()
         this->addChild(player, 1);  // 将玩家加入到场景中
         player->setVisible(true);
         player->setScale(1.0f);
-
         // 设置玩家输入管理器（例如键盘控制）
         if (!keyboardEventManager) {
             keyboardEventManager = new KeyboardEventManager;
@@ -233,12 +232,11 @@ void TestScene::update(float deltaTime)
         blockManager->updateBlocksForPlayer(player);
     }
     if (spiritManager) {
-        if (gaptime < 0.2) {
+        if (gaptime < 5) {
             gaptime += deltaTime;
             return;
         }
         spiritManager->update(gaptime);
         gaptime = 0;
-    }
-    
+    }    
 }
