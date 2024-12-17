@@ -11,8 +11,8 @@ public:
     // 初始化背包界面
     virtual bool init();
 
-    // 创建背包UI组件
-    void createBackpackUI();
+    // 创建背包物品图标
+    void createItemIcon();
 
     // 生成实例的宏
     CREATE_FUNC(BackpackLayer);
