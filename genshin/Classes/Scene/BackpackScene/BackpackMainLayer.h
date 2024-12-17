@@ -63,6 +63,10 @@ private:
 
     cocos2d::Node* skillIconsContainer; // 存储装备图标的容器
 
+    Label* _hoverLabel = nullptr;  // 用于显示装备着的装备和技能描述的标签
+
+    Layer* _hoverLabelBackground = nullptr; // 标签的背景
+
     // 创建碰撞盒
     void createBoundingBoxForIcons(cocos2d::Sprite* sprite);
 
@@ -74,6 +78,9 @@ private:
 
     // 创建技能栏格子的显示
     void createSkillGrid();
+
+    // 创建背包格子的显示
+    void createBackpackUI();
 
     // 创建玩家切换形象的箭头
     void createArrowButtons();
@@ -89,6 +96,16 @@ private:
 
     // 刷新装备图标
     void refreshEquipmentIcons();
+
+    // 根据按钮切换角色属性和外观
+    void onLeftArrowClicked();
+    void onRightArrowClicked();
+
+    // 鼠标悬停监听器
+    void addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id);
+
+    // 装备信息显示器和技能信息显示器
+    void showHoverInfo(const std::string& name, const std::string& effectValue, const Vec2& position);
 };
 
 #endif // BACKPACK_MAIN_LAYER_H

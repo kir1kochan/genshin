@@ -35,6 +35,9 @@ bool BackpackMainLayer::init() {
     auto background = LayerColor::create(Color4B(139, 69, 19, 255)); // 棕色背景,可以修改成别的背景
     this->addChild(background);
 
+    // 创建背包界面的UI组件
+    createBackpackUI();
+
     // 初始化装备图标的容器节点
     equipmentIconsContainer = Node::create();
     this->addChild(equipmentIconsContainer);
@@ -240,6 +243,7 @@ void BackpackMainLayer::createArrowButtons() {
     auto leftButton = Sprite::createWithSpriteFrame(leftButtonFrame);
     leftButton->setPosition(Vec2(200, Director::getInstance()->getVisibleSize().height - 200)); // 设置左箭头的位置
     leftButton->setScale(3.0f); // 放大2倍
+    leftButton->setName("leftButton");
     this->addChild(leftButton);
 
     // 裁剪右箭头按钮
@@ -247,8 +251,37 @@ void BackpackMainLayer::createArrowButtons() {
     auto rightButton = Sprite::createWithSpriteFrame(rightButtonFrame);
     rightButton->setPosition(Vec2(400, Director::getInstance()->getVisibleSize().height - 200)); // 设置右箭头的位置
     rightButton->setScale(3.0f); // 放大2倍
+    rightButton->setName("rightButton");
     this->addChild(rightButton);
+
+    // 添加鼠标监听器
+    auto mouseListener = EventListenerMouse::create();
+
+    mouseListener->onMouseDown = [this](Event* event) {
+        EventMouse* mouseEvent = dynamic_cast<EventMouse*>(event);
+        if (!mouseEvent) return;
+
+        Vec2 clickPosition = Vec2(mouseEvent->getCursorX(), mouseEvent->getCursorY());
+        
+        auto leftButton = this->getChildByName("leftButton");
+        auto rightButton = this->getChildByName("rightButton");
+        Rect boundingBox = leftButton->getBoundingBox();
+        Vec2 pos = leftButton->getPosition();
+
+        // 调整boundingBox的偏移
+        boundingBox.origin = pos - Vec2(boundingBox.size.width, boundingBox.size.height/2);
+        if (boundingBox.containsPoint(clickPosition)) {
+            this->onLeftArrowClicked();
+        }
+        else if (rightButton->getBoundingBox().containsPoint(clickPosition)) {
+            this->onRightArrowClicked();
+        }
+    };
+
+    // 添加监听器到事件分发器
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
 }
+
 
 void BackpackMainLayer::createEquipmentIcons() {
     if (!player) {
@@ -358,7 +391,7 @@ void BackpackMainLayer::addDoubleClickListener(cocos2d::Sprite* target, const st
 }
 
 
-
+// 调试用包围盒绘制
 void BackpackMainLayer::createBoundingBoxForIcons(cocos2d::Sprite* sprite) {
     if (!sprite) return;
 
@@ -373,4 +406,151 @@ void BackpackMainLayer::createBoundingBoxForIcons(cocos2d::Sprite* sprite) {
 
     // 添加到父节点
     this->addChild(drawNode);
+}
+
+void BackpackMainLayer::onLeftArrowClicked() {
+    // 左箭头点击逻辑，切换玩家属性
+    int element = static_cast<int>(player->getElement());
+    element = (element + 6) % 7;
+    player->chanegElement(static_cast<Element>(element));
+    createPlayerDataDisplay();
+    // 还需要添加玩家形象变化
+    CCLOG("Left arrow action triggered!");
+}
+
+void BackpackMainLayer::onRightArrowClicked() {
+    // 右箭头点击逻辑，切换玩家属性
+    int element = static_cast<int>(player->getElement());
+    element = (element + 8) % 7;
+    player->chanegElement(static_cast<Element>(element));
+    createPlayerDataDisplay();
+    // 还需要添加玩家形象变化
+    CCLOG("Right arrow action triggered!");
+}
+
+void BackpackMainLayer::createBackpackUI() {
+    // 创建一个标签显示背包界面的标题
+    auto label = Label::createWithSystemFont("Backpack", "Arial", 24);
+    label->setPosition(Vec2(1200, 1050));
+    this->addChild(label);
+
+    // 物品格子的起始位置
+    float startX = 650.0f;
+    float startY = 960.0f;
+
+    // 每行显示多少个格子
+    int itemsPerRow = 13;
+    float itemWidth = 90.0f;
+    float itemHeight = 90.0f;
+
+    // 创建并平铺格子
+    for (int i = 0; i < 130; ++i) { // 假设你要创建 20 个格子
+        // 计算当前格子的位置
+        float x = startX + (i % itemsPerRow) * (itemWidth + 5); // 每个格子之间有 5 的间隔
+        float y = startY - (i / itemsPerRow) * (itemHeight + 5); // 每行的格子间隔 5
+
+        // 创建格子的 Sprite 并设置位置
+        auto itemSprite = Sprite::create("UI/item_slot.png");
+        itemSprite->setPosition(Vec2(x, y));
+        this->addChild(itemSprite);
+    }
+}
+
+// 鼠标悬停监听
+void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id) {
+    auto hoverListener = EventListenerMouse::create();
+
+    hoverListener->onMouseMove = [this, icon, name, effectValue, id](EventMouse* event) {
+        // 获取鼠标位置
+        Vec2 cursorPosition(event->getCursorX(), event->getCursorY());
+
+        // 获取图标的边界
+        Rect boundingBox = icon->getBoundingBox();
+
+        // 检查鼠标是否悬停在图标上
+        if (boundingBox.containsPoint(cursorPosition)) {
+            // 显示物品的名称和效果
+            int type = id / 10000;
+            int subType = id % 1000 / 100; 
+            std::string effect;
+            switch (type){
+            case 1: // 装备类
+                switch (subType) {
+                case 1: {
+                    effect = "Attack: " + effectValue;
+                    break;
+                }
+                case 2: {
+                    effect = "Defence: " + effectValue;
+                    break;
+                }
+                case 3: {
+                    effect = effectValue + " Stamina  regen per second";
+                    break;
+                }
+                default:
+                    CCLOG("Error: Unsupported equipment subtype %d for ID %d", subType, id);
+                    break;
+                }
+                break;
+            case 2: // 药剂类
+                effect = effectValue + " Stamina  regen";
+                break;
+            case 3: // 食物类
+                effect = effectValue + " Health  regen";
+                break;
+            case 9: // 技能
+                switch (subType) {
+                case 1: {
+                    break;
+                }
+                case 2: {
+                    break;
+                }
+                case 3: {
+                    break;
+                }
+                default:
+                    CCLOG("Error: Unsupported equipment subtype %d for ID %d", subType, id);
+                    break;
+                }
+                break;
+            default:
+                CCLOG("Error: Unsupported type %d for ID %d", type, id);
+                break;
+             }
+            showHoverInfo(name, effect, cursorPosition);
+        }
+        };
+
+    // 注册监听器
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(hoverListener, icon);
+}
+
+// 主背包层部分的技能信息显示
+void BackpackMainLayer::showHoverInfo(const std::string& name, const std::string& effectValue, const Vec2& position) {
+    // 创建一个背景 LayerColor
+    if (!_hoverLabelBackground) {
+        _hoverLabelBackground = LayerColor::create(Color4B(0, 0, 0, 180));  // 黑色半透明背景
+        _hoverLabelBackground->setContentSize(Size(200, 100));  // 设置背景的大小，可以根据需要调整
+        this->addChild(_hoverLabelBackground);
+    }
+
+    // 创建一个 Label 显示悬停信息
+    if (!_hoverLabel) {
+        _hoverLabel = Label::createWithSystemFont("", "Arial", 24);
+        _hoverLabel->setColor(Color3B::WHITE);
+        _hoverLabelBackground->addChild(_hoverLabel);  // 将 Label 添加到背景上
+    }
+
+    // 更新 Label 的内容
+    std::string hoverText = name + "\n" + effectValue;
+    _hoverLabel->setString(hoverText);
+
+    // 更新背景大小
+    _hoverLabelBackground->setContentSize(Size(_hoverLabel->getContentSize().width + 20, _hoverLabel->getContentSize().height + 20));
+
+    // 更新背景和文本的位置
+    _hoverLabelBackground->setPosition(position + Vec2(50, 50)); // 背景位置
+    _hoverLabel->setPosition(Vec2(_hoverLabelBackground->getContentSize().width / 2, _hoverLabelBackground->getContentSize().height / 2)); // 文字居中
 }
