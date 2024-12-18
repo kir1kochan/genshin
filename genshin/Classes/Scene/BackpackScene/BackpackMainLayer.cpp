@@ -13,12 +13,20 @@ BackpackMainLayer::BackpackMainLayer()
     : player(nullptr), backpackLayer(nullptr), skillLayer(nullptr), equipmentLayer(nullptr),
     nextButton(nullptr), prevButton(nullptr) {}
 
+BackpackMainLayer::BackpackMainLayer(Player* player)
+    : player(player), backpackLayer(nullptr), skillLayer(nullptr), equipmentLayer(nullptr),
+    nextButton(nullptr), prevButton(nullptr) {}
+
 BackpackMainLayer::~BackpackMainLayer() {}
 
 BackpackMainLayer* BackpackMainLayer::create(Player* player) {
     // 创建并返回主背包层对象，传入玩家数据
-    auto layer = BackpackMainLayer::create();
-    layer->setPlayer(player);
+    auto layer = new (std::nothrow) BackpackMainLayer(player);  // 使用带参数的构造函数
+    if (layer && layer->init()) {
+        layer->autorelease();
+        return layer;
+    }
+    CC_SAFE_DELETE(layer);
     return layer;
 }
 
@@ -57,6 +65,7 @@ bool BackpackMainLayer::init() {
     // 创建并初始化技能界面
     skillLayer = SkillLayer::create();
     skillLayer->setPlayer(player);
+    skillLayer->setName("skillLayer");
     this->addChild(skillLayer);
 
     /*
@@ -114,6 +123,7 @@ bool BackpackMainLayer::init() {
 
     schedule([this](float deltaTime) {
         this->update(deltaTime);  // 每帧调用 update 方法
+        skillLayer->updateSkills();
         }, 0.5f, "update_key");
 
     // 增加悬停监听器
@@ -243,6 +253,7 @@ void BackpackMainLayer::adjustSizeForTransition() {
     this->setAnchorPoint(Vec2(0.5, 0.5));  // 设置锚点为中心
     updatePlayerData();
     refreshEquipmentIcons();
+    skillLayer->update();
 }
 
 void BackpackMainLayer::createArrowButtons() {
@@ -320,7 +331,8 @@ void BackpackMainLayer::createEquipmentIcons() {
         equipmentIconsContainer->addChild(weaponIcon);
         // 显示包围盒
         createBoundingBoxForIcons(weaponIcon);
-        addHoverListenerForIcons(weaponIcon, weapon.get()->getName(), std::to_string(weapon.get()->getPower()), weapon.get()->getId());
+        addHoverListenerForIcons(weaponIcon, weapon.get()->getName(), std::to_string(weapon.get()->getPower()), weapon.get()->getId(), [this, weaponIcon]() { player->unequipWeapon();
+        this->eraseHoverListenerForIcons(weaponIcon); this->refreshEquipmentIcons(); });
         /* 延迟添加双击卸下的监听器和悬停监听
         scheduleOnce([this, weaponIcon,weapon](float) {
             if (weaponIcon) {  // 确保 weaponIcon 仍然有效
@@ -340,7 +352,8 @@ void BackpackMainLayer::createEquipmentIcons() {
         armorIcon->setPosition(Vec2(startX, startY - 110));
         armorIcon->setScale(1.3f);
         equipmentIconsContainer->addChild(armorIcon);
-        addHoverListenerForIcons(armorIcon, armor.get()->getName(), std::to_string(armor.get()->getPower()), armor.get()->getId());
+        addHoverListenerForIcons(armorIcon, armor.get()->getName(), std::to_string(armor.get()->getPower()), armor.get()->getId(), [this,armorIcon]() { player->unequipArmor(); 
+        this->eraseHoverListenerForIcons(armorIcon); this->refreshEquipmentIcons(); });
         // 延迟添加双击卸下的监听器
         /*scheduleOnce([this, armorIcon](float) {
             if (armorIcon) {  // 确保 armorIcon 仍然有效
@@ -360,7 +373,8 @@ void BackpackMainLayer::createEquipmentIcons() {
         accessoryIcon->setPosition(Vec2(startX, startY - 220));
         accessoryIcon->setScale(1.3f);
         equipmentIconsContainer->addChild(accessoryIcon);
-        addHoverListenerForIcons(accessoryIcon, accessory.get()->getName(), std::to_string(accessory.get()->getPower()), accessory.get()->getId());
+        addHoverListenerForIcons(accessoryIcon, accessory.get()->getName(), std::to_string(accessory.get()->getPower()), accessory.get()->getId(), [this, accessoryIcon]() { player->unequipAccessory();
+        this->eraseHoverListenerForIcons(accessoryIcon); this->refreshEquipmentIcons(); });
         /* 延迟添加双击卸下的监听器
         scheduleOnce([this, accessoryIcon](float) {
             if (accessoryIcon) {  // 确保 accessoryIcon 仍然有效
@@ -375,7 +389,6 @@ void BackpackMainLayer::createEquipmentIcons() {
 
 void BackpackMainLayer::refreshEquipmentIcons() {
     createEquipmentIcons();
-    topLeftGrid.clear();
 }
 
 /*void BackpackMainLayer::addDoubleClickListener(cocos2d::Sprite* target, const std::function<void()>& callback) {
@@ -457,7 +470,7 @@ void BackpackMainLayer::createBackpackUI() {
 }
 
 // 添加到鼠标悬停监听队列
-void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id, std::function<void()> cb = nullptr) {
+void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id, std::function<void()> cb) {
 
     // 显示物品的名称和效果
     int type = id / 100000;
@@ -466,7 +479,12 @@ void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string
     // 获取图标的边界
     Rect boundingBox = icon->getBoundingBox();
     // 调整boundingBox的偏移
-    boundingBox.origin = boundingBox.origin - Vec2(boundingBox.size.width, 0);
+    if (type != 9) {
+        boundingBox.origin = boundingBox.origin - Vec2(boundingBox.size.width, 0);
+    }
+    else {
+        boundingBox.origin = boundingBox.origin - Vec2(boundingBox.size.width/2, 0);
+    }
     switch (type) {
     case 1: // 装备类
         switch (subType) {
@@ -521,6 +539,31 @@ void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string
     else if (boundingBox.getMidX() > 1160 && boundingBox.getMidY() <= 490) {
         // 右下区域
         bottomRightGrid[boundingBox] = hoverInfo;
+    }
+}
+
+// 移出鼠标悬停监听队列
+void BackpackMainLayer::eraseHoverListenerForIcons(Sprite* icon) {
+
+    // 获取图标的边界
+    Rect boundingBox = icon->getBoundingBox();
+    // 调整boundingBox的偏移
+    boundingBox.origin = boundingBox.origin - Vec2(boundingBox.size.width, 0);
+    if (boundingBox.getMidX() <= 1160 && boundingBox.getMidY() > 490) {
+        // 左上区域
+        topLeftGrid.erase(boundingBox);
+    }
+    else if (boundingBox.getMidX() > 1160 && boundingBox.getMidY() > 490) {
+        // 右上区域
+        topRightGrid.erase(boundingBox);
+    }
+    else if (boundingBox.getMidX() <= 1160 && boundingBox.getMidY() <= 490) {
+        // 左下区域
+        bottomLeftGrid.erase(boundingBox);
+    }
+    else if (boundingBox.getMidX() > 1160 && boundingBox.getMidY() <= 490) {
+        // 右下区域
+        bottomRightGrid.erase(boundingBox);
     }
 }
 
@@ -604,7 +647,7 @@ void BackpackMainLayer::update(float deltatime) {
 }
 
 void BackpackMainLayer::addHoverListener() {
-    static const float DOUBLE_CLICK_INTERVAL = 0.3f; // 双击的时间间隔（秒）
+    static const float DOUBLE_CLICK_INTERVAL = 0.2f; // 双击的时间间隔（秒）
     static float lastClickTime = 0.0f; // 上一次点击时间
 
     auto listener = EventListenerMouse::create();
@@ -677,7 +720,6 @@ void BackpackMainLayer::addHoverListener() {
         Vec2 cursorPosition(event->getCursorX(), event->getCursorY());
         // 根据 Rect 的位置划分到对应区域
         if (cursorPosition.x <= 1160 && cursorPosition.y > 490) {
-            mouseArea = 0;
             // 左上区域
             for (auto entry : topLeftGrid) {
                 if (entry.first.containsPoint(cursorPosition)) {
@@ -685,7 +727,6 @@ void BackpackMainLayer::addHoverListener() {
                     if (currentTime - lastClickTime < DOUBLE_CLICK_INTERVAL) {
                         if (entry.second.callback) {
                             entry.second.callback(); // 双击触发回调
-                            refreshEquipmentIcons();
                         }
                         lastClickTime = 0.0f;
                     }
@@ -697,7 +738,6 @@ void BackpackMainLayer::addHoverListener() {
             }
         }
         else if (cursorPosition.x > 1160 && cursorPosition.y > 490) {
-            mouseArea = 1;
             // 右上区域
             for (auto& entry : topRightGrid) {
                 if (entry.first.containsPoint(cursorPosition)) {
@@ -705,7 +745,6 @@ void BackpackMainLayer::addHoverListener() {
                     if (currentTime - lastClickTime < DOUBLE_CLICK_INTERVAL) {
                         if (entry.second.callback) {
                             entry.second.callback(); // 双击触发回调
-                            refreshEquipmentIcons();
                         }
                         lastClickTime = 0.0f;
                     }
@@ -717,7 +756,6 @@ void BackpackMainLayer::addHoverListener() {
             }
         }
         else if (cursorPosition.x <= 1160 && cursorPosition.y <= 490) {
-            mouseArea = 2;
             // 左下区域
             for (auto& entry : bottomLeftGrid) {
                 if (entry.first.containsPoint(cursorPosition)) {
@@ -725,7 +763,6 @@ void BackpackMainLayer::addHoverListener() {
                     if (currentTime - lastClickTime < DOUBLE_CLICK_INTERVAL) {
                         if (entry.second.callback) {
                             entry.second.callback(); // 双击触发回调
-                            refreshEquipmentIcons();
                         }
                         lastClickTime = 0.0f;
                     }
@@ -744,7 +781,6 @@ void BackpackMainLayer::addHoverListener() {
                     if (currentTime - lastClickTime < DOUBLE_CLICK_INTERVAL) {
                         if (entry.second.callback) {
                             entry.second.callback(); // 双击触发回调
-                            refreshEquipmentIcons();
                         }
                         lastClickTime = 0.0f;
                     }

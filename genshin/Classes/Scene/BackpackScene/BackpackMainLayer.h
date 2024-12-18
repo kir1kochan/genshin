@@ -47,6 +47,7 @@ namespace std {
 class BackpackMainLayer : public cocos2d::Layer {
 public:
     BackpackMainLayer();
+    BackpackMainLayer(Player* player);
     virtual ~BackpackMainLayer();
 
     // 创建主背包Layer并传入玩家数据
@@ -77,6 +78,8 @@ public:
 
     // 鼠标悬停监听器
     void addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id, std::function<void()> cb = nullptr);
+    // 移出鼠标监听器
+    void eraseHoverListenerForIcons(Sprite* icon);
 private:
     // 玩家对象
     Player* player;
@@ -139,8 +142,8 @@ private:
     // 生成装备图标
     void createEquipmentIcons();
 
-    // 双击事件监听器
-    void addDoubleClickListener(cocos2d::Sprite* target, const std::function<void()>& callback);
+    // 双击事件监听器，和悬停监听整合了
+    //void addDoubleClickListener(cocos2d::Sprite* target, const std::function<void()>& callback);
 
     // 刷新装备图标
     void refreshEquipmentIcons();

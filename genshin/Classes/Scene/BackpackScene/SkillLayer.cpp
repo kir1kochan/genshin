@@ -1,6 +1,7 @@
 #include "SkillLayer.h"
 #include "cocos2d.h"
 #include "ui/UIButton.h"
+#include "Common/Entities/Player/Skill/AttackSkill/AttackSkill.h"
 
 using namespace cocos2d;
 using namespace ui;
@@ -64,6 +65,20 @@ void SkillLayer::createSkillUI() {
 void SkillLayer::loadSkills() {
     unlockedSkills = player->getunlockedSkills();
     skillBar = player->getskillBar();
+    availableSkills.clear();
+    // 遍历 unlockedSkills
+    for (const auto& unlockedSkill : unlockedSkills) {
+        // 检查 unlockedSkill 是否在 skillBar 中
+        auto it = std::find_if(skillBar.begin(), skillBar.end(),
+            [&unlockedSkill](const std::shared_ptr<Skill>& skill) {
+                return skill && skill->getSkillName() == unlockedSkill->getSkillName();
+            });
+
+        // 如果 skillBar 中没有该技能，则添加到 newSkills
+        if (it == skillBar.end()) {
+            availableSkills.push_back(unlockedSkill);
+        }
+    }
 }
 
 void SkillLayer::loadSkillsIcon() {
@@ -73,14 +88,46 @@ void SkillLayer::loadSkillsIcon() {
     auto mainLayer = dynamic_cast<BackpackMainLayer*>(this->getParent());
 
     for (int i = 0; i < skillBar.size(); i++) {
-        Skill* skill = skillBar.at(i).get();
-        auto skillIcon = Sprite::create("skill/" + skill->getSkillName() + ".png");
-        skillIcon->setPosition(Vec2(startX, startY - i * 120));
-        skillIcon->setScale(1.5);
-        this->addChild(skillIcon);
-        mainLayer->addHoverListenerForIcons(skillIcon, skill->getSkillName(), std::to_string(skill->getStaminaCost()) + "\nCD: " + std::to_string(skill->getCD()), skill->getId());
+        if (skillBar[i]) {
+            Skill* skill = skillBar.at(i).get();
+            auto skillIcon = Sprite::create("Skill/" + skill->getSkillName() + ".png");
+            skillIcon->setPosition(Vec2(startX, startY - i * 110));
+            Size originalSize = skillIcon->getContentSize(); // 获取图标的原始大小
+
+            // 计算缩放比例
+            float scaleX = 72.0f / originalSize.width;
+            float scaleY = 72.0f / originalSize.height;
+
+            // 设置缩放
+            skillIcon->setScale(scaleX, scaleY);
+            skillIcon->setTag(100+i);
+            this->addChild(skillIcon);
+            mainLayer->addHoverListenerForIcons(skillIcon, skill->getSkillName(), std::to_string((int)skill->getStaminaCost()) + "\nCD: " + std::to_string(skill->getCD()).substr(0,3),
+                skill->getId(), [this, i]() {this->setSkillToUnload(i); });
+        }
     }
-    
+
+    startX = 90.0f;
+    startY = 185.0f;
+    for (int i = 0; i < availableSkills.size(); i++) {
+        if (availableSkills[i]) {
+            Skill* skill = availableSkills.at(i).get();
+            auto skillIcon = Sprite::create("Skill/" + skill->getSkillName() + ".png");
+            Size originalSize = skillIcon->getContentSize(); // 获取图标的原始大小
+
+            // 计算缩放比例
+            float scaleX = 72.0f / originalSize.width;
+            float scaleY = 72.0f / originalSize.height;
+
+            // 设置缩放
+            skillIcon->setScale(scaleX, scaleY);
+            skillIcon->setPosition(Vec2(startX+ i * 115, startY));
+            skillIcon->setTag(200+i);
+            this->addChild(skillIcon);
+            mainLayer->addHoverListenerForIcons(skillIcon, skill->getSkillName(), std::to_string((int)skill->getStaminaCost()) + "\nCD: " + std::to_string(skill->getCD()).substr(0,3),
+                skill->getId(), [this, i]() {this->setSkillToEquip(i); });
+        }
+    }
 }
 
 void SkillLayer::setPlayer(Player* player) {
@@ -91,5 +138,60 @@ void SkillLayer::setPlayer(Player* player) {
     // 加载技能和生成技能图片
         loadSkills();
         loadSkillsIcon();
+    }
+}
+
+void SkillLayer::update() {
+    if (player) {
+        // 确保玩家数据已经设置
+
+    // 加载技能和生成技能图片
+        loadSkills();
+        loadSkillsIcon();
+    }
+}
+
+void SkillLayer::setSkillToUnload(int i) {
+    if (skillToUnload == i) {
+        skillToUnload = -1;
+    }
+    skillToUnload = i;
+}
+
+void SkillLayer::setSkillToEquip(int i) {
+    if (skillToEquip == i) {
+        skillToEquip = -1;
+    }
+    skillToEquip = i;
+}
+
+void SkillLayer::updateSkills() {
+    float startX = 500;
+    float startY = Director::getInstance()->getVisibleSize().height - 100;
+    if (skillToEquip != -1 && skillToUnload != -1) {
+        player->unequipSkill(skillToUnload);
+        player->equipSkill(skillToUnload, availableSkills.at(skillToEquip));
+        availableSkills.at(skillToEquip).get()->resetCooldown(); // 替换技能后需要重新冷却
+        skillToEquip = -1;
+        skillToUnload = -1;
+        this->update();
+    }
+    else if (skillToUnload != -1) {
+        this->removeChildByName("highlight");
+        // 创建一个黄色半透明的 Layer
+        auto yellowLayer = LayerColor::create(Color4B(255, 255, 0, 128), 72, 72); // 设置颜色为黄色（255, 255, 0），透明度为128，大小为72x72
+        yellowLayer->setPosition(Vec2(startX, startY - skillToUnload * 110) - Vec2(36, 36)); // 设置位置
+        yellowLayer->setName("highlight");
+        this->addChild(yellowLayer); // 将 Layer 添加到当前 Layer
+    }
+    else if (skillToEquip != -1) {
+        startX = 90.0f;
+        startY = 185.0f;
+        this->removeChildByName("highlight");
+        // 创建一个黄色半透明的 Layer
+        auto yellowLayer = LayerColor::create(Color4B(255, 255, 0, 128), 72, 72); // 设置颜色为黄色（255, 255, 0），透明度为128，大小为72x72
+        yellowLayer->setPosition(Vec2(startX + skillToEquip * 115, startY) - Vec2(36, 36)); // 设置位置
+        yellowLayer->setName("highlight");
+        this->addChild(yellowLayer); // 将 Layer 添加到当前 Layer
     }
 }
