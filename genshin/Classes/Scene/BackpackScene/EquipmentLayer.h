@@ -6,10 +6,10 @@
 class EquipmentLayer : public cocos2d::Layer {
 public:
     EquipmentLayer();
-    virtual ~EquipmentLayer();
+    ~EquipmentLayer();
 
     // 初始化装备界面
-    virtual bool init();
+    bool init();
     
     // 创建装备UI组件
     void createEquipmentUI();

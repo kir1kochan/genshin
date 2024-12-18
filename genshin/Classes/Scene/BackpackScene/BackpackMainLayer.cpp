@@ -60,6 +60,7 @@ bool BackpackMainLayer::init() {
     
     // 创建并初始化背包界面
     backpackLayer = BackpackLayer::create();
+    backpackLayer->setPlayer(player);
     this->addChild(backpackLayer);
     
     // 创建并初始化技能界面

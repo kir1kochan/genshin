@@ -126,9 +126,6 @@
     <ClCompile Include="..\Classes\Scene\BackpackScene\BackpackMainLayer.cpp">
       <Filter>src\Classes\Scene\BackpackScene</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Scene\BackpackScene\EquipmentLayer.cpp">
-      <Filter>src\Classes\Scene\BackpackScene</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Scene\BackpackScene\SkillLayer.cpp">
       <Filter>src\Classes\Scene\BackpackScene</Filter>
     </ClCompile>
@@ -228,9 +225,6 @@
       <Filter>src\Classes\Scene\BackpackScene</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Scene\BackpackScene\BackpackMainLayer.h">
-      <Filter>src\Classes\Scene\BackpackScene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Scene\BackpackScene\EquipmentLayer.h">
       <Filter>src\Classes\Scene\BackpackScene</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Scene\BackpackScene\SkillLayer.h">

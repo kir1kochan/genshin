@@ -325,15 +325,15 @@ void Player::checkAndUnlockSkills()
 }
 
 void Player::addItemToBackpack(int id,int count) {
-    backpack.addItem(id, count);
+    backpack->addItem(id, count);
 }
 
 void Player::removeItemFromBackpack(int itemId) {
-    backpack.removeItem(itemId);  
+    backpack->removeItem(itemId);  
 }
 
 void Player::printBackpackInfo() const {
-    backpack.printInfo();
+    backpack->printInfo();
 }
 
 
@@ -527,7 +527,7 @@ void Player::loadFromJson(const std::string& jsonString) {
     // 反序列化装备（通过 ID 恢复指针）
     if (doc.HasMember("weapon")) {
         int weaponid = doc["weapon"].GetInt();
-        auto item = backpack.idToItemMap[weaponid];
+        auto item = backpack->idToItemMap[weaponid];
         weapon = std::dynamic_pointer_cast<Weapon>(item);
         if (!weapon) {
             CCLOG("Failed to cast item to Weapon.");
@@ -536,7 +536,7 @@ void Player::loadFromJson(const std::string& jsonString) {
 
     if (doc.HasMember("armor")) {
         int armorid = doc["armor"].GetInt();
-        auto item = backpack.idToItemMap[armorid];
+        auto item = backpack->idToItemMap[armorid];
         armor = std::dynamic_pointer_cast<Armor>(item);
         if (!armor) {
             CCLOG("Failed to cast item to Armor.");
@@ -545,7 +545,7 @@ void Player::loadFromJson(const std::string& jsonString) {
 
     if (doc.HasMember("accessory")) {
         int accessoryid = doc["accessory"].GetInt();
-        auto item = backpack.idToItemMap[accessoryid];
+        auto item = backpack->idToItemMap[accessoryid];
         accessory = std::dynamic_pointer_cast<Accessory>(item);
         if (!accessory) {
             CCLOG("Failed to cast item to Accessory.");
