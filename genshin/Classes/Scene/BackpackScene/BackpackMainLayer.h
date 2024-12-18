@@ -3,11 +3,11 @@
 
 #include "cocos2d.h"
 #include "ui/UIButton.h"
-#include "BackpackLayer.h"
 #include "EquipmentLayer.h"
 #include "../../Common/Entities/Player/Player.h"
 
 class SkillLayer;
+class BackpackLayer;
 
 struct HoverInfo {
     bool isHovering;             // 是否正在悬停
@@ -77,9 +77,16 @@ public:
     void adjustSizeForTransition();
 
     // 鼠标悬停监听器
-    void addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id, std::function<void()> cb = nullptr);
+    void addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id, std::function<void()> cb = nullptr, bool is_offset = false);
+
     // 移出鼠标监听器
-    void eraseHoverListenerForIcons(Sprite* icon);
+    void eraseHoverListenerForIcons(Sprite* icon, bool is_offset = false);
+
+    // 刷新装备图标
+    void refreshEquipmentIcons();
+
+    // 更新玩家数据UI（经验、等级、体力等）
+    void updatePlayerData();
 private:
     // 玩家对象
     Player* player;
@@ -121,8 +128,6 @@ private:
     // 创建碰撞盒
     void createBoundingBoxForIcons(cocos2d::Sprite* sprite);
 
-    // 更新玩家数据UI（经验、等级、体力等）
-    void updatePlayerData();
 
     // 创建武器、盔甲、饰品格子的显示
     void createEquipmentGrid();
@@ -145,8 +150,6 @@ private:
     // 双击事件监听器，和悬停监听整合了
     //void addDoubleClickListener(cocos2d::Sprite* target, const std::function<void()>& callback);
 
-    // 刷新装备图标
-    void refreshEquipmentIcons();
 
     // 根据按钮切换角色属性和外观
     void onLeftArrowClicked();

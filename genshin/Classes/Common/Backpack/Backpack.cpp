@@ -246,3 +246,11 @@ bool Backpack::useCoins(int amount) {
     }
     return false;
 }
+
+const std::unordered_map<std::shared_ptr<Item>, int>& Backpack::getItems() const{
+    return items;
+}
+
+std::shared_ptr<Item> Backpack::findItemById(int id) {
+    return idToItemMap[id];
+}

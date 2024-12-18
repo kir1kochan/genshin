@@ -27,7 +27,8 @@ Player::Player() : Entities(), experience(0), level(1), weapon(nullptr), armor(n
 
 Player::Player(cocos2d::Sprite* sprite)
     : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr),
-    currentShield(0), maxStamina(100.0f), stamina(100.0f), backpack() {
+    currentShield(0), maxStamina(100.0f), stamina(100.0f) {
+    backpack = new Backpack;
     skillBar.resize(4, nullptr); // 初始化技能栏为空
 
     if (sprite != nullptr) {

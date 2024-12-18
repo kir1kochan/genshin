@@ -146,6 +146,7 @@ void TestScene::addTestModule2()
     auto label = Label::createWithTTF("Test Module 2", "fonts/Marker Felt.ttf", 24);
     label->setName("module2");  // ¸øÄ£¿éÃüÃû
     label->setPosition(Director::getInstance()->getVisibleSize() / 2);
+    player->addItemToBackpack(300302, 1);
     auto slime = new Enemy();
     slime->setSpriteFilename("monsters/slime.png");
     slime->generateSprite();

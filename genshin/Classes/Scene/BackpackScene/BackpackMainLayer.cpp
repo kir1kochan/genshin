@@ -254,6 +254,8 @@ void BackpackMainLayer::adjustSizeForTransition() {
     this->setAnchorPoint(Vec2(0.5, 0.5));  // 设置锚点为中心
     updatePlayerData();
     refreshEquipmentIcons();
+    backpackLayer->createItemIcon();
+    backpackLayer->createNums();
     skillLayer->update();
 }
 
@@ -332,8 +334,8 @@ void BackpackMainLayer::createEquipmentIcons() {
         equipmentIconsContainer->addChild(weaponIcon);
         // 显示包围盒
         createBoundingBoxForIcons(weaponIcon);
-        addHoverListenerForIcons(weaponIcon, weapon.get()->getName(), std::to_string(weapon.get()->getPower()), weapon.get()->getId(), [this, weaponIcon]() { player->unequipWeapon();
-        this->eraseHoverListenerForIcons(weaponIcon); this->refreshEquipmentIcons(); });
+        addHoverListenerForIcons(weaponIcon, weapon.get()->getName(), std::to_string(weapon.get()->getPower()), weapon.get()->getId(), [this, weaponIcon, weapon]() { player->unequipWeapon();
+        this->eraseHoverListenerForIcons(weaponIcon); this->refreshEquipmentIcons(); backpackLayer->addItemToBlank(weapon.get()->getId()); this->updatePlayerData(); });
         /* 延迟添加双击卸下的监听器和悬停监听
         scheduleOnce([this, weaponIcon,weapon](float) {
             if (weaponIcon) {  // 确保 weaponIcon 仍然有效
@@ -353,8 +355,8 @@ void BackpackMainLayer::createEquipmentIcons() {
         armorIcon->setPosition(Vec2(startX, startY - 110));
         armorIcon->setScale(1.3f);
         equipmentIconsContainer->addChild(armorIcon);
-        addHoverListenerForIcons(armorIcon, armor.get()->getName(), std::to_string(armor.get()->getPower()), armor.get()->getId(), [this,armorIcon]() { player->unequipArmor(); 
-        this->eraseHoverListenerForIcons(armorIcon); this->refreshEquipmentIcons(); });
+        addHoverListenerForIcons(armorIcon, armor.get()->getName(), std::to_string(armor.get()->getPower()), armor.get()->getId(), [this,armorIcon, armor]() { player->unequipArmor();
+        this->eraseHoverListenerForIcons(armorIcon); this->refreshEquipmentIcons(); backpackLayer->addItemToBlank(armor.get()->getId()); this->updatePlayerData();  });
         // 延迟添加双击卸下的监听器
         /*scheduleOnce([this, armorIcon](float) {
             if (armorIcon) {  // 确保 armorIcon 仍然有效
@@ -374,8 +376,8 @@ void BackpackMainLayer::createEquipmentIcons() {
         accessoryIcon->setPosition(Vec2(startX, startY - 220));
         accessoryIcon->setScale(1.3f);
         equipmentIconsContainer->addChild(accessoryIcon);
-        addHoverListenerForIcons(accessoryIcon, accessory.get()->getName(), std::to_string(accessory.get()->getPower()), accessory.get()->getId(), [this, accessoryIcon]() { player->unequipAccessory();
-        this->eraseHoverListenerForIcons(accessoryIcon); this->refreshEquipmentIcons(); });
+        addHoverListenerForIcons(accessoryIcon, accessory.get()->getName(), std::to_string(accessory.get()->getPower()), accessory.get()->getId(), [this, accessoryIcon, accessory]() { player->unequipAccessory();
+        this->eraseHoverListenerForIcons(accessoryIcon); this->refreshEquipmentIcons(); backpackLayer->addItemToBlank(accessory.get()->getId()); this->updatePlayerData(); });
         /* 延迟添加双击卸下的监听器
         scheduleOnce([this, accessoryIcon](float) {
             if (accessoryIcon) {  // 确保 accessoryIcon 仍然有效
@@ -471,7 +473,7 @@ void BackpackMainLayer::createBackpackUI() {
 }
 
 // 添加到鼠标悬停监听队列
-void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id, std::function<void()> cb) {
+void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string& name, const std::string& effectValue, int id, std::function<void()> cb,bool is_offset) {
 
     // 显示物品的名称和效果
     int type = id / 100000;
@@ -480,7 +482,7 @@ void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string
     // 获取图标的边界
     Rect boundingBox = icon->getBoundingBox();
     // 调整boundingBox的偏移
-    if (type != 9) {
+    if (type != 9&&!is_offset) {
         boundingBox.origin = boundingBox.origin - Vec2(boundingBox.size.width, 0);
     }
     else {
@@ -544,12 +546,17 @@ void BackpackMainLayer::addHoverListenerForIcons(Sprite* icon, const std::string
 }
 
 // 移出鼠标悬停监听队列
-void BackpackMainLayer::eraseHoverListenerForIcons(Sprite* icon) {
-
+void BackpackMainLayer::eraseHoverListenerForIcons(Sprite* icon, bool is_offset) {
+    // 调整boundingBox的偏移
+    
     // 获取图标的边界
     Rect boundingBox = icon->getBoundingBox();
-    // 调整boundingBox的偏移
-    boundingBox.origin = boundingBox.origin - Vec2(boundingBox.size.width, 0);
+    if (!is_offset) {
+        boundingBox.origin = boundingBox.origin - Vec2(boundingBox.size.width, 0);
+    }
+    else {
+        boundingBox.origin = boundingBox.origin - Vec2(boundingBox.size.width / 2, 0);
+    }
     if (boundingBox.getMidX() <= 1160 && boundingBox.getMidY() > 490) {
         // 左上区域
         topLeftGrid.erase(boundingBox);

@@ -41,6 +41,9 @@ public:
     // 通过物品ID移除物品
     void removeItem(int itemId, int count = 1);
 
+    // 根据id获得实例
+    std::shared_ptr<Item> findItemById(int id);
+    
     // 打印背包信息
     void printInfo() const;
 
@@ -75,6 +78,8 @@ public:
 
     // 使用金币，成功返回true，失败返回false（金币不足）
     bool useCoins(int amount);
+
+    const std::unordered_map<std::shared_ptr<Item>, int>& getItems() const;
 
     friend class Player;
 private:
