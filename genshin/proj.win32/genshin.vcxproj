@@ -175,7 +175,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Common\SpiritManager\SpiritManager.cpp" />
     <ClCompile Include="..\Classes\Scene\BackpackScene\BackpackLayer.cpp" />
     <ClCompile Include="..\Classes\Scene\BackpackScene\BackpackMainLayer.cpp" />
-    <ClCompile Include="..\Classes\Scene\BackpackScene\EquipmentLayer.cpp" />
     <ClCompile Include="..\Classes\Scene\BackpackScene\SkillLayer.cpp" />
     <ClCompile Include="..\Classes\Scene\SceneObject\SceneObject.cpp" />
     <ClCompile Include="..\Classes\Scene\SceneObject\TPAnchor.cpp" />
@@ -211,7 +210,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Common\SpiritManager\SpiritManager.h" />
     <ClInclude Include="..\Classes\Scene\BackpackScene\BackpackLayer.h" />
     <ClInclude Include="..\Classes\Scene\BackpackScene\BackpackMainLayer.h" />
-    <ClInclude Include="..\Classes\Scene\BackpackScene\EquipmentLayer.h" />
     <ClInclude Include="..\Classes\Scene\BackpackScene\SkillLayer.h" />
     <ClInclude Include="..\Classes\Scene\SceneObject\SceneObject.h" />
     <ClInclude Include="..\Classes\Scene\SceneObject\TPAnchor.h" />
