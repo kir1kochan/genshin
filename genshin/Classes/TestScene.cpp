@@ -153,6 +153,9 @@ void TestScene::addTestModule2()
     this->addChild(label);
     this->addChild(slime);
     blockManager->addEnemy(slime);
+    //player->testSkill();
+    player->setShield(150,5);
+
 }
 
 void TestScene::setupKeyboardListener()

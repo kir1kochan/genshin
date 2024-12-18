@@ -88,44 +88,44 @@
     {
       "id": 100301,
       "name": "Fire_Necklace",
-      "power": 0.5,
+      "power": 5,
       "element": 0
     },
     {
       "id": 100302,
       "name": "Water_Stone",
-      "power": 0.5,
+      "power": 5,
       "element": 1
     },
     {
       "id": 100303,
       "name": "Earth_Necklace",
-      "power": 0.5,
+      "power": 5,
       "element": 2
     },
     {
       "id": 100304,
       "name": "Air_Insignia",
-      "power": 0.5,
+      "power": 5,
       "element": 3
     },
     {
       "id": 100305,
       "name": "Thunder_Stone",
-      "power": 0.5,
+      "power": 5,
       "element": 4
     },
     {
       "id": 100306,
       "name": "Grass_Talisman",
-      "power": 0.5,
+      "power": 5,
       "element": 5
 
     },
     {
       "id": 100307,
       "name": "Ice_Flower",
-      "power": 0.5,
+      "power": 5,
       "element": 6
     }
   ]

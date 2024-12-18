@@ -20,15 +20,6 @@
     },
     {
       "id": 900103,
-      "name": "Thunderstrike",
-      "cooldown": 5.0,
-      "staminaCost": 30,
-      "attackPower": 85.0,
-      "range": 18.0,
-      "element": 4
-    },
-    {
-      "id": 900104,
       "name": "Earthquake",
       "cooldown": 6.0,
       "staminaCost": 35,
@@ -37,7 +28,7 @@
       "element": 2
     },
     {
-      "id": 900105,
+      "id": 900104,
       "name": "Air Blast",
       "cooldown": 3.5,
       "staminaCost": 22,
@@ -46,22 +37,31 @@
       "element": 3
     },
     {
-      "id": 900106,
-      "name": "Ice Shard",
-      "cooldown": 4.5,
-      "staminaCost": 18,
-      "attackPower": 65.0,
-      "range": 13.0,
-      "element": 6
+      "id": 900105,
+      "name": "Thunderstrike",
+      "cooldown": 5.0,
+      "staminaCost": 30,
+      "attackPower": 85.0,
+      "range": 18.0,
+      "element": 4
     },
     {
-      "id": 900107,
+      "id": 900106,
       "name": "Vine Lash",
       "cooldown": 3.0,
       "staminaCost": 20,
       "attackPower": 60.0,
       "range": 11.0,
       "element": 5
+    },
+    {
+      "id": 900107,
+      "name": "Ice Shard",
+      "cooldown": 4.5,
+      "staminaCost": 18,
+      "attackPower": 65.0,
+      "range": 13.0,
+      "element": 6
     },
     {
       "id": 900201,
