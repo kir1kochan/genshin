@@ -19,7 +19,7 @@ bool SkillLayer::init() {
     auto origin = Director::getInstance()->getVisibleOrigin();
 
     // 设置 SkillLayer 的大小为屏幕的左半部分
-    this->setContentSize(Size(visibleSize.width / 2, visibleSize.height));
+    this->setContentSize(Size(visibleSize.width / 3, visibleSize.height));
 
     // 将 SkillLayer 的锚点设为左下角，并将其位置设置为屏幕的左侧
     this->setAnchorPoint(Vec2::ZERO);

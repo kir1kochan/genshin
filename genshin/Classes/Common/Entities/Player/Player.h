@@ -45,7 +45,7 @@ private:
     float shieldTime;     //护甲的持续时间
     float CDtoSet = 1.0f;       // 攻击cd
    
-    Backpack backpack; // 背包
+    Backpack* backpack; // 背包
 
     // 存储技能的所有动画
     std::vector<Vector<SpriteFrame*>> skillAnimations;
@@ -141,6 +141,8 @@ public:
     void addItemToBackpack(int id, int count);
     void removeItemFromBackpack(int itemId);
     void printBackpackInfo() const;
+
+    Backpack* getBackpack() { return backpack; }
 
     std::shared_ptr<Skill> creatSkillById(int id, const std::string& jsonString);
 
