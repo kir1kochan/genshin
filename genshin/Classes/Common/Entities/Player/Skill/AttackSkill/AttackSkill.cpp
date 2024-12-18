@@ -26,10 +26,33 @@ void AttackSkill::activate(Player* user, Enemy& target) {
         CCLOG("AttackSkill: Target out of range for %s.", name.c_str());
         return;
     }
-
+    // 播放技能动画（根据技能 id 选择对应的动画）
+    playSkillAnimation(user, target);
     // 对目标造成伤害
     user->attackTargetBySkill(target, attackPower,element);
     CCLOG("%s dealt %.2f damage to target.", name.c_str(), attackPower);
+}
+// 播放技能动画
+void AttackSkill::playSkillAnimation(Player* user, Enemy& target) {
+    
+
+    // 根据技能 id 选择不同的动画效果
+    switch (id) {
+    case 900101:  // Fireball
+      
+        break;
+    case 900102:  // Water Blast
+    
+        break;
+    case 900103:  // Thunderstrike
+     
+        break;
+    case 900104:  // Earthquak
+        break;
+    default:
+        CCLOG("Unknown skill id: %d", id);
+        break;
+    }
 }
 
 void AttackSkill::loadFromJson(const std::string& jsonString) {

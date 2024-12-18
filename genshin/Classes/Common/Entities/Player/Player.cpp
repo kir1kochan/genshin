@@ -14,11 +14,15 @@
 Player::Player( Element element, float attackRange)
     :Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), maxStamina(100.0f), stamina(100.0f), backpack() {
     skillBar.resize(4, nullptr); // 初始化技能栏为空
+    skillAnimations.resize(10);
+    loadSkillAnimations(); // 缓存所有技能动画
 }
 
 
 Player::Player() : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), maxStamina(100.0f), stamina(100.0f), backpack() {
     skillBar.resize(4, nullptr); // 初始化技能栏为空
+    skillAnimations.resize(10);
+    loadSkillAnimations(); // 缓存所有技能动画
 }
 
 Player::Player(cocos2d::Sprite* sprite)
@@ -272,11 +276,20 @@ void Player::useSkill(int skillSlot, Enemy& target) {
         CCLOG("Not enough stamina to use skill.");
         return;
     }
-
-    // 执行技能
+    skill->resetCooldown();
+    int id_skill = skillBar[skillSlot]->getId();
     reduceStamina(requiredStamina); // 使用技能后减少体力
+    if (id_skill != 900201) { //特殊判断护盾
+        if (id_skill != 900301) //特殊判断治疗
+            lauchSkill(id_skill % 10, target);
+        else
+            lauchSkill(7, target);
+    }
+
+  
+
     skill->activate(this, target);  
-    skill->resetCooldown();        
+
 }
 
 void Player::updateSkillsCooldown(float deltaTime) {
@@ -291,15 +304,15 @@ void Player::checkAndUnlockSkills()
 {
     // allSkills 存储技能解锁等级与技能
     static std::map<int, std::shared_ptr<Skill>> allSkills = {
-     {5, std::make_shared<AttackSkill>(910101, "Fireball", 3.0f, 25.0f, 80.0f, 12.0f, static_cast<Element>(0))},  // 火焰攻击
-     {10, std::make_shared<AttackSkill>(910102, "Water Blast", 4.0f, 20.0f, 70.0f, 14.0f, static_cast<Element>(1))},  // 水之冲击
-     {15, std::make_shared<AttackSkill>(910103, "Thunderstrike", 5.0f, 30.0f, 85.0f, 18.0f, static_cast<Element>(4))},  // 雷电攻击
-     {20, std::make_shared<AttackSkill>(910104, "Earthquake", 6.0f, 35.0f, 90.0f, 10.0f, static_cast<Element>(2))},  // 地震攻击
-     {25, std::make_shared<AttackSkill>(910105, "Air Blast", 3.5f, 22.0f, 75.0f, 16.0f, static_cast<Element>(3))},  // 空气冲击
-     {30, std::make_shared<AttackSkill>(910106, "Ice Shard", 4.5f, 18.0f, 65.0f, 13.0f, static_cast<Element>(6))},  // 冰霜碎片
-     {35, std::make_shared<AttackSkill>(910107, "Vine Lash", 3.0f, 20.0f, 60.0f, 11.0f, static_cast<Element>(5))},  // 藤鞭
-     {11, std::make_shared<ShieldSkill>(920101, "Shield Block", 10.0f, 40.0f, 150.0f, 5.0f)},  // 护盾技能
-     {6, std::make_shared<HealSkill>(930101, "Healing Touch", 6.0f, 30.0f, 120.0f)}  // 治疗技能
+     {5, std::make_shared<AttackSkill>(900101, "Fireball", 3.0f, 25.0f, 80.0f, 12.0f, static_cast<Element>(0))},  // 火焰攻击
+     {10, std::make_shared<AttackSkill>(900102, "Water Blast", 4.0f, 20.0f, 70.0f, 14.0f, static_cast<Element>(1))},  // 水之冲击
+     {15, std::make_shared<AttackSkill>(900103, "Earthquake", 6.0f, 35.0f, 90.0f, 10.0f, static_cast<Element>(2))},  // 地震攻击
+     {20, std::make_shared<AttackSkill>(900104, "Air Blast", 3.5f, 22.0f, 75.0f, 16.0f, static_cast<Element>(3))},  // 空气冲击
+     {25, std::make_shared<AttackSkill>(900105, "Thunderstrike", 5.0f, 30.0f, 85.0f, 18.0f, static_cast<Element>(4))},  // 雷电攻击
+     {30, std::make_shared<AttackSkill>(900106, "Vine Lash", 3.0f, 20.0f, 60.0f, 11.0f, static_cast<Element>(5))},  // 藤鞭
+     {35, std::make_shared<AttackSkill>(900107, "Ice Shard", 4.5f, 18.0f, 65.0f, 13.0f, static_cast<Element>(6))},  // 冰霜碎片
+     {11, std::make_shared<ShieldSkill>(900201, "Shield Block", 10.0f, 40.0f, 150.0f, 5.0f)},  // 护盾技能
+     {6, std::make_shared<HealSkill>(900301, "Healing Touch", 6.0f, 30.0f, 120.0f)}  // 治疗技能
     };
 
     // 遍历 allSkills，根据玩家等级解锁技能
@@ -341,14 +354,30 @@ void Player::updateshieldTime(float deltaTime)
 {
     if (shieldTime > 0.0f) {
         shieldTime -= deltaTime;
+        // 计算透明度，最大透明度为255
+        float shieldAlpha = (currentShield / 150) * 255.0f;  // 根据护盾值计算透明度
+        float timeAlpha = (shieldTime / 5) * 255.0f;  // 根据剩余时间计算透明度
+        // 综合计算透明度，可以使用加权平均或取较小值
+        float alpha = std::min(shieldAlpha, timeAlpha);  // 取两者中的较小值
+        shieldSprite->setPosition(this->getPosition());  // 护盾跟随玩家位置
+        // 更新护盾精灵的透明度
+        if (shieldSprite) {
+            shieldSprite->setOpacity(alpha);  // 设置透明度
+        }
         if (shieldTime <= 0.0f || currentShield <= 0.0f) {
             shieldTime = 0.0f;
             currentShield = 0.0f;
+            removeShield();
             CCLOG("Shield expired.");
         }
     }
 }
-
+void Player::removeShield() {
+    if (shieldSprite) {
+        shieldSprite->removeFromParentAndCleanup(true);  // 从父节点移除护盾精灵并清理
+        shieldSprite = nullptr;  // 清空指针，防止悬空指针
+    }
+}
 void Player::takeDamage(float damage) {
     if (armor != nullptr) {
         damage *= (500.0f - armor->getPower()) / 500.0f;//加入护甲免伤的逻辑
@@ -385,9 +414,24 @@ void Player::heal(float healAmount) {
 }
 
 void Player::setShield(float shield,float Time) {
+
     currentShield = shield;
     this->shieldTime = Time;
     CCLOG("Player receives a shield of %.2f.", shield);
+
+    // 创建护盾精灵（如果护盾不存在的话）
+    if (!shieldSprite) {
+        shieldSprite = Sprite::create("imageSkill/shield.png");  
+        if (shieldSprite) {
+            shieldSprite->setOpacity(255);  // 设置护盾为完全不透明
+            this->addChild(shieldSprite);  // 把护盾精灵添加到玩家的节点中
+        }
+    }
+
+    // 设置护盾的初始位置和大小
+    if (shieldSprite) {
+        shieldSprite->setPosition(this->getPosition());  // 护盾跟随玩家位置
+    }
 }
 
 float Player::getShield() const {
@@ -418,7 +462,7 @@ void Player::updateStamina(float deltaTime) {
         // 每帧自动恢复少量体力（例如 0.1 每秒）
         regenerateStamina(0.1f * deltaTime);
     else
-        regenerateStamina(accessory->getPower() * deltaTime);
+        regenerateStamina(accessory->getPower() * deltaTime * 0.1f);
 }
 // 用于定时更新玩家状态
 void Player::update(float deltaTime) {
@@ -587,10 +631,10 @@ std::shared_ptr<Skill> Player::creatSkillById(int id, const std::string& jsonStr
             skill = std::make_shared<AttackSkill>(id, "Attack Skill", 10.0f, 5.0f, 50.0f, 10.0f, Element::FIRE);
             break;
         case 2:
-            skill = std::make_shared<HealSkill>(id, "Heal Skill", 5.0f,5.0f, 30.0f);
+            skill = std::make_shared<ShieldSkill>(id, "Shield Skill", 15.0f, 5.0f, 100.0f, 20.0f);
             break;
         case 3:
-            skill = std::make_shared<ShieldSkill>(id, "Shield Skill", 15.0f, 5.0f, 100.0f, 20.0f);
+            skill = std::make_shared<HealSkill>(id, "Heal Skill", 5.0f, 5.0f, 30.0f);
             break;
         default:
             CCLOG("Unknown skill subtype %d", subType);
@@ -607,4 +651,144 @@ std::shared_ptr<Skill> Player::creatSkillById(int id, const std::string& jsonStr
     }
 
     return skill;
+}
+
+void Player::loadSkillAnimations() {
+    // 元素名称对应的字符串数组
+    const std::vector<std::string> elementNames = {
+        "fire", "water", "earth", "air", "thunder", "grass", "ice"
+    };
+
+    // 清空现有的技能动画容器
+    skillAnimations.clear();
+
+    // 为每个攻击技能技能加载动画
+    for (int i = 0; i < elementNames.size(); ++i) {  // 修改为遍历所有7个元素
+
+        std::string texturePath = "imageSkill/charge-" + elementNames[i] + ".png"; // 拼接元素纹理路径
+
+        // 加载纹理
+        auto texture = cocos2d::Director::getInstance()->getTextureCache()->addImage(texturePath);
+        if (!texture) {
+            CCLOG("Failed to load texture: %s", texturePath.c_str());
+            continue;  // 如果纹理加载失败，跳过该技能
+        }
+
+        // 每帧的尺寸
+        int frameWidth = 32;
+        int frameHeight = 32;
+
+        Vector<SpriteFrame*> animationFrames;
+
+        // 裁剪每一帧，图片总共八帧
+        for (int j = 0; j < 8; ++j) { 
+            Rect rect(j * frameWidth, 0, frameWidth, frameHeight);
+            auto frame = SpriteFrame::createWithTexture(texture, rect);
+            animationFrames.pushBack(frame);
+        }
+
+        // 存储到技能的动画容器中
+        skillAnimations.push_back(animationFrames);
+    }
+   
+    auto healTexture = cocos2d::Director::getInstance()->getTextureCache()->addImage("imageSkill/Heal Effect Sprite Sheet.png");
+
+    // 每帧的尺寸（治疗技能纹理为 512x512）
+    int healFrameWidth = 128;  
+    int healFrameHeight = 128;
+
+    Vector<SpriteFrame*> healAnimationFrames;
+
+    // 裁剪治疗技能的每一帧（治疗技能有 16 帧）
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            Rect rect(i * healFrameWidth,j * healFrameWidth , healFrameWidth, healFrameHeight);
+            auto frame = SpriteFrame::createWithTexture(healTexture, rect);
+            healAnimationFrames.pushBack(frame);
+        }
+    }
+
+    // 将治疗技能动画帧添加到 skillAnimations 中，确保它位于 7 个攻击技能后
+    skillAnimations.push_back(healAnimationFrames);
+
+}
+
+void Player::testSkill() {
+    // 获取该元素的所有飞行动画帧（假设这些帧已经存储在数组或vector中）
+    loadSkillAnimations();
+    auto& frames = skillAnimations[7];  //改这里可以测试不同的技能
+
+    // 创建飞行动画的帧（假设8帧）
+    Vector<SpriteFrame*> flightFrames;
+    for (int i = 0; i < 8; ++i) {  // 假设技能的飞行动画有8帧
+        flightFrames.pushBack(frames.at(i));
+    }
+
+    // 创建飞行动画
+    auto flightAnimation = Animation::createWithSpriteFrames(flightFrames, 0.1f); // 每帧0.1秒
+    auto flightAnimate = Animate::create(flightAnimation);
+
+    // 创建一个新的精灵用于显示飞行动画
+    auto skillSprite = Sprite::createWithSpriteFrame(flightFrames.front());
+    this->addChild(skillSprite);  // 将精灵添加到玩家的节点中
+
+    // 播放飞行动画，使用 RepeatForever 确保动画一直循环
+    auto repeatFlightAnimate = RepeatForever::create(flightAnimate);
+    skillSprite->runAction(repeatFlightAnimate);
+
+    // 设置精灵的初始位置为玩家的位置
+    skillSprite->setPosition(this->getPosition());
+
+    // 计算飞行的方向
+    float flightDistance = 0.0f;  // 飞行的总距离（可以根据需要调整）
+    float flightDuration = 1.0f;  // 飞行的总时间（可以根据需要调整）
+
+    // 计算飞行的目标位置（假设向右飞行）
+    auto targetPosition = this->getPosition() + cocos2d::Vec2(flightDistance, 0);
+
+    // 飞行路径：使用 MoveTo 动作控制飞行
+    auto moveAction = MoveTo::create(flightDuration, targetPosition);
+
+    // 动作完成后，删除技能精灵
+    auto removeAction = CallFunc::create([skillSprite]() {
+        skillSprite->removeFromParentAndCleanup(true);  // 移除精灵
+        });
+
+    // 创建一个动作序列：飞行 + 删除技能精灵
+    auto actionSequence = Sequence::create(moveAction, removeAction, nullptr);
+
+    // 让技能精灵执行动作
+    skillSprite->runAction(actionSequence);
+}
+
+void Player::lauchSkill(int skillSlot, Enemy& target) {
+    if (skillSlot < 0 || skillSlot >= skillBar.size()) {
+        CCLOG("Invalid skill slot");
+        return;
+    }
+
+    // 计算飞行方向
+    cocos2d::Vec2 direction = skillSlot == 7 ? 0 : target.getPosition() - getPosition();
+    direction.normalize();  
+
+    // 创建飞行精灵
+    auto SkillSprite = Sprite::createWithSpriteFrame(skillAnimations[skillSlot].at(0));  //
+    this->getParent()->addChild(SkillSprite);  // 把精灵添加到场景
+
+    // 设置技能初始位置
+    SkillSprite->setPosition(getPosition());
+
+    auto animation = Animation::createWithSpriteFrames(skillAnimations[skillSlot], 0.1f);  // 每帧0.1秒
+    auto animate = Animate::create(animation);
+    SkillSprite->runAction(RepeatForever::create(animate));  // 循环播放飞行动画
+
+    // 飞行路径（简单的直线运动）
+    auto moveAction = MoveTo::create(1.0f, target.getPosition());  // 假设技能飞行的时间为1秒
+    auto removeAction = CallFunc::create([SkillSprite]() {
+        SkillSprite->removeFromParentAndCleanup(true);  // 技能击中后销毁
+        });
+
+    // 播放飞行动作 + 击中后的销毁
+    auto sequence = Sequence::create(moveAction, removeAction, nullptr);
+    SkillSprite->runAction(sequence);
 }

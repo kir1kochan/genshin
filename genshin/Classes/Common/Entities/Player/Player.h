@@ -39,12 +39,16 @@ private:
 
     float shieldTimeAccumulator = 0.0f;  // 累积时间
     const float shieldTimeInterval = 0.5f;  // 每次更新的时间间隔，单位秒
-  
+    
+    Sprite* shieldSprite = nullptr;  // 用于显示护盾的精灵
     float currentShield;  // 当前护甲值
     float shieldTime;     //护甲的持续时间
     float CDtoSet = 1.0f;       // 攻击cd
    
     Backpack backpack; // 背包
+
+    // 存储技能的所有动画
+    std::vector<Vector<SpriteFrame*>> skillAnimations;
 
 
 public:
@@ -129,6 +133,8 @@ public:
 
     void updateshieldTime(float deltaTime);
 
+    void removeShield();
+
     void update(float deltaTime);        // 定时更新玩家状态，目前用于技能和护盾，也可以更新其他的状态
 
     // 更新背包
@@ -145,6 +151,13 @@ public:
     float getMaxStamina() const { return maxStamina; }              // 获取最大体力
     void updateStamina(float deltaTime);   // 每帧更新体力
     
+    // 加载技能动画
+    void loadSkillAnimations();
+
+    void testSkill();
+
+    void lauchSkill(int skillSlot, Enemy& target);
+
 };
 
 #endif // PLAYER_H

@@ -153,6 +153,9 @@ void TestScene::addTestModule2()
     this->addChild(label);
     this->addChild(slime);
     blockManager->addEnemy(slime);
+    //player->testSkill();
+    player->setShield(150,5);
+
 }
 
 void TestScene::setupKeyboardListener()
@@ -232,7 +235,7 @@ void TestScene::update(float deltaTime)
         blockManager->updateBlocksForPlayer(player);
     }
     if (spiritManager) {
-        if (gaptime < 5) {
+        if (gaptime < 0.5) {
             gaptime += deltaTime;
             return;
         }
