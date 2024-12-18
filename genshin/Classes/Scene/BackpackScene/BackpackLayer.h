@@ -4,6 +4,11 @@
 #include "cocos2d.h"
 #include "Common/Backpack/Backpack.h"
 #include "Common/Entities/Player/Player.h"
+#include "BackpackMainLayer.h"
+#include "Common/Item/Equipment/Equipment.h"
+
+
+
 
 class BackpackLayer : public cocos2d::Layer {
 public:
@@ -21,14 +26,21 @@ public:
     // 生成实例的宏
     CREATE_FUNC(BackpackLayer);
 
+    void createNums();
+
+    // 更新特定物品的数量
+    void uploadNumById(int id);
+
+    // 将卸下的装备加在第一个空位
+    void addItemToBlank(int id);
+
 private:
 
     Player* player;
     Backpack* backpack;
 
-    // 存储图标和数量的关系
-    std::unordered_map<cocos2d::Sprite, int> iconToNum;
-
+    // 记录管理图标展示情况的数组
+    std::unordered_map<int, int> placeToId;
 };
 
 #endif // BACKPACK_LAYER_H
