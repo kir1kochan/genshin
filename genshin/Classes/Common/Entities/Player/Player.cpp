@@ -13,18 +13,18 @@
 
 Player::Player( Element element, float attackRange)
     :Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), maxStamina(100.0f), stamina(100.0f), backpack() {
-    skillBar.resize(3, nullptr); // 初始化技能栏为空
+    skillBar.resize(4, nullptr); // 初始化技能栏为空
 }
 
 
 Player::Player() : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr), currentShield(0), maxStamina(100.0f), stamina(100.0f), backpack() {
-    skillBar.resize(3, nullptr); // 初始化技能栏为空
+    skillBar.resize(4, nullptr); // 初始化技能栏为空
 }
 
 Player::Player(cocos2d::Sprite* sprite)
     : Entities(), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr),
     currentShield(0), maxStamina(100.0f), stamina(100.0f), backpack() {
-    skillBar.resize(3, nullptr); // 初始化技能栏为空
+    skillBar.resize(4, nullptr); // 初始化技能栏为空
 
     if (sprite != nullptr) {
         this->addChild(sprite, 1);  // 添加到当前节点
@@ -298,7 +298,7 @@ void Player::checkAndUnlockSkills()
      {25, std::make_shared<AttackSkill>(910105, "Air Blast", 3.5f, 22.0f, 75.0f, 16.0f, static_cast<Element>(3))},  // 空气冲击
      {30, std::make_shared<AttackSkill>(910106, "Ice Shard", 4.5f, 18.0f, 65.0f, 13.0f, static_cast<Element>(6))},  // 冰霜碎片
      {35, std::make_shared<AttackSkill>(910107, "Vine Lash", 3.0f, 20.0f, 60.0f, 11.0f, static_cast<Element>(5))},  // 藤鞭
-     {10, std::make_shared<ShieldSkill>(920101, "Shield Block", 10.0f, 40.0f, 150.0f, 5.0f)},  // 护盾技能
+     {11, std::make_shared<ShieldSkill>(920101, "Shield Block", 10.0f, 40.0f, 150.0f, 5.0f)},  // 护盾技能
      {6, std::make_shared<HealSkill>(930101, "Healing Touch", 6.0f, 30.0f, 120.0f)}  // 治疗技能
     };
 
@@ -308,14 +308,16 @@ void Player::checkAndUnlockSkills()
             // 检查是否已经解锁过技能
             auto it = std::find_if(unlockedSkills.begin(), unlockedSkills.end(),
                 [&skillEntry](const std::shared_ptr<Skill>& skill) {
-                    return skill->getName() == skillEntry.second->getName();
+                    return skill->getSkillName() == skillEntry.second->getSkillName();
                 });
 
             if (it == unlockedSkills.end()) { // 如果没有解锁过该技能
                 unlockSkill(skillEntry.second);
                 for (int i = 0; i < 4; i++) {
-                    if (skillBar[i] != nullptr)
+                    if (skillBar[i] == nullptr) {
                         equipSkill(i, skillEntry.second); //若技能栏没有满，则自动装备技能
+                        break;
+                    }
                 }
             }
         }
