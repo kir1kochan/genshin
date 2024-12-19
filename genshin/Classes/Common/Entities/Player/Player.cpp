@@ -117,12 +117,7 @@ void Player::attackTargetBySkill(Enemy& target, float attackValue, Element skill
         return;
     }
 
-    // 检查目标是否在攻击范围内
-    if (!attackInRange(target)) {
-        CCLOG("Target is out of range.");
-        return;
-    }
-
+    
     float damage = attackValue;
     
 
@@ -282,7 +277,7 @@ void Player::useSkill(int skillSlot, Enemy& target) {
     reduceStamina(requiredStamina); // 使用技能后减少体力
     if (id_skill != 900201) { //特殊判断护盾
         if (id_skill != 900301) //特殊判断治疗
-            lauchSkill(id_skill % 10, target);
+            lauchSkill(id_skill % 10-1, target);
         else
             lauchSkill(7, target);
     }
@@ -360,7 +355,6 @@ void Player::updateshieldTime(float deltaTime)
         float timeAlpha = (shieldTime / 5) * 255.0f;  // 根据剩余时间计算透明度
         // 综合计算透明度，可以使用加权平均或取较小值
         float alpha = std::min(shieldAlpha, timeAlpha);  // 取两者中的较小值
-        shieldSprite->setPosition(this->getPosition());  // 护盾跟随玩家位置
         // 更新护盾精灵的透明度
         if (shieldSprite) {
             shieldSprite->setOpacity(alpha);  // 设置透明度
@@ -424,14 +418,15 @@ void Player::setShield(float shield,float Time) {
     if (!shieldSprite) {
         shieldSprite = Sprite::create("imageSkill/shield.png");  
         if (shieldSprite) {
-            shieldSprite->setOpacity(255);  // 设置护盾为完全不透明
-            this->addChild(shieldSprite);  // 把护盾精灵添加到玩家的节点中
+            shieldSprite->setOpacity(105);  // 设置护盾为半透明
+            shieldSprite->setName("shield");
+            this->addChild(shieldSprite,5);  // 把护盾精灵添加到玩家的节点中
         }
     }
 
     // 设置护盾的初始位置和大小
     if (shieldSprite) {
-        shieldSprite->setPosition(this->getPosition());  // 护盾跟随玩家位置
+        shieldSprite->setPosition(0,0);  // 护盾跟随玩家位置
     }
 }
 
@@ -441,7 +436,7 @@ float Player::getShield() const {
 
 void Player::regenerateStamina(float amount) {
     stamina = std::min(stamina + amount, maxStamina); // 体力恢复但不超过最大体力
-    CCLOG("Player regenerates %.2f stamina. Current stamina: %.2f", amount, stamina);
+    //CCLOG("Player regenerates %.2f stamina. Current stamina: %.2f", amount, stamina);
 }
 
 void Player::reduceStamina(float amount) {
@@ -737,8 +732,6 @@ void Player::testSkill() {
     auto repeatFlightAnimate = RepeatForever::create(flightAnimate);
     skillSprite->runAction(repeatFlightAnimate);
 
-    // 设置精灵的初始位置为玩家的位置
-    skillSprite->setPosition(this->getPosition());
 
     // 计算飞行的方向
     float flightDistance = 0.0f;  // 飞行的总距离（可以根据需要调整）
@@ -763,28 +756,30 @@ void Player::testSkill() {
 }
 
 void Player::lauchSkill(int skillSlot, Enemy& target) {
-    if (skillSlot < 0 || skillSlot >= skillBar.size()) {
+    if (skillSlot < 0 || skillSlot >= 8) {
         CCLOG("Invalid skill slot");
         return;
     }
 
     // 计算飞行方向
-    cocos2d::Vec2 direction = skillSlot == 7 ? 0 : target.getPosition() - getPosition();
-    direction.normalize();  
+    cocos2d::Vec2 direction = skillSlot == 7 ? this->getPosition() - this->getPosition() : target.getPosition() - this->getPosition();
+    direction.normalize();
 
     // 创建飞行精灵
     auto SkillSprite = Sprite::createWithSpriteFrame(skillAnimations[skillSlot].at(0));  //
-    this->getParent()->addChild(SkillSprite);  // 把精灵添加到场景
+    this->addChild(SkillSprite);  // 把精灵添加到场景
 
     // 设置技能初始位置
-    SkillSprite->setPosition(getPosition());
+    SkillSprite->setPosition(0, 0);
 
     auto animation = Animation::createWithSpriteFrames(skillAnimations[skillSlot], 0.1f);  // 每帧0.1秒
     auto animate = Animate::create(animation);
     SkillSprite->runAction(RepeatForever::create(animate));  // 循环播放飞行动画
-
+    auto moveAction = MoveTo::create(0.5f, target.getPosition() - getPosition());  // 假设技能飞行的时间为1秒
     // 飞行路径（简单的直线运动）
-    auto moveAction = MoveTo::create(1.0f, target.getPosition());  // 假设技能飞行的时间为1秒
+    if (skillSlot == 7) {
+       moveAction = MoveTo::create(1.0f, getPosition() - getPosition());
+    }
     auto removeAction = CallFunc::create([SkillSprite]() {
         SkillSprite->removeFromParentAndCleanup(true);  // 技能击中后销毁
         });
@@ -792,4 +787,5 @@ void Player::lauchSkill(int skillSlot, Enemy& target) {
     // 播放飞行动作 + 击中后的销毁
     auto sequence = Sequence::create(moveAction, removeAction, nullptr);
     SkillSprite->runAction(sequence);
+
 }

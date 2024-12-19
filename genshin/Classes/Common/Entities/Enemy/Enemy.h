@@ -4,9 +4,12 @@
 #include "../Entities.h"
 #include "../../Element/Element.h"
 #include <vector>
+#include "../../Backpack/Backpack.h"
 //#include "../Player/Player.h"
+
 class Player;
 USING_NS_CC;
+
 class Enemy : public Entities {
 private:
     int aggressionLevel;         // 敌人的攻击性等级（决定敌人的攻击频率或强度）

@@ -18,7 +18,10 @@ void MainGameMouseEventManager::handleEvent() {
 
 void MainGameMouseEventManager::onMouseDown(cocos2d::Event* event) {
     if (_isListening) {
-        // 处理鼠标按下事件
+        // 处理鼠标按下事件，攻击最接近的敌人
+        if (nearestEnemy) {
+            player->attackTarget(*nearestEnemy);
+        }
     }
 }
 
@@ -41,4 +44,13 @@ void MainGameMouseEventManager::onMouseScroll(cocos2d::Event* event) {
         }
         camera->setPosition3D(currentPos);
     }
+}
+
+void MainGameMouseEventManager::setPlayer(Player* theplayer) {
+    player = theplayer;
+    // 设置玩家位置和摄像机位置一致
+}
+
+void MainGameMouseEventManager::setNearestEnemy(Enemy* enemy) {
+    nearestEnemy = enemy;
 }
