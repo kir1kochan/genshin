@@ -43,7 +43,8 @@ void Player::levelUp() {
     health = maxHealth;                // 升级时血量恢复
     maxStamina += 20.0f + (level / 5);  // 随等级增加体力值增幅
     stamina = maxStamina;           // 升级时体力值恢复
-    attack += 5.0f + (level / 3); // 随等级增加攻击力
+    baseAttack += 5.0f + (level / 3); // 随等级增加攻击力
+    attack = baseAttack;
     CCLOG("Level up! Now level %d", level);
 
     // 根据当前等级解锁技能
@@ -261,20 +262,13 @@ void Player::useSkill(int skillSlot, Enemy& target) {
     }
 
     auto skill = skillBar[skillSlot];  
-    if (skill->isOnCooldown()) {
-        CCLOG("Skill %s is on cooldown.", skill->getName().c_str());
+    
+    if (!skill->canUse(this,target))
         return;
-    }
-    // 检查体力是否足够
-    float requiredStamina = skill->getStaminaCost(); //获取技能消耗的体力
 
-    if (stamina < requiredStamina) {
-        CCLOG("Not enough stamina to use skill.");
-        return;
-    }
     skill->resetCooldown();
-    int id_skill = skillBar[skillSlot]->getId();
-    reduceStamina(requiredStamina); // 使用技能后减少体力
+    int id_skill = skill->getId();
+    reduceStamina(skill->getStaminaCost()); // 使用技能后减少体力
     if (id_skill != 900201) { //特殊判断护盾
         if (id_skill != 900301) //特殊判断治疗
             lauchSkill(id_skill % 10-1, target);
@@ -300,17 +294,17 @@ void Player::checkAndUnlockSkills()
 {
     // allSkills 存储技能解锁等级与技能
     static std::map<int, std::shared_ptr<Skill>> allSkills = {
-     {5, std::make_shared<AttackSkill>(900101, "Fireball", 3.0f, 25.0f, 80.0f, 12.0f, static_cast<Element>(0))},  // 火焰攻击
-     {10, std::make_shared<AttackSkill>(900102, "Water Blast", 4.0f, 20.0f, 70.0f, 14.0f, static_cast<Element>(1))},  // 水之冲击
-     {15, std::make_shared<AttackSkill>(900103, "Earthquake", 6.0f, 35.0f, 90.0f, 10.0f, static_cast<Element>(2))},  // 地震攻击
-     {20, std::make_shared<AttackSkill>(900104, "Air Blast", 3.5f, 22.0f, 75.0f, 16.0f, static_cast<Element>(3))},  // 空气冲击
-     {25, std::make_shared<AttackSkill>(900105, "Thunderstrike", 5.0f, 30.0f, 85.0f, 18.0f, static_cast<Element>(4))},  // 雷电攻击
-     {30, std::make_shared<AttackSkill>(900106, "Vine Lash", 3.0f, 20.0f, 60.0f, 11.0f, static_cast<Element>(5))},  // 藤鞭
-     {35, std::make_shared<AttackSkill>(900107, "Ice Shard", 4.5f, 18.0f, 65.0f, 13.0f, static_cast<Element>(6))},  // 冰霜碎片
+     {5, std::make_shared<AttackSkill>(900101, "Fireball", 3.0f, 25.0f, 80.0f, 120.0f, static_cast<Element>(0))},  // 火焰攻击
+     {10, std::make_shared<AttackSkill>(900102, "Water Blast", 4.0f, 20.0f, 70.0f,120.0f, static_cast<Element>(1))},  // 水之冲击
+     {15, std::make_shared<AttackSkill>(900103, "Earthquake", 6.0f, 35.0f, 90.0f, 120.0f, static_cast<Element>(2))},  // 地震攻击
+     {20, std::make_shared<AttackSkill>(900104, "Air Blast", 3.5f, 22.0f, 75.0f, 120.0f, static_cast<Element>(3))},  // 空气冲击
+     {25, std::make_shared<AttackSkill>(900105, "Thunderstrike", 5.0f, 30.0f, 85.0f, 120.0f, static_cast<Element>(4))},  // 雷电攻击
+     {30, std::make_shared<AttackSkill>(900106, "Vine Lash", 3.0f, 20.0f, 60.0f, 120.0f, static_cast<Element>(5))},  // 藤鞭
+     {35, std::make_shared<AttackSkill>(900107, "Ice Shard", 4.5f, 18.0f, 65.0f, 120.0f, static_cast<Element>(6))},  // 冰霜碎片
      {11, std::make_shared<ShieldSkill>(900201, "Shield Block", 10.0f, 40.0f, 150.0f, 5.0f)},  // 护盾技能
      {6, std::make_shared<HealSkill>(900301, "Healing Touch", 6.0f, 30.0f, 120.0f)}  // 治疗技能
     };
-
+    loadSkillAnimations();
     // 遍历 allSkills，根据玩家等级解锁技能
     for (const auto& skillEntry : allSkills) {
         if (level >= skillEntry.first) {
@@ -624,7 +618,7 @@ std::shared_ptr<Skill> Player::creatSkillById(int id, const std::string& jsonStr
     case 9:
         switch (subType) {
         case 1:
-            skill = std::make_shared<AttackSkill>(id, "Attack Skill", 10.0f, 5.0f, 50.0f, 10.0f, Element::FIRE);
+            skill = std::make_shared<AttackSkill>(id, "Attack Skill", 10.0f, 5.0f, 50.0f, 100, Element::FIRE);
             break;
         case 2:
             skill = std::make_shared<ShieldSkill>(id, "Shield Skill", 15.0f, 5.0f, 100.0f, 20.0f);

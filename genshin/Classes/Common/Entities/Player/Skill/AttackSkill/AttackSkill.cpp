@@ -20,40 +20,11 @@ float AttackSkill::getRange() const {
 
 // 激活技能
 void AttackSkill::activate(Player* user, Enemy& target) {
-    // 检查目标是否在范围内
-    float distance = user->getPosition().distance(target.getPosition());
-    if (distance > range) {
-        CCLOG("AttackSkill: Target out of range for %s.", name.c_str());
-        return;
-    }
-    // 播放技能动画（根据技能 id 选择对应的动画）
-    playSkillAnimation(user, target);
     // 对目标造成伤害
     user->attackTargetBySkill(target, attackPower,element);
     CCLOG("%s dealt %.2f damage to target.", name.c_str(), attackPower);
 }
-// 播放技能动画
-void AttackSkill::playSkillAnimation(Player* user, Enemy& target) {
-    
 
-    // 根据技能 id 选择不同的动画效果
-    switch (id) {
-    case 900101:  // Fireball
-      
-        break;
-    case 900102:  // Water Blast
-    
-        break;
-    case 900103:  // Thunderstrike
-     
-        break;
-    case 900104:  // Earthquak
-        break;
-    default:
-        CCLOG("Unknown skill id: %d", id);
-        break;
-    }
-}
 
 void AttackSkill::loadFromJson(const std::string& jsonString) {
     Skill::loadFromJson(jsonString);  // 加载基类的属性
@@ -78,4 +49,28 @@ void AttackSkill::loadFromJson(const std::string& jsonString) {
     if (doc.HasMember("element") && doc["element"].IsInt()) {
         element = static_cast<Element>(doc["element"].GetInt());  // 假设 Element 是一个枚举
     }
+}
+
+bool AttackSkill::canUse(Player* user, Enemy& target)
+{
+    // 检查是否在冷却
+    if (isOnCooldown()) {
+        CCLOG("Skill %s is on cooldown.", name.c_str());
+        return false;
+    }
+
+    // 检查体力是否足够
+    if (user->getStamina() < staminaCost) {
+        CCLOG("Not enough stamina for skill %s.", name.c_str());
+        return false;
+    }
+
+    // 检查目标是否在技能范围内
+    float distance = user->getPosition().distance(target.getPosition());
+    if (distance > range) {
+        CCLOG("Target out of range for skill %s.", name.c_str());
+        return false;
+    }
+
+    return true;  // 满足所有条件，技能可以使用
 }

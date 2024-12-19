@@ -24,10 +24,13 @@ public:
     // 实现技能激活
     void activate(Player* user, Enemy& target) override;
 
-    void playSkillAnimation(Player* user, Enemy& target);
 
     // 从 JSON 字符串加载数据
     void loadFromJson(const std::string& jsonString) override;
+
+    //判断能否使用技能
+    bool canUse(Player* user, Enemy& target) override;
+
 };
 
 #endif // ATTACK_SKILL_H

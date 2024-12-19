@@ -73,3 +73,20 @@ void Skill::loadFromJson(const std::string& jsonString) {
         staminaCost = 0.0f;
     }
 }
+
+bool Skill::canUse(Player* user, Enemy& target)
+{
+    // 检查是否在冷却
+    if (isOnCooldown()) {
+        CCLOG("Skill %s is on cooldown.", name.c_str());
+        return false;
+    }
+
+    // 检查体力是否足够
+    if (user->getStamina() < staminaCost) {
+        CCLOG("Not enough stamina for skill %s.", name.c_str());
+        return false;
+    }
+    return true;  // 满足所有条件，技能可以使用
+}
+
