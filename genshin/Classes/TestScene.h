@@ -7,7 +7,7 @@
 #include "Classes/Scene/BackpackScene/BackpackMainLayer.h"
 #include "Classes/Common/Entities/Player/Player.h"
 #include "Classes/Common/SpiritManager/SpiritManager.h"
-
+#include "System/FishingSystem/FishingSystem.h"
 class TestScene : public cocos2d::Scene
 {
 public:
@@ -41,7 +41,9 @@ private:
     SpiritManager* spiritManager;
     BlockManager* blockManager;
     Enemy* nearestEnemy=nullptr;
+    FishingSystem* fishing = nullptr;
     float gaptime=0;
+    bool is_running = true;
 };
 
 #endif // TESTSCENE_H
