@@ -41,6 +41,9 @@ public:
     // 从 JSON 字符串加载数据
     virtual void loadFromJson(const std::string& jsonString);
 
+    //判断能否使用技能
+    virtual bool canUse(Player* user, Enemy& target);
+
 };
 
 #endif // SKILL_H
