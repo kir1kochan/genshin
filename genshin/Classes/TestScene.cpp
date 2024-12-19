@@ -140,7 +140,7 @@ void TestScene::addTestModule2()
     if (this->getChildByName("module2")) {
         return;
     }
-    std::shared_ptr<Weapon> newWeapon = std::make_shared<Weapon>(100101, "Copper_Broadsword", 10, 1.5, 1.2);
+    std::shared_ptr<Weapon> newWeapon = std::make_shared<Weapon>(100101, "Copper_Broadsword", 10, 30, 1.2);
     player->equipWeapon(newWeapon);
     player->levelUp();
     auto label = Label::createWithTTF("Test Module 2", "fonts/Marker Felt.ttf", 24);
@@ -150,7 +150,7 @@ void TestScene::addTestModule2()
     auto slime = new Enemy();
     slime->setSpriteFilename("monsters/slime.png");
     slime->generateSprite();
-    slime->setPosition(400, 300);
+    slime->setPosition(1800, 6300);
     this->addChild(label);
     this->addChild(slime);
     blockManager->addEnemy(slime);

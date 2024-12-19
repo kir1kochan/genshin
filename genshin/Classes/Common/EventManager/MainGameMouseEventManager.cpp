@@ -32,22 +32,27 @@ void MainGameMouseEventManager::onMouseScroll(cocos2d::Event* event) {
         auto director = cocos2d::Director::getInstance();
         Camera* camera = Camera::getDefaultCamera();
 
+        Vec3 hudPos = hud->getPosition3D();
         // 增加或减少摄像机的Z坐标来模拟缩放
         Vec3 currentPos = camera->getPosition3D();
         if (deltaY > 0 && currentPos.z >= 400) {
             // 向前缩小
             currentPos.z -= 20;
+            hudPos.z -= 20;
         }
         else if (deltaY < 0 && currentPos.z <= 800) {
             // 向后放大
             currentPos.z += 20;
+            hudPos.z += 20;
         }
         camera->setPosition3D(currentPos);
+        hud->setPosition3D(hudPos);
     }
 }
 
 void MainGameMouseEventManager::setPlayer(Player* theplayer) {
     player = theplayer;
+    hud = dynamic_cast<Hud*>(player->getChildByName("hud"));
     // 设置玩家位置和摄像机位置一致
 }
 

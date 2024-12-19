@@ -20,6 +20,7 @@ Player::Player( Element element, float attackRange)
     // 创建 HUD 并作为子节点
     Hud* hud = Hud::create(this);
     if (hud) {
+        hud->setName("hud");
         this->addChild(hud);  // 添加为子节点
     }
 
@@ -35,6 +36,7 @@ Player::Player() : Entities(), experience(0), level(1), weapon(nullptr), armor(n
     // 创建 HUD 并作为子节点
     Hud* hud = Hud::create(this);
     if (hud) {
+        hud->setName("hud");
         this->addChild(hud);  // 添加为子节点
     }
 }
@@ -52,6 +54,7 @@ Player::Player(cocos2d::Sprite* sprite)
     // 创建 HUD 并作为子节点
     Hud* hud = Hud::create(this);
     if (hud) {
+        hud->setName("hud");
         this->addChild(hud);  // 添加为子节点
     }
 }

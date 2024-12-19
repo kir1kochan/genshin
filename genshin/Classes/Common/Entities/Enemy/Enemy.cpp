@@ -71,6 +71,8 @@ void Enemy::takeDamage(float amount) {
         sprite->runAction(deathSequence);
 
     }
+
+    drawProgressBar(barNode, health / maxHealth);
     currentCooldown = 0.5; // 受击的攻击僵直
 }
 
@@ -102,10 +104,13 @@ void Enemy::aiBehavior(float distance, Player* player) {
     if (!isAlive) {
         // 如有掉落物则掉落并且重设掉落内容为0
         if (drop) {
-            player->addItemToBackpack(drop, 1);
+            player->addItemToBackpack(drop, 1);           
+            drop = 0;
+        }
+        if (baseLevel) {
             player->gainExperience(30 + 2 * baseLevel);
             player->getBackpack()->addCoins(30 + 2 * baseLevel);
-            drop = 0;
+            baseLevel = 0;
         }
         return;
     }
@@ -305,6 +310,10 @@ cocos2d::Sprite* Enemy::generateSprite() {
         sprite->runAction(defaultAnimate); // 默认朝下
         applyElementColor();
         spriteGenerated = true;
+        barNode = DrawNode::create();
+        this->addChild(barNode);
+        barNode->setPosition(-20, 20);
+        drawProgressBar(barNode, health / maxHealth);
         return sprite;
     }
     return nullptr; // 如果精灵已经生成，返回空指针
@@ -358,4 +367,20 @@ cocos2d::Animate* Enemy::getDirectionAnimate(float angle, bool isAttacking) {
 
 void Enemy::setSpriteFilename(std::string filename) {
     imagePath = filename;
+}
+
+void Enemy::drawProgressBar(cocos2d::DrawNode* barNode, float percent) {
+    barNode->clear(); // 清空旧的内容
+
+    // 确保百分比在 0 到 1 之间
+    percent = std::max(0.0f, std::min(1.0f, percent));
+    float filledWidth = 40 * percent;
+
+    // 绘制矩形进度条
+    barNode->drawSolidRect(cocos2d::Vec2(0, 0), cocos2d::Vec2(filledWidth, 5), Color4F::RED);
+
+    // 绘制边框
+    cocos2d::Vec2 origin(0, 0); // 起点
+    cocos2d::Vec2 topRight(40, 5); // 右上角点
+    barNode->drawRect(origin, topRight, cocos2d::Color4F::BLACK); // 黑色边框
 }
