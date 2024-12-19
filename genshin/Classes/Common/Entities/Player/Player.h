@@ -6,6 +6,7 @@
 #include "Classes/Common/Item/Equipment/Weapon/Weapon.h"
 #include "Classes/Common/Item/Equipment/Armor/Armor.h"
 #include "Classes/Common/Item/Equipment/Accessory/Accessory.h"
+#include "Classes/UI/Hud.h"
 //#include "Skill/Skill.h"
 //#include "Skill/AttackSkill/AttackSkill.h"
 //#include "Skill/HealSkill/HealSkill.h"

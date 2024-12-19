@@ -49,6 +49,9 @@
     <Filter Include="src\Classes\System">
       <UniqueIdentifier>{27b30626-8437-4365-bede-5ee26bff495a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Classes\UI">
+      <UniqueIdentifier>{81fa6b22-10e7-4b8a-a235-93fae99e6321}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -146,6 +149,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\System\FishingSystem\FishingSystem.cpp">
       <Filter>src\Classes\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\Hud.cpp">
+      <Filter>src\Classes\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +253,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\System\FishingSystem\FishingSystem.h">
       <Filter>src\Classes\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\Hud.h">
+      <Filter>src\Classes\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
