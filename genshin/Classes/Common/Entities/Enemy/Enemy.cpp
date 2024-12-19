@@ -103,6 +103,8 @@ void Enemy::aiBehavior(float distance, Player* player) {
         // 如有掉落物则掉落并且重设掉落内容为0
         if (drop) {
             player->addItemToBackpack(drop, 1);
+            player->gainExperience(30 + 2 * baseLevel);
+            player->getBackpack()->addCoins(30 + 2 * baseLevel);
             drop = 0;
         }
         return;

@@ -31,7 +31,7 @@ bool TestScene::init()
     director->getOpenGLView()->setDesignResolutionSize(1920, 1080, ResolutionPolicy::NO_BORDER);
 
     // 如果地图太小，可以调整缩放比例，放大地图
-    auto map = TMXTiledMap::create("/maps/world.tmx");
+    auto map = TMXTiledMap::create("/maps/forest.tmx");
     if (map) {
         map->setName("background");
         this->addChild(map, -1);  // 将地图作为背景层添加到场景中
@@ -87,7 +87,7 @@ bool TestScene::init()
         // 初始化背包层时，放在屏幕外
         backpackMainLayer->setPosition(Vec2(-Director::getInstance()->getVisibleSize().width, 0));
 
-
+        mouseInputManager->setPlayer(player);
         }, 0.1f, "init_player_key");
 
     scheduleOnce([this](float dt) {
@@ -155,7 +155,7 @@ void TestScene::addTestModule2()
     this->addChild(slime);
     blockManager->addEnemy(slime);
     //player->testSkill();
-    player->setShield(150,5);
+    //player->setShield(150,5);
 
 }
 
@@ -179,7 +179,7 @@ void TestScene::setupKeyboardListener()
             keyboardEventManager->setBackpackActive(true);
             mouseInputManager->setIsListening(false);
         }
-        else if (keyCode == EventKeyboard::KeyCode::KEY_E) {
+        else if (keyCode == EventKeyboard::KeyCode::KEY_ESCAPE) {
             CCLOG("Exiting Backpack");
             exitBackpack();  // 退出背包
             keyboardEventManager->setBackpackActive(false);
@@ -241,6 +241,12 @@ void TestScene::update(float deltaTime)
             return;
         }
         spiritManager->update(gaptime);
+        nearestEnemy = spiritManager->getNearestEnemy();
+        mouseInputManager->setNearestEnemy(nearestEnemy);
+        keyboardEventManager->setNearestEnemy(nearestEnemy);
         gaptime = 0;
     }    
+    if (player) {
+        player->update(deltaTime);
+    }
 }

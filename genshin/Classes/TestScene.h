@@ -40,6 +40,7 @@ private:
     BackpackMainLayer* backpackMainLayer;  // ±³°üÖ÷²ã
     SpiritManager* spiritManager;
     BlockManager* blockManager;
+    Enemy* nearestEnemy=nullptr;
     float gaptime=0;
 };
 

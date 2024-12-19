@@ -72,6 +72,8 @@ void SpiritManager::updateDistances() {
     for (auto it = enemiesInBlock.begin(); it != enemiesInBlock.end();) {
         Enemy* enemy = *it;
         if (!enemy->getIsAlive()) {
+            // 调用怪物的 AI 行为，并传入玩家的等级和敌人距离
+            enemy->aiBehavior((0,0), player);
             // 删除敌人并更新迭代器
             it = enemiesInBlock.erase(it);
             continue; // 如果敌人已死，跳过这次循环，继续检查下一个敌人

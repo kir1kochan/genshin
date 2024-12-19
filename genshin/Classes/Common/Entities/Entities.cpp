@@ -223,9 +223,7 @@ void Entities::updateStatusEffects(float deltaTime) {
             if (status.first == "Weakened") {
                 // 虚弱状态结束时恢复攻击力
                 attack = baseAttack;  // 恢复原始攻击力
-                CCLOG("Weakened effect expired: Attack restored to %.2f.", attack);
             }
-            CCLOG("%s effect expired.", status.first.c_str());
             // 不删除状态，只是继续处理时间结束后的效果
             // 可以选择在这里添加一些额外的逻辑，比如解除状态后触发其他效果，比如虚弱状态恢复
         }
