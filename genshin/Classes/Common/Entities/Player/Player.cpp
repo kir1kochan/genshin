@@ -16,6 +16,14 @@ Player::Player( Element element, float attackRange)
     skillBar.resize(4, nullptr); // 初始化技能栏为空
     skillAnimations.resize(10);
     loadSkillAnimations(); // 缓存所有技能动画
+
+    // 创建 HUD 并作为子节点
+    Hud* hud = Hud::create(this);
+    if (hud) {
+        this->addChild(hud);  // 添加为子节点
+    }
+
+    
 }
 
 
@@ -23,6 +31,12 @@ Player::Player() : Entities(), experience(0), level(1), weapon(nullptr), armor(n
     skillBar.resize(4, nullptr); // 初始化技能栏为空
     skillAnimations.resize(10);
     loadSkillAnimations(); // 缓存所有技能动画
+
+    // 创建 HUD 并作为子节点
+    Hud* hud = Hud::create(this);
+    if (hud) {
+        this->addChild(hud);  // 添加为子节点
+    }
 }
 
 Player::Player(cocos2d::Sprite* sprite)
@@ -33,6 +47,12 @@ Player::Player(cocos2d::Sprite* sprite)
 
     if (sprite != nullptr) {
         this->addChild(sprite, 1);  // 添加到当前节点
+    }
+    loadSkillAnimations(); // 缓存所有技能动画
+    // 创建 HUD 并作为子节点
+    Hud* hud = Hud::create(this);
+    if (hud) {
+        this->addChild(hud);  // 添加为子节点
     }
 }
 
@@ -478,6 +498,15 @@ void Player::update(float deltaTime) {
         updateAttackCooldown(attackCooldownAccumulator);  // 更新攻击冷却
         attackCooldownAccumulator = 0.0f;  // 重置时间
     }
+
+    // 遍历子节点，找到 HUD 并更新（如果有 HUD）
+    for (auto child : this->getChildren()) {
+        Hud* hud = dynamic_cast<Hud*>(child);
+        if (hud) {
+            hud->update(deltaTime);  // 调用 HUD 的更新方法
+        }
+    }
+
 
     // 更新玩家的状态效果
     updateStatusEffects(deltaTime);  // 更新所有的状态效果（例如中毒、冰冻等）
