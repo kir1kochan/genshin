@@ -115,7 +115,7 @@ void SceneObject::interactWithPlayer(Backpack* backpack) {
         srand(time(0)); // 初始化随机种子
         // 创建并启动钓鱼系统
         FishingSystem* fishingSystem = new FishingSystem;
-        fishingSystem->startFishing();
+        fishingSystem->startFishing(Director::getInstance()->getRunningScene());
 
         // 设置钓鱼结果的回调函数
         fishingSystem->setOnFishingResultCallback([this, backpack](bool success) {

@@ -178,12 +178,37 @@ void TestScene::setupKeyboardListener()
             switchToBackpack();  // 切换到背包
             keyboardEventManager->setBackpackActive(true);
             mouseInputManager->setIsListening(false);
+            is_running = false;
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_ESCAPE) {
             CCLOG("Exiting Backpack");
             exitBackpack();  // 退出背包
             keyboardEventManager->setBackpackActive(false);
             mouseInputManager->setIsListening(true);
+            is_running = true;
+        }
+        else if (keyCode == EventKeyboard::KeyCode::KEY_F) {
+            CCLOG("Start Fishing");
+            keyboardEventManager->setBackpackActive(true);
+            mouseInputManager->setIsListening(false);
+            fishing = new FishingSystem;
+            fishing->startFishing(this);
+            fishing->setOnFishingResultCallback([this](bool success) {
+                if (success) {
+                    CCLOG("Fishing successful!");
+                    player->addItemToBackpack(300101,1);
+                }
+                else {
+                    CCLOG("Fishing failed!");
+                }
+                keyboardEventManager->setBackpackActive(false);
+                mouseInputManager->setIsListening(true);
+                scheduleOnce([this](float dt) {
+                    this->removeChild(fishing);
+                    delete fishing;
+                    fishing = nullptr;
+                    }, 2.0f, "delay_action_key"); 
+                } );
         }
         };
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventListener, this);
@@ -202,7 +227,7 @@ void TestScene::switchToBackpack()
     // 背包层移动到目标位置
     auto moveTo = MoveTo::create(0.5f, targetPosition);  // 目标位置设置为 3D 坐标
     backpackMainLayer->runAction(moveTo);
-
+    is_running = false;
     // 暂停玩家
     // player->setPaused(true);
 }
@@ -216,6 +241,7 @@ void TestScene::exitBackpack()
         // 动画完成后，确保背包层完全不可见并隐藏
         backpackMainLayer->setVisible(false);
         }), nullptr));
+    is_running = true;
     // 恢复玩家
     // player->setPaused(false);
 }
@@ -232,10 +258,10 @@ void TestScene::update(float deltaTime)
     if (keyboardEventManager) {
         keyboardEventManager->update(deltaTime);  // 调用键盘事件管理器的 update 方法
     }
-    if (blockManager) {
+    if (blockManager && is_running) {
         blockManager->updateBlocksForPlayer(player);
     }
-    if (spiritManager) {
+    if (spiritManager && is_running) {
         if (gaptime < 0.5) {
             gaptime += deltaTime;
             return;
@@ -245,8 +271,8 @@ void TestScene::update(float deltaTime)
         mouseInputManager->setNearestEnemy(nearestEnemy);
         keyboardEventManager->setNearestEnemy(nearestEnemy);
         gaptime = 0;
-    }    
-    if (player) {
+    }
+    if (player&&is_running) {
         player->update(deltaTime);
     }
 }
