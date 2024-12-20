@@ -255,11 +255,11 @@ cocos2d::Sprite* Enemy::generateSprite() {
     if (!spriteGenerated) {
         // 加载纹理
         auto texture = cocos2d::Director::getInstance()->getTextureCache()->addImage(imagePath);
+        auto textureSize = texture->getContentSize();
 
         // 每帧的尺寸
-        int frameWidth = 64;
-        int frameHeight = 64;
-
+        int frameWidth = textureSize.height / 4;
+        int frameHeight = textureSize.height / 4;
 
         // 动画方向和动作设置 (4个方向，2种状态：正常、攻击)
         const int rows = 4;  // 4个方向
