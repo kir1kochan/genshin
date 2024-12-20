@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include "Backpack.h" // 假设 Backpack 类已经存在
+#include "../../Common/Backpack/Backpack.h" 
 
 struct QuestStage {
     std::unordered_map<int, int> requiredItems; // 每个阶段需要的物品及其数量 (itemId, quantity)
