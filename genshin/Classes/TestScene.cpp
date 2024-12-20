@@ -156,7 +156,7 @@ void TestScene::addTestModule2()
     blockManager->addEnemy(slime);
     //player->testSkill();
     //player->setShield(150,5);
-
+    //for (int i = 0; i < 30; i++) { player->levelUp(); }
 }
 
 void TestScene::setupKeyboardListener()
