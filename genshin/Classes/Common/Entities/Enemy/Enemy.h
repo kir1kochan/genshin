@@ -24,7 +24,9 @@ private:
 
     Vector<SpriteFrame*> attackFrames; // 攻击动作帧容器
     Sprite* sprite; // 角色精灵
+    DrawNode* barNode;
 
+    void drawProgressBar(cocos2d::DrawNode* barNode, float percent);
 public:
     // 构造函数
     Enemy(float health, float attack, float defence, Element element, float attackRange, int aggressionLevel, float detectionRadius,

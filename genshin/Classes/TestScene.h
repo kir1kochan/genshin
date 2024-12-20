@@ -8,6 +8,7 @@
 #include "Classes/Common/Entities/Player/Player.h"
 #include "Classes/Common/SpiritManager/SpiritManager.h"
 #include "System/FishingSystem/FishingSystem.h"
+#include "System/CookingSystem/CookingSystem.h"
 class TestScene : public cocos2d::Scene
 {
 public:
@@ -31,6 +32,9 @@ public:
     // 每帧更新
     void update(float deltaTime);
 
+    // 恢复相机位置
+    void loadCameraPosition() ;
+
     CREATE_FUNC(TestScene);
 
 private:
@@ -42,8 +46,13 @@ private:
     BlockManager* blockManager;
     Enemy* nearestEnemy=nullptr;
     FishingSystem* fishing = nullptr;
+    CookingSystem* cooking = nullptr;
     float gaptime=0;
     bool is_running = true;
+    Vec3 _savedCameraPosition=Vec3(0,0,500);
+
+    virtual void onExit() override;
+    virtual void onEnter() override;
 };
 
 #endif // TESTSCENE_H

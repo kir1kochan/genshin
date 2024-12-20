@@ -43,13 +43,6 @@ bool TestScene::init()
     // 设置键盘事件监听器
     setupKeyboardListener();
 
-    // 延迟设置相机，确保场景已经初始化
-    scheduleOnce([this](float dt) {
-        auto director = Director::getInstance();
-        Camera* camera = Camera::getDefaultCamera();
-        camera->setPosition3D(Vec3(1400, 1400, 500));  // 改变摄像头的位置
-        camera->lookAt(Vec3(1400, 1400, 0));  // 朝向场景中心
-        }, 0, "init_camera_key");  // 延迟执行，相机设置将在场景初始化后执行
 
     // 设置鼠标输入管理器用于视角缩放
     scheduleOnce([this](float dt) {
@@ -72,6 +65,9 @@ bool TestScene::init()
         this->addChild(player, 1);  // 将玩家加入到场景中
         player->setVisible(true);
         player->setScale(1.0f);
+        cooking = new CookingSystem(player->getBackpack());
+        this->addChild(cooking, 9);
+        fishing = new FishingSystem;
         // 设置玩家输入管理器（例如键盘控制）
         if (!keyboardEventManager) {
             keyboardEventManager = new KeyboardEventManager;
@@ -103,6 +99,7 @@ bool TestScene::init()
             spiritManager->setPlayer(player);
         }
         }, 0.1f, "init_SM_key");
+
 
     schedule([this](float deltaTime) {
         this->update(deltaTime);  // 每帧调用 update 方法
@@ -140,7 +137,7 @@ void TestScene::addTestModule2()
     if (this->getChildByName("module2")) {
         return;
     }
-    std::shared_ptr<Weapon> newWeapon = std::make_shared<Weapon>(100101, "Copper_Broadsword", 10, 1.5, 1.2);
+    std::shared_ptr<Weapon> newWeapon = std::make_shared<Weapon>(100101, "Copper_Broadsword", 10, 30, 1.2);
     player->equipWeapon(newWeapon);
     player->levelUp();
     auto label = Label::createWithTTF("Test Module 2", "fonts/Marker Felt.ttf", 24);
@@ -150,7 +147,7 @@ void TestScene::addTestModule2()
     auto slime = new Enemy();
     slime->setSpriteFilename("monsters/slime.png");
     slime->generateSprite();
-    slime->setPosition(400, 300);
+    slime->setPosition(1800, 6300);
     this->addChild(label);
     this->addChild(slime);
     blockManager->addEnemy(slime);
@@ -186,12 +183,20 @@ void TestScene::setupKeyboardListener()
             keyboardEventManager->setBackpackActive(false);
             mouseInputManager->setIsListening(true);
             is_running = true;
+            // 创建并发送事件
+            auto cookingEvent = new cocos2d::EventCustom("COOKING_ENDED_EVENT");
+            _eventDispatcher->dispatchEvent(cookingEvent);  // 发送事件
+            // 创建并发送事件
+            auto fishingEvent = new cocos2d::EventCustom("FISHING_ENDED_EVENT");
+            _eventDispatcher->dispatchEvent(fishingEvent);  // 发送事件
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_F) {
-            CCLOG("Start Fishing");
             keyboardEventManager->setBackpackActive(true);
             mouseInputManager->setIsListening(false);
-            fishing = new FishingSystem;
+            // 创建并发送事件
+            auto cookingEvent = new cocos2d::EventCustom("COOKING_STARTED_EVENT");
+            _eventDispatcher->dispatchEvent(cookingEvent);  // 发送事件
+            /* 
             fishing->startFishing(this);
             fishing->setOnFishingResultCallback([this](bool success) {
                 if (success) {
@@ -208,7 +213,7 @@ void TestScene::setupKeyboardListener()
                     delete fishing;
                     fishing = nullptr;
                     }, 2.0f, "delay_action_key"); 
-                } );
+                } );*/
         }
         };
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventListener, this);
@@ -255,6 +260,10 @@ TestScene::~TestScene()
 
 void TestScene::update(float deltaTime)
 {
+    auto camera = Camera::getDefaultCamera();
+    if (camera) {
+        camera->setPosition3D(player->getPosition3D() + Vec3(0, 0, mouseInputManager->getCameraZ()));
+    }
     if (keyboardEventManager) {
         keyboardEventManager->update(deltaTime);  // 调用键盘事件管理器的 update 方法
     }
@@ -274,5 +283,29 @@ void TestScene::update(float deltaTime)
     }
     if (player&&is_running) {
         player->update(deltaTime);
+    }
+}
+
+void TestScene::onExit() {
+    Scene::onExit();
+    // 这里可以进行数据保存
+}
+
+void TestScene::onEnter() {
+    Scene::onEnter();
+    // 恢复相机的状态
+    auto camera = Camera::getDefaultCamera();
+    if (camera) {
+        camera->setPosition3D(_savedCameraPosition);
+    }
+    // 这里可以继续数据读取
+}
+
+
+void TestScene::loadCameraPosition(){
+    // 恢复相机的状态
+    auto camera = Camera::getDefaultCamera();
+    if (camera) {
+        camera->setPosition3D(player->getPosition3D() + Vec3(0, 0, mouseInputManager->getCameraZ()));
     }
 }
