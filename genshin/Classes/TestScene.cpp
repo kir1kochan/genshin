@@ -37,6 +37,9 @@ bool TestScene::init()
         this->addChild(map, -1);  // 将地图作为背景层添加到场景中
     }
 
+    auto layer = map->getLayer("area");
+    layer->setVisible(false);
+
     // 测试模块 1
     addTestModule1();
 
@@ -101,8 +104,8 @@ bool TestScene::init()
         }, 0.1f, "init_SM_key");
 
 
-    schedule([this](float deltaTime) {
-        this->update(deltaTime);  // 每帧调用 update 方法
+    schedule([this,map](float deltaTime) {
+        this->update(deltaTime ,map);  // 每帧调用 update 方法
         }, 0.5f, "update_key");
 
     return true;
@@ -258,14 +261,14 @@ TestScene::~TestScene()
     delete backpackMainLayer;  // 释放背包层
 }
 
-void TestScene::update(float deltaTime)
+void TestScene::update(float deltaTime, CCTMXTiledMap* map)
 {
     auto camera = Camera::getDefaultCamera();
     if (camera) {
         camera->setPosition3D(player->getPosition3D() + Vec3(0, 0, mouseInputManager->getCameraZ()));
     }
     if (keyboardEventManager) {
-        keyboardEventManager->update(deltaTime);  // 调用键盘事件管理器的 update 方法
+        keyboardEventManager->update(deltaTime,map);  // 调用键盘事件管理器的 update 方法
     }
     if (blockManager && is_running) {
         blockManager->updateBlocksForPlayer(player);
