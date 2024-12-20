@@ -270,6 +270,7 @@ bool Player::equipSkill(int skillSlot, const std::shared_ptr<Skill>& skill) {
         Hud* hud = dynamic_cast<Hud*>(child);
         if (hud) {
             hud->equipSkill(skillSlot, skill->getSkillName());
+            hud->useSkill(skillSlot, skill->getCD());
         }
     }
     return true;
@@ -280,6 +281,7 @@ void Player::unequipSkill(int skillSlot) {
         CCLOG("Invalid or empty skill slot: %d", skillSlot);
         return;
     }
+   
     // 遍历子节点，找到 HUD 并更新（如果有 HUD）
     for (auto child : this->getChildren()) {
         Hud* hud = dynamic_cast<Hud*>(child);
@@ -287,6 +289,7 @@ void Player::unequipSkill(int skillSlot) {
             hud->unequipSkill(skillSlot);
         }
     }
+  
     CCLOG("Unequipped skill: %s from slot %d", skillBar[skillSlot]->getName().c_str(), skillSlot);
     skillBar[skillSlot] = nullptr;  // 智能指针会自动管理内存
 }
@@ -307,7 +310,7 @@ void Player::useSkill(int skillSlot, Enemy& target) {
     for (auto child : this->getChildren()) {
         Hud* hud = dynamic_cast<Hud*>(child);
         if (hud) {
-            hud->useSkill(skillSlot,skill->getCD());
+           hud->useSkill(skillSlot,skill->getCD());
         }
     }
     int id_skill = skill->getId();
