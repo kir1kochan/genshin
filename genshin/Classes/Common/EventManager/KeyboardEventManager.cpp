@@ -2,6 +2,12 @@
 #include "cocos2d.h"
 USING_NS_CC;
 
+
+template <class T>
+const T& clamp(const T& v, const T& lo, const T& hi) {
+    return (v < lo) ? lo : (hi < v) ? hi : v;
+}
+
 void KeyboardEventManager::initialize() {
     auto listener = EventListenerKeyboard::create();
     listener->onKeyPressed = CC_CALLBACK_2(KeyboardEventManager::onKeyPressed, this);
@@ -91,8 +97,8 @@ void KeyboardEventManager::update(float deltaTime,CCTMXTiledMap* map) {
     auto mapSize = map->getMapSize();
     auto tileSize = map->getTileSize();
     //限定终点不能超范围
-    //targetPos.y = targetPos.y > 0 ? (targetPos.y < mapSize.height * tileSize.height ? targetPos.y : mapSize.height * tileSize.height) : 0;
-   // targetPos.x = targetPos.x > 0 ? (targetPos.x < mapSize.width * tileSize.width ? targetPos.x : mapSize.width * tileSize.width) : 0;
+    targetPos.y = clamp(targetPos.y, 0.01f, mapSize.height * tileSize.height - 0.01f);
+    targetPos.x = clamp(targetPos.x, 0.01f, mapSize.width * tileSize.width - 0.01f);
 
     //获取碰撞区域图层
     auto layer = map->getLayer("area");
