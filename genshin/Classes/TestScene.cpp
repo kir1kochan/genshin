@@ -148,9 +148,9 @@ void TestScene::addTestModule2()
     label->setPosition(Director::getInstance()->getVisibleSize() / 2);
     player->addItemToBackpack(300302, 1);
     auto slime = new Enemy();
-    slime->setSpriteFilename("monsters/slime.png");
+    slime->setSpriteFilename("monsters/man_eater_flower.png");
     slime->generateSprite();
-    slime->setPosition(1800, 6300);
+    slime->setPosition(5700, 400);
     this->addChild(label);
     this->addChild(slime);
     blockManager->addEnemy(slime);
