@@ -153,6 +153,9 @@
     <ClCompile Include="..\Classes\UI\Hud.cpp">
       <Filter>src\Classes\UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\System\CookingSystem\CookingSystem.cpp">
+      <Filter>src\Classes\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -256,6 +259,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\UI\Hud.h">
       <Filter>src\Classes\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\System\CookingSystem\CookingSystem.h">
+      <Filter>src\Classes\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -13,6 +13,10 @@ private:
 public:
     HealSkill(int id, const std::string& name, float cooldown, float staminaCost,float healAmount);
 
+    float getHealAmount() const{
+        return healAmount;
+    }
+
     // 激活治疗技能
     void activate(Player* user, Enemy& target) override;
 

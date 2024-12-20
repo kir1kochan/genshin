@@ -16,7 +16,7 @@ public:
     void onKeyPress(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 
     // 更新钓鱼状态
-    void update(float deltaTime, cocos2d::Scene* fishingScene);
+    //void update(float deltaTime, cocos2d::Scene* fishingScene);
 
     // 设置钓鱼成功后执行的回调
     void setOnFishingResultCallback(std::function<void(bool)> callback);
