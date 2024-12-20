@@ -179,6 +179,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Scene\SceneObject\SceneObject.cpp" />
     <ClCompile Include="..\Classes\Scene\SceneObject\TPAnchor.cpp" />
     <ClCompile Include="..\Classes\Scene\SceneObject\TreasureChest.cpp" />
+    <ClCompile Include="..\Classes\System\CookingSystem\CookingSystem.cpp" />
     <ClCompile Include="..\Classes\System\FishingSystem\FishingSystem.cpp" />
     <ClCompile Include="..\Classes\TestScene.cpp" />
     <ClCompile Include="..\Classes\UI\Hud.cpp" />
@@ -215,6 +216,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Scene\SceneObject\SceneObject.h" />
     <ClInclude Include="..\Classes\Scene\SceneObject\TPAnchor.h" />
     <ClInclude Include="..\Classes\Scene\SceneObject\TreasureChest.h" />
+    <ClInclude Include="..\Classes\System\CookingSystem\CookingSystem.h" />
     <ClInclude Include="..\Classes\System\FishingSystem\FishingSystem.h" />
     <ClInclude Include="..\Classes\TestScene.h" />
     <ClInclude Include="..\Classes\UI\Hud.h" />

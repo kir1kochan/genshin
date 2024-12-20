@@ -15,6 +15,10 @@ private:
 public:
     ShieldSkill(int id,const std::string& name, float cooldown, float staminaCost, float shieldValue,float shieldTime);
 
+    float getShieldValue() const {
+        return shieldValue;
+    }
+
     // 激活护甲技能
     void activate(Player* user, Enemy& target) override;
 

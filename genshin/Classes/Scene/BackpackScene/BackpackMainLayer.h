@@ -112,7 +112,7 @@ private:
 
     cocos2d::Node* skillIconsContainer; // 存储装备图标的容器
 
-    Label* _hoverLabel = nullptr;  // 用于显示装备着的装备和技能描述的标签
+    Label* _hoverLabel = nullptr;  // 用于显示物品和技能描述的标签
 
     Layer* _hoverLabelBackground = nullptr; // 标签的背景
 

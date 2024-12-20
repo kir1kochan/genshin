@@ -17,11 +17,14 @@ public:
         _isListening = isListening;
     }
 
+    float getCameraZ();
+
 private:
     bool _isListening = true;  // 默认为监听
     Enemy* nearestEnemy = nullptr;
     Player* player = nullptr;   // 存放玩家指针
     Hud* hud = nullptr;
+    float cameraZ=500.0f;
 };
 
 #endif // __MAIN_GAME_MOUSE_EVENT_MANAGER_H__

@@ -2,7 +2,8 @@
 #include "cocos2d.h"
 #include "ui/UIButton.h"
 #include "Common/Entities/Player/Skill/AttackSkill/AttackSkill.h"
-
+#include "Common/Entities/Player/Skill/ShieldSkill/ShieldSkill.h"
+#include "Common/Entities/Player/Skill/HealSkill/HealSkill.h"
 using namespace cocos2d;
 using namespace ui;
 
@@ -100,9 +101,9 @@ void SkillLayer::loadSkillsIcon() {
 
             // 设置缩放
             skillIcon->setScale(scaleX, scaleY);
-            skillIcon->setTag(100+i);
+            skillIcon->setTag(100 + i);
             this->addChild(skillIcon);
-            mainLayer->addHoverListenerForIcons(skillIcon, skill->getSkillName(), std::to_string((int)skill->getStaminaCost()) + "\nCD: " + std::to_string(skill->getCD()).substr(0,3),
+            mainLayer->addHoverListenerForIcons(skillIcon, skill->getSkillName(), std::to_string((int)skill->getStaminaCost()) + "\nCD: " + std::to_string(skill->getCD()).substr(0, 3),
                 skill->getId(), [this, i]() {this->setSkillToUnload(i); });
         }
     }
@@ -121,10 +122,24 @@ void SkillLayer::loadSkillsIcon() {
 
             // 设置缩放
             skillIcon->setScale(scaleX, scaleY);
-            skillIcon->setPosition(Vec2(startX+ i * 115, startY));
-            skillIcon->setTag(200+i);
+            skillIcon->setPosition(Vec2(startX + i * 115, startY));
+            skillIcon->setTag(200 + i);
             this->addChild(skillIcon);
-            mainLayer->addHoverListenerForIcons(skillIcon, skill->getSkillName(), std::to_string((int)skill->getStaminaCost()) + "\nCD: " + std::to_string(skill->getCD()).substr(0,3),
+            std::string power = "";
+            int type = skill->getId() % 1000 / 100;
+            if (type == 1) {
+                auto attackSkill = dynamic_cast<AttackSkill*>(skill);
+                power += "Power" + std::to_string((int)attackSkill->getAttackPower()) + "\n";
+            }
+            else if (type == 3) {
+                auto shieldSkill = dynamic_cast<ShieldSkill*>(skill);
+                power += "Shield value:" + std::to_string((int)shieldSkill->getShieldValue()) + "\n";
+            }
+            else {
+                auto healSkill = dynamic_cast<HealSkill*>(skill);
+                power += "Heal amount" + std::to_string((int)healSkill->getHealAmount()) + "\n";
+            }
+            mainLayer->addHoverListenerForIcons(skillIcon, skill->getSkillName(), std::to_string((int)skill->getStaminaCost()) + "\nCD: " + std::to_string(skill->getCD()).substr(0, 3),
                 skill->getId(), [this, i]() {this->setSkillToEquip(i); });
         }
     }

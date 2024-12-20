@@ -107,7 +107,9 @@ void SceneObject::interactWithPlayer(Backpack* backpack) {
     case ObjectType::COOKING: {
         // 烹饪交互，触发烹饪页面并返回烹饪结果
         CCLOG("Cooking interaction triggered!");
-        // 这里可以触发一个新的页面或逻辑来处理烹饪，可以用事件监听的方式传回，页面根据是否可以制作来决定显示情况。
+        // 创建并发送事件
+        auto cookingEvent = new cocos2d::EventCustom("COOKING_STARTED_EVENT");
+        _eventDispatcher->dispatchEvent(cookingEvent);  // 发送事件
         break;
     }
     case ObjectType::FISHING: {

@@ -43,13 +43,6 @@ bool TestScene::init()
     // 设置键盘事件监听器
     setupKeyboardListener();
 
-    // 延迟设置相机，确保场景已经初始化
-    scheduleOnce([this](float dt) {
-        auto director = Director::getInstance();
-        Camera* camera = Camera::getDefaultCamera();
-        camera->setPosition3D(Vec3(1400, 1400, 500));  // 改变摄像头的位置
-        camera->lookAt(Vec3(1400, 1400, 0));  // 朝向场景中心
-        }, 0, "init_camera_key");  // 延迟执行，相机设置将在场景初始化后执行
 
     // 设置鼠标输入管理器用于视角缩放
     scheduleOnce([this](float dt) {
@@ -191,7 +184,10 @@ void TestScene::setupKeyboardListener()
             CCLOG("Start Fishing");
             keyboardEventManager->setBackpackActive(true);
             mouseInputManager->setIsListening(false);
-            fishing = new FishingSystem;
+            cooking = new CookingSystem(player->getBackpack());
+            this->addChild(cooking,9);
+            cooking->startCooking();
+            /* fishing = new FishingSystem;
             fishing->startFishing(this);
             fishing->setOnFishingResultCallback([this](bool success) {
                 if (success) {
@@ -208,7 +204,7 @@ void TestScene::setupKeyboardListener()
                     delete fishing;
                     fishing = nullptr;
                     }, 2.0f, "delay_action_key"); 
-                } );
+                } );*/
         }
         };
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventListener, this);
@@ -255,6 +251,10 @@ TestScene::~TestScene()
 
 void TestScene::update(float deltaTime)
 {
+    auto camera = Camera::getDefaultCamera();
+    if (camera) {
+        camera->setPosition3D(player->getPosition3D() + Vec3(0, 0, mouseInputManager->getCameraZ()));
+    }
     if (keyboardEventManager) {
         keyboardEventManager->update(deltaTime);  // 调用键盘事件管理器的 update 方法
     }
@@ -274,5 +274,29 @@ void TestScene::update(float deltaTime)
     }
     if (player&&is_running) {
         player->update(deltaTime);
+    }
+}
+
+void TestScene::onExit() {
+    Scene::onExit();
+    // 这里可以进行数据保存
+}
+
+void TestScene::onEnter() {
+    Scene::onEnter();
+    // 恢复相机的状态
+    auto camera = Camera::getDefaultCamera();
+    if (camera) {
+        camera->setPosition3D(_savedCameraPosition);
+    }
+    // 这里可以继续数据读取
+}
+
+
+void TestScene::loadCameraPosition(){
+    // 恢复相机的状态
+    auto camera = Camera::getDefaultCamera();
+    if (camera) {
+        camera->setPosition3D(player->getPosition3D() + Vec3(0, 0, mouseInputManager->getCameraZ()));
     }
 }
