@@ -1,7 +1,7 @@
 #include "Quest.h"
-#include "rapidjson/document.h"
-#include "rapidjson/prettywriter.h"
-#include "rapidjson/stringbuffer.h"
+#include "json/document.h"
+#include "json/prettywriter.h"
+#include "json/stringbuffer.h"
 #include <fstream>
 #include <sstream>
 
@@ -41,8 +41,8 @@ bool Quest::isCurrentStageComplete(const Backpack* backpack, const cocos2d::Vec2
     const QuestStage& currentStage = stages[questProgress];
 
     // 检查是否所有物品满足要求
-    for (const auto& [itemId, quantity] : currentStage.requiredItems) {
-        if (!backpack || backpack->getItemCountById(itemId) < quantity) {
+    for (const auto& it: currentStage.requiredItems) {
+        if (!backpack || backpack->getItemCountById(it.first) < it.second) {
             return false;
         }
     }

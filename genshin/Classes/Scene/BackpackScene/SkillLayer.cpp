@@ -102,9 +102,22 @@ void SkillLayer::loadSkillsIcon() {
             // ÉèÖÃËõ·Å
             skillIcon->setScale(scaleX, scaleY);
             skillIcon->setTag(100 + i);
-            this->addChild(skillIcon);
-            mainLayer->addHoverListenerForIcons(skillIcon, skill->getSkillName(), std::to_string((int)skill->getStaminaCost()) + "\nCD: " + std::to_string(skill->getCD()).substr(0, 3),
-                skill->getId(), [this, i]() {this->setSkillToUnload(i); });
+            this->addChild(skillIcon); std::string power = "";
+            int type = skill->getId() % 1000 / 100;
+            if (type == 1) {
+                auto attackSkill = dynamic_cast<AttackSkill*>(skill);
+                power += "Power: " + std::to_string((int)attackSkill->getAttackPower());
+            }
+            else if (type == 2) {
+                auto shieldSkill = dynamic_cast<ShieldSkill*>(skill);
+                power += "Shield value:" + std::to_string((int)shieldSkill->getShieldValue()) ;
+            }
+            else {
+                auto healSkill = dynamic_cast<HealSkill*>(skill);
+                power += "Heal amount: " + std::to_string((int)healSkill->getHealAmount());
+            }
+            mainLayer->addHoverListenerForIcons(skillIcon, skill->getSkillName() + "\n" + power, std::to_string((int)skill->getStaminaCost()) + "\nCD: " + std::to_string(skill->getCD()).substr(0, 3),
+                skill->getId(), [this, i]() {this->setSkillToUnload(i);  });
         }
     }
 
@@ -129,17 +142,17 @@ void SkillLayer::loadSkillsIcon() {
             int type = skill->getId() % 1000 / 100;
             if (type == 1) {
                 auto attackSkill = dynamic_cast<AttackSkill*>(skill);
-                power += "Power" + std::to_string((int)attackSkill->getAttackPower()) + "\n";
+                power += "Power: " + std::to_string((int)attackSkill->getAttackPower());
             }
-            else if (type == 3) {
+            else if (type == 2) {
                 auto shieldSkill = dynamic_cast<ShieldSkill*>(skill);
-                power += "Shield value:" + std::to_string((int)shieldSkill->getShieldValue()) + "\n";
+                power += "Shield value: " + std::to_string((int)shieldSkill->getShieldValue()) ;
             }
             else {
                 auto healSkill = dynamic_cast<HealSkill*>(skill);
-                power += "Heal amount" + std::to_string((int)healSkill->getHealAmount()) + "\n";
+                power += "Heal amount: " + std::to_string((int)healSkill->getHealAmount());
             }
-            mainLayer->addHoverListenerForIcons(skillIcon, skill->getSkillName(), std::to_string((int)skill->getStaminaCost()) + "\nCD: " + std::to_string(skill->getCD()).substr(0, 3),
+            mainLayer->addHoverListenerForIcons(skillIcon, skill->getSkillName() + "\n" + power, std::to_string((int)skill->getStaminaCost()) + "\nCD: " + std::to_string(skill->getCD()).substr(0, 3),
                 skill->getId(), [this, i]() {this->setSkillToEquip(i); });
         }
     }
