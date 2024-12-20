@@ -59,6 +59,7 @@ private:
     std::unordered_map<int, std::string> idToName;
     Backpack* backpack;  // 背包指针
     float gaptime = 0;
+    bool cookingInProgress=false;
 
     cocos2d::Label* _hoverLabel = nullptr;  // 用于显示装备着的装备和技能描述的标签
 
@@ -75,6 +76,8 @@ private:
     void addHoverListener(Node* node);
 
     void update(float deltatime);
+
+    void toStartCooking();
 };
 
 #endif // COOKINGSYSTEM_H

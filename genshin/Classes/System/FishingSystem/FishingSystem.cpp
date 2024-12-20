@@ -8,6 +8,16 @@ using namespace cocos2d;
 FishingSystem::FishingSystem()
     : fishingSuccessTime(0.0f), elapsedTime(0.0f), keyPressed(false), fishingInProgress(false) {
     srand(static_cast<unsigned>(time(0)));  // 随机初始化
+
+    auto listener = cocos2d::EventListenerCustom::create("FISHING_ENDED_EVENT", [this](cocos2d::EventCustom* event) {
+        CCLOG("Fishing event ended!");
+        if (!fishingInProgress) {
+            return;
+        }
+        fishingInProgress = false;
+        this->setVisible(false);
+        });
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);  // 将监听器添加到事件分发器
 }
 
 FishingSystem::~FishingSystem() {
@@ -16,7 +26,7 @@ FishingSystem::~FishingSystem() {
 
 void FishingSystem::startFishing(Scene* fishingScene) {
     if (fishingInProgress) return;  // 防止多次开始
-
+    this->setVisible(true);
     fishingInProgress = true;
     fishingSuccessTime = static_cast<float>(rand() % 3 + 5);  // 成功时机刷新在3秒到7秒之间
     elapsedTime = 0.0f;

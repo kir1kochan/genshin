@@ -113,7 +113,7 @@ void SkillLayer::loadSkillsIcon() {
     for (int i = 0; i < availableSkills.size(); i++) {
         if (availableSkills[i]) {
             Skill* skill = availableSkills.at(i).get();
-            auto skillIcon = Sprite::create("Skill/" + skill->getSkillName() + ".png");
+            auto skillIcon = Sprite::create("imageSkill/" + skill->getSkillName() + ".png");
             Size originalSize = skillIcon->getContentSize(); // 获取图标的原始大小
 
             // 计算缩放比例

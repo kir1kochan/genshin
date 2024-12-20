@@ -65,6 +65,9 @@ bool TestScene::init()
         this->addChild(player, 1);  // 将玩家加入到场景中
         player->setVisible(true);
         player->setScale(1.0f);
+        cooking = new CookingSystem(player->getBackpack());
+        this->addChild(cooking, 9);
+        fishing = new FishingSystem;
         // 设置玩家输入管理器（例如键盘控制）
         if (!keyboardEventManager) {
             keyboardEventManager = new KeyboardEventManager;
@@ -96,6 +99,7 @@ bool TestScene::init()
             spiritManager->setPlayer(player);
         }
         }, 0.1f, "init_SM_key");
+
 
     schedule([this](float deltaTime) {
         this->update(deltaTime);  // 每帧调用 update 方法
@@ -179,15 +183,20 @@ void TestScene::setupKeyboardListener()
             keyboardEventManager->setBackpackActive(false);
             mouseInputManager->setIsListening(true);
             is_running = true;
+            // 创建并发送事件
+            auto cookingEvent = new cocos2d::EventCustom("COOKING_ENDED_EVENT");
+            _eventDispatcher->dispatchEvent(cookingEvent);  // 发送事件
+            // 创建并发送事件
+            auto fishingEvent = new cocos2d::EventCustom("FISHING_ENDED_EVENT");
+            _eventDispatcher->dispatchEvent(fishingEvent);  // 发送事件
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_F) {
-            CCLOG("Start Fishing");
             keyboardEventManager->setBackpackActive(true);
             mouseInputManager->setIsListening(false);
-            cooking = new CookingSystem(player->getBackpack());
-            this->addChild(cooking,9);
-            cooking->startCooking();
-            /* fishing = new FishingSystem;
+            // 创建并发送事件
+            auto cookingEvent = new cocos2d::EventCustom("COOKING_STARTED_EVENT");
+            _eventDispatcher->dispatchEvent(cookingEvent);  // 发送事件
+            /* 
             fishing->startFishing(this);
             fishing->setOnFishingResultCallback([this](bool success) {
                 if (success) {

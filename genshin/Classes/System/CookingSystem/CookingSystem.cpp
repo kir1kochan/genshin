@@ -9,19 +9,44 @@ USING_NS_CC;
 CookingSystem::CookingSystem(Backpack* backpack) : backpack(backpack) {
     loadRecipesFromFile("JSON/Recipe.json");
     // 注册烹饪事件监听
-    auto listener = cocos2d::EventListenerCustom::create("COOKING_STARTED_EVENT", [this](cocos2d::EventCustom* event) {
+    auto listener1 = cocos2d::EventListenerCustom::create("COOKING_STARTED_EVENT", [this](cocos2d::EventCustom* event) {
         CCLOG("Cooking event received!");
 
         // 启动烹饪逻辑
-        this->startCooking();  // 调用烹饪系统的开始烹饪方法
+        this->setVisible(true);
+        this->toStartCooking();  // 调用烹饪系统的开始烹饪方法
         });
 
-    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);  // 将监听器添加到事件分发器
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener1, this);  // 将监听器添加到事件分发器
+
+    // 注册烹饪事件监听
+    auto listener2 = cocos2d::EventListenerCustom::create("COOKING_ENDED_EVENT", [this](cocos2d::EventCustom* event) {
+        CCLOG("Cooking event ended!");
+        if (!cookingInProgress) {
+            return;
+        }
+        cookingInProgress = false;
+        this->setVisible(false);
+        });
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener2, this);  // 将监听器添加到事件分发器
+
+    schedule([this](float deltaTime) {
+        this->update(deltaTime);  // 每帧调用 update 方法
+        }, 0.5f, "update_key");
 }
 
 
 CookingSystem::~CookingSystem() {
     // 清理资源，如果有需要的话
+}
+
+void CookingSystem::toStartCooking() {
+    if (cookingInProgress) {
+        return;
+    }
+   
+    cookingInProgress = true;
+    startCooking();
 }
 
 void CookingSystem::startCooking() {
@@ -73,6 +98,7 @@ void CookingSystem::startCooking() {
                 "Icon/" + idToName[foodId] + ".jpg",
                 [this, foodId](cocos2d::Ref* sender) {
                     this->cook(foodId, backpack);
+                    this->startCooking();
                 });
             // 获取精灵的当前宽度和高度
             float width = button->getContentSize().width;
@@ -106,7 +132,7 @@ void CookingSystem::startCooking() {
             foodSprite->setColor(cocos2d::Color3B(128, 128, 128));
             background->addChild(foodSprite);
             foodSprite->setPosition(cocos2d::Vec2(startX + i % 5 * iconWidth, startY + i / 5 * iconHeight)); 
-            auto rect = Rect(cocos2d::Vec2(startX + i % 5 * (iconWidth - 72) + 36, startY + i / 5 * (iconHeight - 32) + 32), cocos2d::Size(80, 80));
+            auto rect = Rect(cocos2d::Vec2(startX + i % 5 * (iconWidth - 60) + 36, startY + i / 5 * (iconHeight - 36) + 36), cocos2d::Size(80, 80));
             FoodHoverInfo hoverInfo;
             hoverInfo.info = "Recipe: " + idToName[foodId] + "\n" + "Raw material:";
             for (auto& it : recipes[foodId].ingredients) {
