@@ -78,7 +78,7 @@ void KeyboardEventManager::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* 
 }
 
 // 每帧更新玩家位置
-void KeyboardEventManager::update(float deltaTime) {
+void KeyboardEventManager::update(float deltaTime,CCTMXTiledMap* map) {
     if (player == nullptr || isBackpackActive) return;  // 如果背包界面激活，忽略更新
 
     // 计算目标位置
@@ -87,9 +87,33 @@ void KeyboardEventManager::update(float deltaTime) {
     targetPos.x += moveDirection.x * moveSpeed * deltaTime;
     targetPos.y += moveDirection.y * moveSpeed * deltaTime;
 
+    //获取地图大小和图块大小
+    auto mapSize = map->getMapSize();
+    auto tileSize = map->getTileSize();
+    //限定终点不能超范围
+    //targetPos.y = targetPos.y > 0 ? (targetPos.y < mapSize.height * tileSize.height ? targetPos.y : mapSize.height * tileSize.height) : 0;
+   // targetPos.x = targetPos.x > 0 ? (targetPos.x < mapSize.width * tileSize.width ? targetPos.x : mapSize.width * tileSize.width) : 0;
+
+    //获取碰撞区域图层
+    auto layer = map->getLayer("area");
+    //获取当前图块坐标图块GID
+    int tileGid = layer->getTileGIDAt(Vec2(targetPos.x / tileSize.width, (mapSize.height * tileSize.height - targetPos.y) / tileSize.height));
+    destination = targetPos;
+
+    if (tileGid) {
+        // 获取 GID 对应的属性
+        auto properties = map->getPropertiesForGID(tileGid).asValueMap();
+        if (!properties.empty()) {
+            // 检查属性中是否有 "Collide"且为"true"
+            auto collision = properties["collide"].asString();
+            if (!collision.empty() && collision == "true") {
+                destination = currentPos;
+            }
+        }
+    }
+
     // 如果目标位置发生变化，创建动作
-    if (destination != targetPos) {
-        destination = targetPos;
+    if (destination != currentPos) {
 
         // 停止之前的动作，创建新的平滑移动动作
         player->stopAllActions(); // 避免残留动作
