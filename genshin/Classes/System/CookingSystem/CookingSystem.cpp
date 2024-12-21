@@ -26,7 +26,17 @@ CookingSystem::CookingSystem(Backpack* backpack) : backpack(backpack) {
             return;
         }
         cookingInProgress = false;
+
+        this->removeAllChildren();
+        if (_hoverLabel) {
+            _hoverLabel = nullptr; // 避免悬空指针
+        }
+        if (_hoverLabelBackground) {
+            _hoverLabelBackground = nullptr; // 避免悬空指针
+        }
+
         this->setVisible(false);
+        _eventDispatcher->removeEventListener(hoverlistener);
         });
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener2, this);  // 将监听器添加到事件分发器
 
@@ -53,7 +63,12 @@ void CookingSystem::startCooking() {
     CCLOG("Cooking system initialized.");
     updateCookableRecipes();
     this->removeAllChildren();
-
+    if (_hoverLabel) {
+        _hoverLabel = nullptr; // 避免悬空指针
+    }
+    if (_hoverLabelBackground) {
+        _hoverLabelBackground = nullptr; // 避免悬空指针
+    }
     // 生成交互页面内容
     // 创建UI
     auto background = Sprite::create("Backgrounds/Cooking_Background.jpg");
@@ -116,7 +131,7 @@ void CookingSystem::startCooking() {
             for (auto& it : recipes[foodId].ingredients) {
                 hoverInfo.info += "\n" + idToName[it.first]+std::to_string(ingredientNums[it.first])+"/"+std::to_string(it.second);
             }
-            hoverInfo.info += "/nCan cook.";
+            hoverInfo.info += "\nCan cook.";
             hoverInfos[rect] = hoverInfo;
         }
         else {
@@ -321,9 +336,9 @@ void CookingSystem::hideHoverInfo() {
 
 void CookingSystem::addHoverListener(Node* node) {
 
-    auto listener = EventListenerMouse::create();
+    hoverlistener = EventListenerMouse::create();
 
-    listener->onMouseMove = [this,node](EventMouse* event) {
+    hoverlistener->onMouseMove = [this,node](EventMouse* event) {
         // 获取鼠标位置
         Vec2 cursorPosition(event->getCursorX(), event->getCursorY());
         for (auto entry : hoverInfos) {
@@ -338,10 +353,13 @@ void CookingSystem::addHoverListener(Node* node) {
         }
 
         };
-    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(hoverlistener, this);
 }
 
 void CookingSystem::update(float deltatime) {
+    if (!cookingInProgress) {
+        return;
+    }
     if (gaptime < 2.0f) {
         gaptime += deltatime;
         return;
