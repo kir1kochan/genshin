@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="6">
+ <tileset firstgid="1" source="little_map.tsx"/>
+ <tileset firstgid="1025" source="fog01.tsx"/>
+ <tileset firstgid="1537" source="../../../../../genshin/genshin/Resources/maps/vstreets.tsx"/>
+ <layer id="1" name="1" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJwV1wMSIAYAA8Czbdu2bdu2bbs927Zt27Zt2+52JvuGJAEDBAgQiMAEISjBCE4IQhKK0IQhLOEITwQiEonIRCEq0YhODGISi9jEIS7xiE8CEpKIxCQhKclITgpSkorUpCEt6UhPBjKSicxkISvZyE4OcpKL3OQhL/nITwEKUojCFKEoxShOCUpSitKUoSzlKE8FKlKJylShKtWoTg1qUova1KEu9ahPAxrSiMY0oSnNaE4LWtKK1rShLe1oTwc60onOdKEr3ehOD3rSi970oS/96M8ABjKIwQzhH/5lKMMYzghGMorRjGEs4xjPBCYyiclMYSrTmM4MZjKL2cxhLvOYzwIWsojFLGEpy1jOClayitWsYS3rWM8GNrKJzWxhK9vYzg52sovd7GEv+9jPAQ5yiMMc4SjHOM4JTnKK05zhLOc4zwUuconLXOEq17jODW5yi9vc4S73uM8DHvKIxzzhKc94zgte8orXvOEt73jPBz7yic984Svf+M4PfvKL3/zhLwECCoEITBCCEozghCAkoQhNGMISjvBEICKRiEwUohKN6MQgJrGITRziEo/4JCAhiUhMEpKSjOSkICWpSE0a0pKO9GQgI5nITBayko3s5CAnuchNHvKSj/wUoCCFKEwRilKM4pSgJKUoTRnKUo7yVKAilahMFapSjerUoCa1qE0d6lKP+jSgIY1oTBOa0ozmtKAlrWhNG9rSjvZ0oCOd6EwXutKN7vSgJ73oTR/60o/+DGAggxjMEP7hX4YyjOGMYCSjGM0YxjKO8UxgIpOYzBSmMo3pzGAms5jNHOYyj/ksYCGLWMwSlrKM5axgJatYzRrWso71bGAjm9jMFrayje3sYCe72M0e9rKP/RzgIIc4zBGOcozjnOAkpzjNGc5yjvNc4CKXuMwVrnKN69zgJre4zR3uco/7POAhj3jME57yjOe84CWveM0b3vKO93zgI5/4zBe+8o3v/OAnv/jNH/7yf/EHJBCBCUJQghGcEIQkFKEJQ1jCEZ4IRCQSkYlCVKIRnRjEJBaxiUNc4hGfBCQkEYlJQlKSkZwUpCQVqUlDWtKRngxkJBOZyUJWspGdHOQkF7nJQ17ykZ8CFKQQhSlCUYpRnBKUpBSlKUNZylGeClSkEpWpQlWqUZ0a1KQWtalDXepRnwY0pBGNaUJTmtGcFrSkFa1pQ1va0Z4OdKQTnelCV7rRnR70pBe96UNf+tGfAQxkEIMZwj/8y1CGMZwRjGQUoxnDWMYxnglMZBKTmcJUpjGdGcxkFrOZw1zmMZ8FLGQRi1nCUpaxnBWsZBWrWcNa1rGeDWxkE5vZwla2sZ0d7GQXu9nDXvaxnwMc5BCHOcJRjnGcE5zkFKc5w1nOcZ4LXOQSl7nCVa5xnRvc5Ba3ucNd7nGfBzzkEY95wlOe8ZwXvOQVr3nDW97xng985BOf+cJXvvGdH/zkF7/5w1/+H/0BCURgghCUYAQnBCEJRWjCEJZwhCcCEYlEZKIQlWhEJwYxiUVs4hCXeMQnAQlJRGKSkJRkJCcFKUlFatKQlnSkJwMZyURmspCVbGQnBznJRW7ykJd85KcABSlEYYpQlGIUpwQlKUVpylCWcpSnAhWpRGWqUJVqVKcGNalFbepQl3rUpwENaURjmtCUZjSnBS1pRWva0JZ2tKcDHelEZ7rQlW50pwc96UVv+tCXfvRnAAMZxGCG8A//MpRhDGcEIxnFaMYwlnGMZwITmcRkpjCVaUxnBjOZxWzmMJd5zGcBC1nEYpawlGUsZwUrWcVq1rCWdaxnAxvZxGa2sJVtbGcHO9nFbvawl33s5wAHOcRhjnCUYxznBCc5xWnOcJZznOcCF7nEZa5wlWtc5wY3ucVt7nCXe9znAQ95xGOe8JRnPOcFL3nFa97wlne85wMf+cRnvvCVb3znBz/5xW/+8Jf/D/9/q3kEIw==
+  </data>
+ </layer>
+ <layer id="2" name="fog_1" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt0cEJACAIQFEvLlSb1P671DkoElSI/rt4Uz6K+CgqUtU+vbS5q6t9eqGf/lNn9P2szp2ov97K7l3RTz/9//YDAPCSAcrtKSg=
+  </data>
+ </layer>
+ <layer id="3" name="fog_2" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztzzEOABAQRNFpXIibcP+70Eg2S3Sr4L9mo/EzEoDX5SSVtN4odfzdTGe+/Y3iu+xnP/vZ/+v+233b2bWj+wCAsw6vrCb8
+  </data>
+ </layer>
+ <layer id="4" name="fog_3" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt0bENACAMA0E3WQg2gf13gRGwlAgJ/po0aV6WAAAA/tJC6pF/T439OyP/0n+v31HR77i1e1V/lezdXdm7u+h/s38BXbk+jQ==
+  </data>
+ </layer>
+ <layer id="5" name="fog_4" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztz6ERACAMBMGYNASdQP+9QAdRUdk1537mIwAAAGZYGbGzbpfzt2/W7eL/7P8PRgkQww==
+  </data>
+ </layer>
+ <layer id="6" name="fog_5" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt0kEKABAUhOHZvAtxEy7oqKSUFTZ6yf+VxmpqRAIAAADeF0yKts8bkqm0o2z9vswbWm/x2j96vfaPXo/9aXp3j/15+nfs/3v/aVZNWyuO
+  </data>
+ </layer>
+ <layer id="18" name="missions" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt1MEJADAIA0BfLtH99+wCvoqglLsJAgmJgH4npxOgg530AlDzj3R72ZQd8rsLN/YAxw==
+  </data>
+ </layer>
+ <objectgroup id="17" name="Objects">
+  <object id="5" name="SpawnPoint" x="231.091" y="271.545">
+   <point/>
+  </object>
+ </objectgroup>
+</map>
