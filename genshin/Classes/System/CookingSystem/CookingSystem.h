@@ -67,6 +67,8 @@ private:
 
     std::unordered_map<cocos2d::Rect, FoodHoverInfo> hoverInfos;     // 存放悬停内容
 
+    cocos2d::EventListenerMouse* hoverlistener;
+
     void showHoverInfo(const std::string& info, const cocos2d::Vec2& position); // 显示悬停信息
 
     void updateCookableRecipes();  // 更新食谱可烹饪状态

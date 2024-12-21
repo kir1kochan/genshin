@@ -14,8 +14,21 @@ FishingSystem::FishingSystem()
         if (!fishingInProgress) {
             return;
         }
+
+        this->removeFromParent();
+        this->removeAllChildren();
+        if (backgroundBar) {
+            backgroundBar = nullptr;
+        }
+        if (progressBarNode) {
+            progressBarNode = nullptr;
+        }
+        if (fishingLabel) {
+            fishingLabel = nullptr;
+        }
         fishingInProgress = false;
         this->setVisible(false);
+        unschedule("fishing_update_key");
         });
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);  // 将监听器添加到事件分发器
 }

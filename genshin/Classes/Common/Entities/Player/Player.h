@@ -56,6 +56,7 @@ public:
     Player( Element element, float attackRange);
     Player();  // 默认构造函数
     Player(cocos2d::Sprite* sprite);
+    Player(float health, cocos2d::Sprite* sprite); // 护送任务需要用到的player构造函数
 
     // 升级
     void levelUp();

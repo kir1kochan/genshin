@@ -59,6 +59,16 @@ Player::Player(cocos2d::Sprite* sprite)
     }
 }
 
+Player::Player(float health, cocos2d::Sprite* sprite)
+    : Entities(health,0,0, Element::FIRE,0), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr),
+    currentShield(0), maxStamina(100.0f), stamina(100.0f), backpack(nullptr) {
+    skillBar.resize(4, nullptr); // 初始化技能栏为空
+
+    if (sprite != nullptr) {
+        this->addChild(sprite, 1);  // 添加到当前节点
+    }
+}
+
 
 void Player::levelUp() {
     level++;

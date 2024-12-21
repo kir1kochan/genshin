@@ -23,6 +23,7 @@ public:
         }
     };
     BlockManager();
+    BlockManager(std::string& filePath);
     ~BlockManager();
 
     std::pair<int, int> getBlockCoordinates(const cocos2d::Vec2& position) const;

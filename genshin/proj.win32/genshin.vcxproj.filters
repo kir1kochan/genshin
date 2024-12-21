@@ -159,6 +159,9 @@
     <ClCompile Include="..\Classes\System\QuestSystem\Quest.cpp">
       <Filter>src\Classes\System</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\System\QuestSystem\EscortQuest.cpp">
+      <Filter>src\Classes\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -267,6 +270,9 @@
       <Filter>src\Classes\System</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\System\QuestSystem\Quest.h">
+      <Filter>src\Classes\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\System\QuestSystem\EscortQuest.h">
       <Filter>src\Classes\System</Filter>
     </ClInclude>
   </ItemGroup>

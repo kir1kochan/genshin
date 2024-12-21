@@ -3,9 +3,12 @@
 
 USING_NS_CC;
 
-BlockManager::BlockManager() {
+BlockManager::BlockManager(std::string& filePath) {
     // 加载 TMX 文件的对象层数据
-    //loadObjectsFromTMX("your_tmx_file.tmx");
+    //loadObjectsFromTMX("filePath");
+}
+
+BlockManager::BlockManager() {
 }
 
 BlockManager::~BlockManager() {

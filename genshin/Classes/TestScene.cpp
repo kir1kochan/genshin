@@ -147,6 +147,7 @@ void TestScene::addTestModule2()
     label->setName("module2");  // 给模块命名
     label->setPosition(Director::getInstance()->getVisibleSize() / 2);
     player->addItemToBackpack(300302, 1);
+    player->addItemToBackpack(300109, 1);
     auto slime = new Enemy();
     slime->setSpriteFilename("monsters/man_eater_flower.png");
     slime->generateSprite();
@@ -197,9 +198,9 @@ void TestScene::setupKeyboardListener()
             keyboardEventManager->setBackpackActive(true);
             mouseInputManager->setIsListening(false);
             // 创建并发送事件
-            auto cookingEvent = new cocos2d::EventCustom("COOKING_STARTED_EVENT");
-            _eventDispatcher->dispatchEvent(cookingEvent);  // 发送事件
-            /* 
+            // auto cookingEvent = new cocos2d::EventCustom("COOKING_STARTED_EVENT");
+            // _eventDispatcher->dispatchEvent(cookingEvent);  // 发送事件
+            fishing = new FishingSystem();
             fishing->startFishing(this);
             fishing->setOnFishingResultCallback([this](bool success) {
                 if (success) {
@@ -216,7 +217,7 @@ void TestScene::setupKeyboardListener()
                     delete fishing;
                     fishing = nullptr;
                     }, 2.0f, "delay_action_key"); 
-                } );*/
+                } );
         }
         };
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventListener, this);
