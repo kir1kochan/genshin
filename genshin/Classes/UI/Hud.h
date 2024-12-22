@@ -2,7 +2,6 @@
 #define HUD_H
 
 #include "cocos2d.h"
-#include<vector>
 
 class Player;
 
@@ -16,13 +15,9 @@ private:
     cocos2d::ClippingNode* clipper;//裁剪
     cocos2d::DrawNode* stencil;//遮罩层
     cocos2d::DrawNode* borderNode;//边框
-    cocos2d::TMXTiledMap* expandedMiniMapNode;
+    cocos2d::TMXTiledMap* expandedMiniMapNode ;
     cocos2d::Sprite* expandedMiniMapPlayerIcon;
-    // 技能栏绘制节点
-    std::vector<cocos2d::DrawNode*> skillBarNode;   // 技能栏节点
 
-    // 冷却罩子（进度条）
-    std::vector<cocos2d::ProgressTimer*> skillCooldownBars;  // 冷却进度条
 
     // 进度条的宽度和高度
     float barWidth;  // 进度条的总宽度
@@ -42,6 +37,7 @@ private:
 
     // 初始化小地图玩家图标
     void initMiniMapPlayerIcon();
+
 public:
     // 构造函数与析构函数
     Hud(Player* player);
@@ -57,21 +53,21 @@ public:
     void updateHealthBar(float healthPercent);
     void updateStaminaBar(float staminaPercent);
 
-    // 装备技能
-    void equipSkill(int skillSlot, std::string skillName);
-    // 卸载技能
-    void unequipSkill(int skillSlot);
-
-    void useSkill(int skillSlot, float cdTime);
-
     // 更新小地图的位置
     void updateMiniMapPosition();
     //切换小地图显示方式
     void toggleMiniMap();
 
-    bool getIsExpanded() {
-        return isMiniMapExpanded;
-    }
+    // 更新主线任务图标位置
+    void updateMissionIconPosition(int stage);
+    //支线
+    void updateSideMissionIconPosition(const std::string& missionName, bool isVisible);
+
+    //隐藏雾
+    void hideFogLayers(cocos2d::TMXTiledMap* map, int index);
+
+    cocos2d::TMXTiledMap* getMiniMapNode() const;
+    cocos2d::TMXTiledMap* getExpandedMiniMapNode() const;
 };
 
 #endif // HUD_H
