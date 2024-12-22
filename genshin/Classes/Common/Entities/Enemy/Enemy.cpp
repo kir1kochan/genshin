@@ -176,6 +176,7 @@ void Enemy::aiBehavior(float distance, Player* player) {
         float pursuitSpeed = 100.0f * aggressionLevel; // 追击速度
         setPosition(enemyPosition + pursuitDirection * pursuitSpeed * 0.1f);  // 每帧按速度移动
     }
+    
     auto repeatAnimate = RepeatForever::create(getDirectionAnimate(angle,isAttacking));
     repeatAnimate->setTag(100); // 方便后续停止
     sprite->stopActionByTag(100);

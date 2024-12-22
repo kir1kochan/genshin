@@ -8,10 +8,10 @@
 class EscortQuest : public cocos2d::Node {
 public:
     // 静态创建方法
-    static EscortQuest* create(Player* realPlayer);
+    static EscortQuest* create(Player* realPlayer, BlockManager* bm, SpiritManager* sm);
 
     // 初始化方法
-    bool init(Player* realPlayer);
+    bool init(Player* realPlayer, BlockManager* bm, SpiritManager* sm);
 
     // 每帧更新
     void update(float delta) override;
@@ -20,11 +20,14 @@ private:
     // 成员变量
     Player* escortTarget;        // 被护送对象
     Player* realPlayer;          // 实际玩家
-    cocos2d::Rect startArea=cocos2d::Rect(5620,1585,50,50);     // 任务开始区域
+    cocos2d::Rect startArea=cocos2d::Rect(5620,1585,70,70);     // 任务开始区域
     cocos2d::Vec2 destination=cocos2d::Vec2(5620,2710);   // 目标位置
     bool missionStarted;         // 任务是否已经开始
-    BlockManager* escortTargetBM;
-    SpiritManager* escortTargetSM;
+    BlockManager* escortTargetBM1;
+    SpiritManager* escortTargetSM1;
+    BlockManager* escortTargetBM2;
+    SpiritManager* escortTargetSM2;
+    float gaptime = 0;
     // 检查玩家是否进入任务开始区域
     void checkStartCondition();
 
