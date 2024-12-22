@@ -34,7 +34,10 @@ public:
     void update(float deltaTime);
 
     // 恢复相机位置
-    void loadCameraPosition() ;
+    void loadCameraPosition();
+
+    //地图切换
+    void switchMap(int index);
 
     CREATE_FUNC(TestScene);
 
@@ -45,13 +48,16 @@ private:
     BackpackMainLayer* backpackMainLayer;  // 背包主层
     SpiritManager* spiritManager;
     BlockManager* blockManager;
-    Enemy* nearestEnemy=nullptr;
+    Enemy* nearestEnemy = nullptr;
     FishingSystem* fishing = nullptr;
     CookingSystem* cooking = nullptr;
-    float gaptime=0;
+    float gaptime = 0;
     bool is_running = true;
     SLSystem* slSystem;
-    Vec3 _savedCameraPosition=Vec3(0,0,500);
+    Vec3 _savedCameraPosition = Vec3(0, 0, 500);
+
+    Vec2 playerPositionInWorld;  // 记录玩家在大地图中的位置
+    Vec2 playerPositionInMiniMap;  // 记录玩家在小地图中的位置
 
     virtual void onExit() override;
     virtual void onEnter() override;

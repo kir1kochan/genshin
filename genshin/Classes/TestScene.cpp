@@ -55,7 +55,7 @@ bool TestScene::init()
     scheduleOnce([this](float dt) {
         auto runningScene = cocos2d::Director::getInstance()->getRunningScene();
         auto map = runningScene->getChildByName<cocos2d::TMXTiledMap*>("background");
-        auto objectLayer = map->getObjectGroup("Objects");  // 获取对应图层
+        auto objectLayer = map->getObjectGroup("ObjectsLayer");  // 获取对应图层
         auto spawnPoint = objectLayer->getObject("SpawnPoint");  // 获取对象点
         float x = spawnPoint["x"].asFloat();
         float y = spawnPoint["y"].asFloat();
@@ -90,7 +90,7 @@ bool TestScene::init()
     scheduleOnce([this](float dt) {
         if (!spiritManager) {
             spiritManager = new SpiritManager();
-            spiritManager->init(blockManager,player);
+            spiritManager->init(blockManager, player);
             spiritManager->setPlayer(player);
         }
         }, 0.1f, "init_SM_key");
@@ -218,7 +218,7 @@ void TestScene::setupKeyboardListener()
             player->getChildByName("sprite")->setVisible(true);
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_F) {
-            blockManager->handleClickEvent(player->getPosition(),player);
+            blockManager->handleClickEvent(player->getPosition(), player);
             /*keyboardEventManager->setBackpackActive(true);
             mouseInputManager->setIsListening(false);
             // 创建并发送事件
@@ -240,13 +240,13 @@ void TestScene::setupKeyboardListener()
                     this->removeChild(fishing);
                     delete fishing;
                     fishing = nullptr;
-                    }, 2.0f, "delay_action_key"); 
+                    }, 2.0f, "delay_action_key");
                 } );*/
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_M) {
             CCLOG("Toggling MiniMap");
-            
-            auto hud = player->getHud(); 
+
+            auto hud = player->getHud();
             if (hud->getIsExpanded()) {
                 keyboardEventManager->setBackpackActive(false);
                 mouseInputManager->setIsListening(true);
@@ -257,6 +257,12 @@ void TestScene::setupKeyboardListener()
                 mouseInputManager->setIsListening(false);
             }
             hud->toggleMiniMap();  // 切换小地图显示模式
+        }
+        else if (keyCode == EventKeyboard::KeyCode::KEY_H) {
+            int doorIndex = blockManager->checkPlayerInDoorArea(player->getPosition());
+            if (doorIndex != -1) {
+                switchMap(doorIndex);
+            }
         }
         };
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventListener, this);
@@ -324,7 +330,7 @@ void TestScene::update(float deltaTime)
         keyboardEventManager->setNearestEnemy(nearestEnemy);
         gaptime = 0;
     }
-    if (player&&is_running) {
+    if (player && is_running) {
         player->update(deltaTime);
     }
 }
@@ -347,7 +353,7 @@ void TestScene::onEnter() {
 }
 
 
-void TestScene::loadCameraPosition(){
+void TestScene::loadCameraPosition() {
     // 恢复相机的状态
     auto camera = Camera::getDefaultCamera();
     if (camera) {
@@ -355,3 +361,59 @@ void TestScene::loadCameraPosition(){
     }
 }
 
+void TestScene::switchMap(int index) {
+    // 如果 index 为 0，表示从室内地图切换回大地图
+    if (index == 0) {
+        // 显示大地图
+        auto oldMap = this->getChildByName("background");
+        if (oldMap) {
+            oldMap->setVisible(true);
+        }
+
+        // 移除室内地图
+        auto smallMap = this->getChildByName("smallMap");
+        if (smallMap) {
+            this->removeChild(smallMap);
+        }
+
+        // 恢复悬浮小地图
+        auto hud = player->getHud();
+        if (hud) {
+            hud->setMiniMapVisible(true);
+            hud->setMiniMapPlayerPosition(playerPositionInMiniMap);
+        }
+
+        // 将玩家设置回大地图中的位置
+        player->setPosition(playerPositionInWorld);
+    }
+    else {
+        // 记录玩家在大地图中的位置
+        playerPositionInWorld = player->getPosition();
+
+        // 隐藏悬浮小地图
+        auto hud = player->getHud();
+        if (hud) {
+            playerPositionInMiniMap = hud->getMiniMapPlayerPosition();
+            hud->setMiniMapVisible(false);
+        }
+
+        // 加载新的 TMX 地图
+        std::string newMapFile = StringUtils::format("%d.tmx", index);
+        auto newMap = TMXTiledMap::create(newMapFile);
+        newMap->setName("smallMap");
+        this->addChild(newMap, -1);
+
+        // 隐藏原先的大地图
+        auto oldMap = this->getChildByName("background");
+        if (oldMap) {
+            oldMap->setVisible(false);
+        }
+
+        // 将玩家设置到地图中的 SpawnPoint 位置
+        auto objectLayer = newMap->getObjectGroup("ObjectsLayer");
+        auto spawnPoint = objectLayer->getObject("SpawnPoint");
+        float x = spawnPoint["x"].asFloat();
+        float y = spawnPoint["y"].asFloat();
+        player->setPosition(x, y);
+    }
+}
