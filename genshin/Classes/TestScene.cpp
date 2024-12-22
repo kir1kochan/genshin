@@ -69,6 +69,7 @@ bool TestScene::init()
         this->addChild(player, 1);  // 将玩家加入到场景中
         player->setVisible(true);
         player->setScale(1.0f);
+        player->setPosition(1808.0, 6280.0);
         cooking = new CookingSystem(player->getBackpack());
         this->addChild(cooking, 9);
         fishing = new FishingSystem;
@@ -77,15 +78,7 @@ bool TestScene::init()
             slSystem = new SLSystem(tpAnchor);
             slSystem->setPlayer(player);
             tpAnchor->setPlayer(player);
-            try {
-                slSystem->loadFromJson("/JSON/save1.json");
-                // 可能抛出异常的代码，例如加载文件、资源等
-                // 例如：std::string data = loadData("file.txt");
-            }
-            catch (const std::runtime_error& e) {
-                CCLOG("Caught exception: %s", e.what());
-                // 进行必要的异常处理，比如显示错误信息
-            }
+            slSystem->loadFromJson("Resources/JSON/save.json");
             auto tpAnchors = tpAnchor->gettpPointActivation();
             for (auto& anchor : tpAnchors) {
                 Vec2 pos = anchor.first;
