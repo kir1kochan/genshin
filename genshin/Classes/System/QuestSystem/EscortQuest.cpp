@@ -19,8 +19,6 @@ bool EscortQuest::init(Player* realPlayer, BlockManager* bm, SpiritManager* sm) 
     }
     // 创建一个 DrawNode 绘制包围盒
     auto drawNode = cocos2d::DrawNode::create();
-    drawNode->drawRect(startArea.origin,startArea.origin+startArea.size,
-        cocos2d::Color4F::RED);
     this->escortTargetBM2 = bm;
     this->escortTargetSM2 = sm;
     // 添加到父节点

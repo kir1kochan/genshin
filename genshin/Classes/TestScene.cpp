@@ -107,10 +107,17 @@ bool TestScene::init()
         this->update(deltaTime ,map);  // 每帧调用 update 方法
         }, 0.5f, "update_key");
 
-    scheduleOnce([this](float dt) {
+    /*scheduleOnce([this](float dt) {
         if (!eq) {
             eq = EscortQuest::create(player,blockManager,spiritManager);
             this->addChild(eq);
+        }
+        }, 0.1f, "init_EQ_key");*/
+    scheduleOnce([this](float dt) {
+        if (!slSystem) {
+            slSystem = new SLSystem();
+            slSystem->setPlayer(player);
+            slSystem->loadFromJson("JSON/save1.json");
         }
         }, 0.1f, "init_EQ_key");
     return true;
@@ -316,6 +323,8 @@ void TestScene::update(float deltaTime, CCTMXTiledMap* map)
 void TestScene::onExit() {
     Scene::onExit();
     // 这里可以进行数据保存
+    slSystem->getPlayerPosition();
+    slSystem->saveToJson("JSON/save1.json");
 }
 
 void TestScene::onEnter() {

@@ -1,9 +1,9 @@
 #ifndef SLSYSTEM_H
 #define SLSYSTEM_H
 
-#include "Player.h"
-#include "TreasureChest.h"
-#include "TPAnchor.h"
+#include "../../Common/Entities/Player/Player.h"
+#include "../../Scene/SceneObject/TPAnchor.h"
+#include "../../Scene/SceneObject/TreasureChest.h"
 #include "cocos2d.h"
 #include <string>
 #include <unordered_map>
@@ -27,7 +27,7 @@ public:
 
     // 设定和读取保存用的玩家位置
     void setPlayerPosition(const cocos2d::Vec2& position);
-    cocos2d::Vec2 getPlayerPosition() const;
+    cocos2d::Vec2 getPlayerPosition() ;
 
     // 设定和读取宝箱类指针
     void setTreasureChest(TreasureChest* treasureChest);
