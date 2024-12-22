@@ -183,6 +183,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\Classes\System\FishingSystem\FishingSystem.cpp" />
     <ClCompile Include="..\Classes\System\QuestSystem\EscortQuest.cpp" />
     <ClCompile Include="..\Classes\System\QuestSystem\Quest.cpp" />
+    <ClCompile Include="..\Classes\System\SLSystem\SLSystem.cpp" />
     <ClCompile Include="..\Classes\TestScene.cpp" />
     <ClCompile Include="..\Classes\UI\Hud.cpp" />
     <ClCompile Include="main.cpp" />
@@ -222,6 +223,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\System\FishingSystem\FishingSystem.h" />
     <ClInclude Include="..\Classes\System\QuestSystem\EscortQuest.h" />
     <ClInclude Include="..\Classes\System\QuestSystem\Quest.h" />
+    <ClInclude Include="..\Classes\System\SLSystem\SLSystem.h" />
     <ClInclude Include="..\Classes\TestScene.h" />
     <ClInclude Include="..\Classes\UI\Hud.h" />
     <ClInclude Include="main.h" />

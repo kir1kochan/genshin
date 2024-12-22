@@ -66,7 +66,8 @@ void SLSystem::setPlayerPosition(const cocos2d::Vec2& position) {
     playerPosition = position;
 }
 
-cocos2d::Vec2 SLSystem::getPlayerPosition() const {
+cocos2d::Vec2 SLSystem::getPlayerPosition() {
+    playerPosition = player->getPosition();
     return playerPosition;
 }
 
@@ -75,53 +76,53 @@ void SLSystem::saveToJson(const std::string& jsonFilePath) const {
     doc.SetObject();
     auto& allocator = doc.GetAllocator();
 
-    // Save main progress
-    Value mainProgress(kObjectType);
+    /*
+    rapidjson::Value mainProgress(kObjectType);
     mainProgress.AddMember("major", mainMajorProgress, allocator);
     mainProgress.AddMember("minor", mainMinorProgress, allocator);
     doc.AddMember("mainProgress", mainProgress, allocator);
 
-    // Save side quests
-    Value sideQuests(kObjectType);
+    
+    rapidjson::Value sideQuests(kObjectType);
     for (const auto& quest : sideQuestStatus) {
-        sideQuests.AddMember(Value(std::to_string(quest.first).c_str(), allocator).Move(),
+        sideQuests.AddMember(rapidjson::Value(std::to_string(quest.first).c_str(), allocator).Move(),
             quest.second, allocator);
     }
     doc.AddMember("sideQuests", sideQuests, allocator);
-
-    // Save player data
+    */
+    // 保存玩家信息
     if (player) {
         std::string playerJson = player->saveToJson();
-        doc.AddMember("player", Value(playerJson.c_str(), allocator).Move(), allocator);
+        doc.AddMember("player", rapidjson::Value(playerJson.c_str(), allocator).Move(), allocator);
 
         // Save player's backpack
         if (player->getBackpack()) {
             std::string backpackJson = player->getBackpack()->saveToJson();
-            doc.AddMember("backpack", Value(backpackJson.c_str(), allocator).Move(), allocator);
+            doc.AddMember("backpack", rapidjson::Value(backpackJson.c_str(), allocator).Move(), allocator);
         }
     }
 
-    // Save treasure chest data
+    /* 保存宝箱信息
     if (treasureChest) {
         std::string chestJson;
         treasureChest->saveToJson(chestJson);
-        doc.AddMember("treasureChest", Value(chestJson.c_str(), allocator).Move(), allocator);
+        doc.AddMember("treasureChest", rapidjson::Value(chestJson.c_str(), allocator).Move(), allocator);
     }
 
-    // Save TPAnchor data
+    // 保存锚点信息
     if (tpAnchor) {
         std::string tpJson;
         tpAnchor->saveToJson(tpJson);
-        doc.AddMember("tpAnchor", Value(tpJson.c_str(), allocator).Move(), allocator);
-    }
+        doc.AddMember("tpAnchor", rapidjson::Value(tpJson.c_str(), allocator).Move(), allocator);
+    }*/
 
-    // Save player position
-    Value position(kObjectType);
+    // 保存玩家位置信息
+    rapidjson::Value position(kObjectType);
     position.AddMember("x", playerPosition.x, allocator);
     position.AddMember("y", playerPosition.y, allocator);
     doc.AddMember("playerPosition", position, allocator);
 
-    // Write JSON to file
+    // 保存json文件
     StringBuffer buffer;
     PrettyWriter<StringBuffer> writer(buffer);
     doc.Accept(writer);
@@ -151,9 +152,9 @@ void SLSystem::loadFromJson(const std::string& jsonFilePath) {
         throw std::runtime_error("Failed to parse JSON file: " + jsonFilePath);
     }
 
-    // Load main progress
+    /*
     if (doc.HasMember("mainProgress")) {
-        const Value& mainProgress = doc["mainProgress"];
+        const rapidjson::Value& mainProgress = doc["mainProgress"];
         if (mainProgress.HasMember("major")) {
             mainMajorProgress = mainProgress["major"].GetInt();
         }
@@ -162,39 +163,39 @@ void SLSystem::loadFromJson(const std::string& jsonFilePath) {
         }
     }
 
-    // Load side quests
+    
     if (doc.HasMember("sideQuests")) {
-        const Value& sideQuests = doc["sideQuests"];
-        for (Value::ConstMemberIterator it = sideQuests.MemberBegin(); it != sideQuests.MemberEnd(); ++it) {
+        const rapidjson::Value& sideQuests = doc["sideQuests"];
+        for (rapidjson::Value::ConstMemberIterator it = sideQuests.MemberBegin(); it != sideQuests.MemberEnd(); ++it) {
             int questId = std::stoi(it->name.GetString());
             bool isCompleted = it->value.GetBool();
             sideQuestStatus[questId] = isCompleted;
         }
-    }
+    }*/
 
-    // Load player data
+    // 加载玩家信息
     if (player && doc.HasMember("player")) {
         player->loadFromJson(doc["player"].GetString());
 
-        // Load player's backpack
+        // 加载玩家背包
         if (player->getBackpack() && doc.HasMember("backpack")) {
-            player->getBackpack()->loadFromJson(doc["backpack"].GetString());
+            player->getBackpack()->loadFromJson(doc["backpack"].GetString(),1);
         }
     }
-
-    // Load treasure chest data
+    /*
+    // 加载宝箱信息
     if (treasureChest && doc.HasMember("treasureChest")) {
         treasureChest->loadFromJson(doc["treasureChest"].GetString());
     }
 
-    // Load TPAnchor data
+    // 加载锚点信息
     if (tpAnchor && doc.HasMember("tpAnchor")) {
         tpAnchor->loadFromJson(doc["tpAnchor"].GetString());
-    }
+    }*/
 
-    // Load player position
+    // 加载玩家位置
     if (doc.HasMember("playerPosition")) {
-        const Value& position = doc["playerPosition"];
+        const rapidjson::Value& position = doc["playerPosition"];
         if (position.HasMember("x") && position.HasMember("y")) {
             playerPosition.x = position["x"].GetFloat();
             playerPosition.y = position["y"].GetFloat();

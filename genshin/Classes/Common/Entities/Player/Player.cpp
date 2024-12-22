@@ -622,8 +622,8 @@ void Player::loadFromJson(const std::string& jsonString) {
     // 反序列化 Player 特有数据
     if (doc.HasMember("experience")) experience = doc["experience"].GetInt();
     if (doc.HasMember("level")) level = doc["level"].GetInt();
-    if (doc.HasMember("maxStamina")) maxStamina = doc["maxStamina"].GetInt();
-    if (doc.HasMember("stamina")) stamina = doc["stamina"].GetInt();
+    if (doc.HasMember("maxStamina")) maxStamina = doc["maxStamina"].GetFloat();
+    if (doc.HasMember("stamina")) stamina = doc["stamina"].GetFloat();
 
     // 反序列化装备（通过 ID 恢复指针）
     if (doc.HasMember("weapon")) {

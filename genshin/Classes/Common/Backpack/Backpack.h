@@ -52,6 +52,7 @@ public:
 
     // 从 JSON 字符串加载背包数据
     void loadFromJson(const std::string& jsonString);
+    void loadFromJson(const std::string& jsonString, int i);
 
     // 将背包保存到文件
     void saveToFile(const std::string& filePath) const;
