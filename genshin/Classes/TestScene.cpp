@@ -2,11 +2,21 @@
 #include "Classes/Common/EventManager/KeyboardEventManager.h"
 #include "Classes/Common/EventManager/MainGameMouseEventManager.h"
 #include "Classes/Common/Entities/Player/Player.h"
+#include "Classes/Common/Entities/NPC.h"
+#include "Classes/Common/StoryManager/StoryManager.h"
 USING_NS_CC;
 
 Scene* TestScene::createScene()
 {
     return TestScene::create();
+}
+
+void TestScene::checkPlayerAndNpcDistance() {
+    float distance = player->getPosition().distance(npc->getPosition());  // 计算玩家和 NPC 之间的距离
+    // 如果距离小于 100，触发对话
+    if (distance < 100.0f) {
+        npc->startDialogue();
+    }
 }
 
 bool TestScene::init()
@@ -36,9 +46,6 @@ bool TestScene::init()
         }
         }, 0.1f, "init_bm_key");
 
-    // 测试模块 1
-    addTestModule1();
-
     // 设置键盘事件监听器
     setupKeyboardListener();
 
@@ -55,13 +62,8 @@ bool TestScene::init()
     scheduleOnce([this](float dt) {
         auto runningScene = cocos2d::Director::getInstance()->getRunningScene();
         auto map = runningScene->getChildByName<cocos2d::TMXTiledMap*>("background");
-        auto objectLayer = map->getObjectGroup("ObjectsLayer");  // 获取对应图层
-        auto spawnPoint = objectLayer->getObject("SpawnPoint");  // 获取对象点
-        float x = spawnPoint["x"].asFloat();
-        float y = spawnPoint["y"].asFloat();
         auto playerspirt = Sprite::create("player.png");
         player = new Player(playerspirt);
-        player->setPosition(x, y);
 
         this->addChild(player, 1);  // 将玩家加入到场景中
         player->setVisible(true);
@@ -69,6 +71,25 @@ bool TestScene::init()
         cooking = new CookingSystem(player->getBackpack());
         this->addChild(cooking, 9);
         fishing = new FishingSystem;
+        if (!slSystem) {
+            tpAnchor = new TPAnchor();
+            slSystem = new SLSystem(tpAnchor);
+            slSystem->setPlayer(player);
+            tpAnchor->setPlayer(player);
+            slSystem->loadFromJson("save1.json");
+            tpAnchor->loadFromJson("JSON/TPAnchors.json");
+            auto tpAnchors = tpAnchor->gettpPointActivation();
+            for (auto& anchor : tpAnchors) {
+                Vec2 pos = anchor.first;
+                auto sprite = cocos2d::Sprite::create("Icon/Anchor.jpg");
+                this->addChild(sprite);
+                sprite->setName("Anchor");
+                sprite->setPosition(pos.x, pos.y);
+
+            }
+        }
+        player->getHud()->setTPAnchor(tpAnchor);
+        tpAnchor->activateTPPoint(Vec2(1808.0, 6280.0));
         // 设置玩家输入管理器（例如键盘控制）
         if (!keyboardEventManager) {
             keyboardEventManager = new KeyboardEventManager;
@@ -95,6 +116,26 @@ bool TestScene::init()
         }
         }, 0.1f, "init_SM_key");
 
+    // 添加 NPC
+    scheduleOnce([this](float dt) {
+        // 获取 NPC 的位置（可以从地图中获取，或者手动设置）
+        auto npc = NPC::create("/images/princess.png");  // 假设 NPC 使用 "npc.png" 图片
+        npc->setPosition(Vec2(5815, 345));  // 设置 NPC 的位置
+        this->addChild(npc, 2);  // 将 NPC 加入场景中
+
+        npc->startDialogue();
+        }, 0.1f, "init_npc_key");
+
+    scheduleOnce([this](float dt) {
+        // 创建剧情管理器并启动剧情
+        if (!storyManager) {
+            storyManager = StoryManager::create();
+            this->addChild(storyManager, 3);  // 将剧情管理器添加到场景
+        }
+
+        // 启动一段剧情
+        storyManager->startStory("Welcome to the world! This is your adventure!\nLevel up to 100 throught tough battle and you will complete this game");
+        }, 0.1f, "init_story_key");
 
     schedule([this](float deltaTime) {
         this->update(deltaTime);  // 每帧调用 update 方法
@@ -107,13 +148,7 @@ bool TestScene::init()
         }
         }, 0.1f, "init_EQ_key");*/
 
-    scheduleOnce([this](float dt) {
-        if (!slSystem) {
-            slSystem = new SLSystem();
-            slSystem->setPlayer(player);
-            slSystem->loadFromJson("JSON/save1.json");
-        }
-        }, 0.1f, "init_EQ_key");
+
 
     auto listener1 = cocos2d::EventListenerCustom::create("COOKING_STARTED_EVENT", [this](cocos2d::EventCustom* event) {
         CCLOG("Cooking event received!");
@@ -128,6 +163,7 @@ bool TestScene::init()
         mouseInputManager->setIsListening(false);
         });
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener2, this);  // 将监听器添加到事件分发器
+
     return true;
 }
 
@@ -152,32 +188,6 @@ void TestScene::addTestModule1()
     label->setName("module1");  // 给模块命名
     label->setPosition(Director::getInstance()->getVisibleSize() / 2);
     this->addChild(label);
-}
-
-void TestScene::addTestModule2()
-{
-    // 如果模块已经添加过了，就不再添加
-    if (this->getChildByName("module2")) {
-        return;
-    }
-    std::shared_ptr<Weapon> newWeapon = std::make_shared<Weapon>(100101, "Copper_Broadsword", 10, 30, 1.2);
-    player->equipWeapon(newWeapon);
-    player->levelUp();
-    auto label = Label::createWithTTF("Test Module 2", "fonts/Marker Felt.ttf", 24);
-    label->setName("module2");  // 给模块命名
-    label->setPosition(Director::getInstance()->getVisibleSize() / 2);
-    player->addItemToBackpack(300302, 1);
-    player->addItemToBackpack(300109, 1);
-    auto slime = new Enemy();
-    slime->setSpriteFilename("monsters/man_eater_flower.png");
-    slime->generateSprite();
-    slime->setPosition(5620, 985);
-    this->addChild(label);
-    this->addChild(slime);
-    blockManager->addEnemy(slime);
-    //player->testSkill();
-    //player->setShield(150,5);
-    //for (int i = 0; i < 30; i++) { player->levelUp(); }
 }
 
 void TestScene::setupKeyboardListener()
@@ -307,6 +317,13 @@ TestScene::~TestScene()
     delete backpackMainLayer;  // 释放背包层
 }
 
+bool TestScene::isPlayerNearNPC(Player* player, NPC* npc) {
+    // 计算玩家和 NPC 之间的距离
+    float distance = player->getPosition().distance(npc->getPosition());
+    return distance < 100.0f;  // 如果小于 100 像素，则认为玩家靠近 NPC
+}
+
+
 void TestScene::update(float deltaTime)
 {
     auto camera = Camera::getDefaultCamera();
@@ -332,6 +349,12 @@ void TestScene::update(float deltaTime)
     }
     if (player && is_running) {
         player->update(deltaTime);
+    }
+    if (npc && player) {
+        // 检查玩家是否靠近 NPC
+        if (isPlayerNearNPC(player, npc)) {
+            npc->startDialogue();  // 启动 NPC 对话
+        }
     }
 }
 
