@@ -165,6 +165,12 @@
     <ClCompile Include="..\Classes\System\SLSystem\SLSystem.cpp">
       <Filter>src\Classes\System</Filter>
     </ClCompile>
+    <ClCompile Include="HelloWorldScene.cpp" />
+    <ClCompile Include="NPC.cpp" />
+    <ClCompile Include="SeneNPC.cpp" />
+    <ClCompile Include="..\Classes\Common\Entities\NPC.cpp">
+      <Filter>src\Classes\Common\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -281,14 +287,14 @@
     <ClInclude Include="SeneNPC.h">
       <Filter>src\Classes\Scene\SceneObject</Filter>
     </ClInclude>
-    <ClInclude Include="NPC.h">
-      <Filter>src\Classes\Common\Entities</Filter>
-    </ClInclude>
     <ClInclude Include="HelloWorldScene.h">
       <Filter>src\Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\System\SLSystem\SLSystem.h">
       <Filter>src\Classes\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Common\Entities\NPC.h">
+      <Filter>src\Classes\Common\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
