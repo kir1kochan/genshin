@@ -5,7 +5,7 @@ USING_NS_CC;
 
 BlockManager::BlockManager(std::string& filePath) {
     // 加载 TMX 文件的对象层数据
-    //loadObjectsFromTMX("filePath");
+    loadObjectsFromTMX(filePath);
 }
 
 BlockManager::BlockManager() {
@@ -91,6 +91,13 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
         CCLOG("Failed to load TMX file: %s", tmxFile.c_str());
         return;
     }
+    auto sence = Director::getInstance()->getRunningScene();
+    tmxMap->setName("background");
+    sence->addChild(tmxMap, -1);  // 将地图作为背景层添加到场景中
+
+    // 将碰撞区域图块标注层设置不可见
+    auto area = tmxMap->getLayer("area");
+    area->setVisible(false);
 
     // 获取对象层（假设对象层的名字为 "ObjectLayer"）
     TMXObjectGroup* objectGroup = tmxMap->getObjectGroup("ObjectLayer");

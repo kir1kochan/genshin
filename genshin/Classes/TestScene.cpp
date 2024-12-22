@@ -15,7 +15,7 @@ bool TestScene::init()
         return false;
     }
     // 加载 TMX 地图作为背景
-    loadBackgroundMap();
+    // loadBackgroundMap();
 
     // 获取导演（Director）实例
     auto director = Director::getInstance();
@@ -29,15 +29,12 @@ bool TestScene::init()
     // 设置设计分辨率大小，使用 NO_BORDER 可以确保视窗按比例填满
     director->getOpenGLView()->setDesignResolutionSize(1920, 1080, ResolutionPolicy::NO_BORDER);
 
-    // 如果地图太小，可以调整缩放比例，放大地图
-    auto map = TMXTiledMap::create("/maps/world2.tmx");
-    if (map) {
-        map->setName("background");
-        this->addChild(map, -1);  // 将地图作为背景层添加到场景中
-    }
 
-    auto layer = map->getLayer("area");
-    layer->setVisible(false);
+    scheduleOnce([this](float dt) {
+        if (!blockManager) {
+            blockManager = new BlockManager(static_cast<std::string>("/maps/world.tmx"));
+        }
+        }, 0.1f, "init_bm_key");
 
     // 测试模块 1
     addTestModule1();
@@ -55,7 +52,9 @@ bool TestScene::init()
         }, 0.1f, "init_mouse_manager_key");
 
     // 加入玩家
-    scheduleOnce([this, map](float dt) {
+    scheduleOnce([this](float dt) {
+        auto runningScene = cocos2d::Director::getInstance()->getRunningScene();
+        auto map = runningScene->getChildByName<cocos2d::TMXTiledMap*>("background");
         auto objectLayer = map->getObjectGroup("Objects");  // 获取对应图层
         auto spawnPoint = objectLayer->getObject("SpawnPoint");  // 获取对象点
         float x = spawnPoint["x"].asFloat();
@@ -89,12 +88,6 @@ bool TestScene::init()
         }, 0.1f, "init_player_key");
 
     scheduleOnce([this](float dt) {
-        if (!blockManager) {
-            blockManager=new BlockManager;
-        }
-        }, 0.1f, "init_bm_key");
-
-    scheduleOnce([this](float dt) {
         if (!spiritManager) {
             spiritManager = new SpiritManager();
             spiritManager->init(blockManager,player);
@@ -103,8 +96,8 @@ bool TestScene::init()
         }, 0.1f, "init_SM_key");
 
 
-    schedule([this,map](float deltaTime) {
-        this->update(deltaTime ,map);  // 每帧调用 update 方法
+    schedule([this](float deltaTime) {
+        this->update(deltaTime);  // 每帧调用 update 方法
         }, 0.5f, "update_key");
 
     /*scheduleOnce([this](float dt) {
@@ -117,7 +110,7 @@ bool TestScene::init()
         if (!slSystem) {
             slSystem = new SLSystem();
             slSystem->setPlayer(player);
-            slSystem->loadFromJson("JSON/save1.json");
+            slSystem->loadFromJson("/JSON/save1.json");
         }
         }, 0.1f, "init_EQ_key");
     return true;
@@ -292,14 +285,14 @@ TestScene::~TestScene()
     delete backpackMainLayer;  // 释放背包层
 }
 
-void TestScene::update(float deltaTime, CCTMXTiledMap* map)
+void TestScene::update(float deltaTime)
 {
     auto camera = Camera::getDefaultCamera();
     if (camera) {
         camera->setPosition3D(player->getPosition3D() + Vec3(0, 0, mouseInputManager->getCameraZ()));
     }
     if (keyboardEventManager) {
-        keyboardEventManager->update(deltaTime,map);  // 调用键盘事件管理器的 update 方法
+        keyboardEventManager->update(deltaTime);  // 调用键盘事件管理器的 update 方法
     }
     if (blockManager && is_running) {
         blockManager->updateBlocksForPlayer(player);
