@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 #include<vector>
-
+class TPAnchor;
 class Player;
 
 class Hud : public cocos2d::Node {
@@ -27,7 +27,7 @@ private:
     // 进度条的宽度和高度
     float barWidth;  // 进度条的总宽度
     float barHeight; // 进度条的高度
-
+    TPAnchor* tpAnchor;
     // 引用玩家对象
     Player* player;
 
@@ -47,6 +47,7 @@ public:
     Hud(Player* player);
     virtual ~Hud();
 
+    void setTPAnchor(TPAnchor* tpAnchor);
     // 静态创建方法
     static Hud* create(Player* player);
 
@@ -68,6 +69,17 @@ public:
     void updateMiniMapPosition();
     //切换小地图显示方式
     void toggleMiniMap();
+
+    // 更新主线任务图标位置
+    void updateMissionIconPosition(int stage);
+    //支线
+    void updateSideMissionIconPosition(const std::string& missionName, bool isVisible);
+    //隐藏雾
+    void hideFogLayers(cocos2d::TMXTiledMap* map);
+    //隐藏雾
+    void hideFogLayers(cocos2d::TMXTiledMap* map, int index);
+    cocos2d::TMXTiledMap* getMiniMapNode() const;
+    cocos2d::TMXTiledMap* getExpandedMiniMapNode() const;
 
     bool getIsExpanded() {
         return isMiniMapExpanded;

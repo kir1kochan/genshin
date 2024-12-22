@@ -32,7 +32,7 @@ bool TestScene::init()
 
     scheduleOnce([this](float dt) {
         if (!blockManager) {
-            blockManager = new BlockManager(static_cast<std::string>("/maps/world.tmx"));
+            blockManager = new BlockManager(static_cast<std::string>("maps/world.tmx"));
         }
         }, 0.1f, "init_bm_key");
 
@@ -55,13 +55,8 @@ bool TestScene::init()
     scheduleOnce([this](float dt) {
         auto runningScene = cocos2d::Director::getInstance()->getRunningScene();
         auto map = runningScene->getChildByName<cocos2d::TMXTiledMap*>("background");
-        auto objectLayer = map->getObjectGroup("Objects");  // 获取对应图层
-        auto spawnPoint = objectLayer->getObject("SpawnPoint");  // 获取对象点
-        float x = spawnPoint["x"].asFloat();
-        float y = spawnPoint["y"].asFloat();
         auto playerspirt = Sprite::create("player.png");
         player = new Player(playerspirt);
-        player->setPosition(x, y);
 
         this->addChild(player, 1);  // 将玩家加入到场景中
         player->setVisible(true);
@@ -69,6 +64,24 @@ bool TestScene::init()
         cooking = new CookingSystem(player->getBackpack());
         this->addChild(cooking, 9);
         fishing = new FishingSystem;
+        if (!slSystem) {
+            tpAnchor = new TPAnchor();
+            slSystem = new SLSystem(tpAnchor);
+            slSystem->setPlayer(player);
+            tpAnchor->setPlayer(player);
+            slSystem->loadFromJson("JSON/save1.json");
+            auto tpAnchors = tpAnchor->gettpPointActivation();
+            for (auto& anchor : tpAnchors) {
+                Vec2 pos = anchor.first;
+                auto sprite = cocos2d::Sprite::create("Icon/Anchor.jpg");
+                this->addChild(sprite);
+                sprite->setName("Anchor");
+                sprite->setPosition(pos.x, pos.y);
+
+            }
+        }
+        player->getHud()->setTPAnchor(tpAnchor);
+        tpAnchor->activateTPPoint(Vec2(1808.0, 6280.0));
         // 设置玩家输入管理器（例如键盘控制）
         if (!keyboardEventManager) {
             keyboardEventManager = new KeyboardEventManager;
@@ -107,13 +120,6 @@ bool TestScene::init()
         }
         }, 0.1f, "init_EQ_key");*/
 
-    scheduleOnce([this](float dt) {
-        if (!slSystem) {
-            slSystem = new SLSystem();
-            slSystem->setPlayer(player);
-            slSystem->loadFromJson("JSON/save1.json");
-        }
-        }, 0.1f, "init_EQ_key");
 
     auto listener1 = cocos2d::EventListenerCustom::create("COOKING_STARTED_EVENT", [this](cocos2d::EventCustom* event) {
         CCLOG("Cooking event received!");
