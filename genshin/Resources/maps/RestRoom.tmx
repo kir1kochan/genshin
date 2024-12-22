@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="22" nextobjectid="30">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="23" nextobjectid="31">
  <tileset firstgid="1" source="floors.tsx"/>
  <tileset firstgid="2049" source="upholstery.tsx"/>
  <tileset firstgid="2561" source="windows.tsx"/>
@@ -369,11 +369,6 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="17" name="SpawnPoint">
-  <object id="24" name="SpawnPoint" x="479" y="579">
-   <point/>
-  </object>
- </objectgroup>
  <layer id="3" name="box" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -398,13 +393,11 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="8" name="Objects">
+ <objectgroup id="22" name="ObjectLayer">
+  <object id="24" name="SpawnPoint" x="479" y="579">
+   <point/>
+  </object>
   <object id="1" name="CheckOpen" x="736.167" y="66.5" width="31.6667" height="33"/>
- </objectgroup>
- <objectgroup id="19" name="Check">
-  <object id="25" name="CheckDown" x="422.167" y="622.5" width="115.667" height="18"/>
- </objectgroup>
- <objectgroup id="18" name="Collision">
   <object id="2" name="CollisionArea" x="520.167" y="125.5" width="77.6667" height="92"/>
   <object id="3" name="CollisionArea" x="929.167" y="171.5" width="31.6667" height="49"/>
   <object id="4" name="CollisionArea" x="515.167" y="50.5" width="88.6667" height="68"/>
@@ -428,5 +421,11 @@
   <object id="27" name="CollisionArea" x="895.167" y="323.5" width="36.667" height="33"/>
   <object id="28" name="CollisionArea" x="827.667" y="320.5" width="36.667" height="33"/>
   <object id="29" name="CollisionArea" x="858.667" y="353.5" width="36.667" height="33"/>
+  <object id="30" name="SceneObject" x="479.619" y="631.406">
+   <properties>
+    <property name="subtype" value="door"/>
+   </properties>
+   <point/>
+  </object>
  </objectgroup>
 </map>

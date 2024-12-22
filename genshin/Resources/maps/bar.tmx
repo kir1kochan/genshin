@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="22" height="12" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="33">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="22" height="12" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="37">
  <tileset firstgid="1" source="walls.tsx"/>
  <tileset firstgid="6145" name="tavern-furniture" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
   <image source="../images/tavern-furniture.png" trans="ff00ff" width="1024" height="1024"/>
@@ -351,42 +351,6 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="10" name="SpawnPoint">
-  <object id="23" name="SpawnPoint" x="52.6667" y="231.333">
-   <point/>
-  </object>
- </objectgroup>
- <objectgroup id="5" name="NPC">
-  <object id="1" gid="8692" x="447" y="188" width="64" height="64"/>
-  <object id="2" gid="8250" x="415" y="156" width="64" height="64"/>
-  <object id="3" gid="8524" x="479" y="156" width="64" height="64"/>
- </objectgroup>
- <objectgroup id="8" name="Collision">
-  <object id="4" name="CollisionArea" x="289.667" y="254.833" width="63.3337" height="39.6667"/>
-  <object id="5" name="CollisionArea" x="227" y="287.5" width="27.3337" height="65.6667"/>
-  <object id="6" name="CollisionArea" x="385.667" y="286.833" width="30.0003" height="64.3333"/>
-  <object id="7" name="CollisionArea" x="448.333" y="260.833" width="34.0003" height="31.6667"/>
-  <object id="8" name="CollisionArea" x="511" y="292.833" width="60.0003" height="30.3333"/>
-  <object id="9" name="CollisionArea" x="639" y="162.833" width="32.667" height="121"/>
-  <object id="10" name="CollisionArea" x="417.667" y="125.5" width="36.667" height="79.6667"/>
-  <object id="11" name="CollisionArea" x="417" y="171.5" width="126" height="33"/>
-  <object id="12" name="CollisionArea" x="512.333" y="121.5" width="31.3337" height="81.6667"/>
-  <object id="13" name="CollisionArea" x="66.9998" y="290.167" width="26.667" height="29"/>
-  <object id="14" name="CollisionArea" x="100.333" y="263.5" width="85.3337" height="31.6667"/>
-  <object id="15" name="CollisionArea" x="255.667" y="111.5" width="95.3337" height="33"/>
-  <object id="16" name="CollisionArea" x="353.667" y="138.833" width="29.3337" height="25.6667"/>
-  <object id="17" name="CollisionArea" x="103" y="126.833" width="32.0003" height="63"/>
-  <object id="18" name="CollisionArea" x="186" y="125.167" width="32.0003" height="65.6667"/>
-  <object id="19" name="CollisionArea" x="103.333" y="190.5" width="16.667" height="114.333" rotation="-90"/>
-  <object id="20" name="CollisionArea" x="671.333" y="125.833" width="32.0003" height="225.667"/>
-  <object id="21" name="CollisionArea" x="-1.33348" y="126.5" width="31.3336" height="225.667"/>
-  <object id="22" name="CollisionArea" x="682" y="352.5" width="30.0003" height="662.334" rotation="90"/>
-  <object id="32" name="CollisionArea" x="688.667" y="94.833" width="32.0003" height="662.334" rotation="90"/>
- </objectgroup>
- <objectgroup id="9" name="Check">
-  <object id="24" name="CheckLeft" x="49.4998" y="199.667" width="55.667" height="18" rotation="90"/>
-  <object id="25" name="CheckOpen" x="608.166" y="127" width="33.0003" height="18"/>
- </objectgroup>
  <layer id="6" name="图块层 5" width="22" height="12">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -419,4 +383,44 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="10" name="ObjectLayer">
+  <object id="23" name="SpawnPoint" x="73.5056" y="220.151">
+   <point/>
+  </object>
+  <object id="1" gid="8692" x="447" y="188" width="64" height="64"/>
+  <object id="2" gid="8250" x="415" y="156" width="64" height="64"/>
+  <object id="3" gid="8524" x="479" y="156" width="64" height="64"/>
+  <object id="4" name="CollisionArea" x="289.667" y="254.833" width="63.3337" height="39.6667"/>
+  <object id="5" name="CollisionArea" x="227" y="287.5" width="27.3337" height="65.6667"/>
+  <object id="6" name="CollisionArea" x="385.667" y="286.833" width="30.0003" height="64.3333"/>
+  <object id="7" name="CollisionArea" x="448.333" y="260.833" width="34.0003" height="31.6667"/>
+  <object id="8" name="CollisionArea" x="511" y="292.833" width="60.0003" height="30.3333"/>
+  <object id="9" name="CollisionArea" x="639" y="162.833" width="32.667" height="121"/>
+  <object id="10" name="CollisionArea" x="417.667" y="125.5" width="36.667" height="79.6667"/>
+  <object id="11" name="CollisionArea" x="417" y="171.5" width="126" height="33"/>
+  <object id="12" name="CollisionArea" x="512.333" y="121.5" width="31.3337" height="81.6667"/>
+  <object id="13" name="CollisionArea" x="66.9998" y="290.167" width="26.667" height="29"/>
+  <object id="14" name="CollisionArea" x="100.333" y="263.5" width="85.3337" height="31.6667"/>
+  <object id="15" name="CollisionArea" x="255.667" y="111.5" width="95.3337" height="33"/>
+  <object id="16" name="CollisionArea" x="353.667" y="138.833" width="29.3337" height="25.6667"/>
+  <object id="17" name="CollisionArea" x="103" y="126.833" width="32.0003" height="63"/>
+  <object id="18" name="CollisionArea" x="186" y="125.167" width="32.0003" height="65.6667"/>
+  <object id="19" name="CollisionArea" x="103.333" y="190.5" width="16.667" height="114.333" rotation="-90"/>
+  <object id="20" name="CollisionArea" x="671.333" y="125.833" width="32.0003" height="225.667"/>
+  <object id="21" name="CollisionArea" x="-1.33348" y="126.5" width="31.3336" height="225.667"/>
+  <object id="22" name="CollisionArea" x="682" y="352.5" width="30.0003" height="662.334" rotation="90"/>
+  <object id="32" name="CollisionArea" x="688.667" y="94.833" width="32.0003" height="662.334" rotation="90"/>
+  <object id="35" name="SceneObject" x="624.66" y="141.806">
+   <properties>
+    <property name="subtype" value="door"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="36" name="SceneObject" x="45.2357" y="222.112">
+   <properties>
+    <property name="subtype" value="door"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
 </map>
