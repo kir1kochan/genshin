@@ -30,7 +30,7 @@ public:
     void updateBlocksForPlayer(Player* playerNode);
     void handleClickEvent(const cocos2d::Vec2& clickPosition, Player* player);
     void clear();
-    
+
     // 更新玩家所在区域的物体的碰撞箱的映射
     void updateCollisionMap();
 
@@ -46,8 +46,13 @@ public:
     std::vector<SceneObject*> getSceneObjectsInBlock(const std::pair<int, int>& block);
     std::unordered_map<std::pair<int, int>, bool, BlockManager::PairHash> getBlockStatus() const;
 
+    // 检查玩家是否在 door 区域，并返回 door 的 index 属性
+    int checkPlayerInDoorArea(const cocos2d::Vec2& playerPosition);
+
+    // 检查玩家是否在小地图的 door 区域，并返回 door 的 index 属性
+    int checkPlayerInSmallMapDoorArea(const cocos2d::Vec2& playerPosition);
 private:
-    
+
 
     // 从 TMX 文件加载对象数据
     void loadObjectsFromTMX(const std::string& tmxFile);
@@ -73,6 +78,9 @@ private:
     std::unordered_map<std::pair<int, int>, std::unordered_map<SceneObject*, cocos2d::Rect>, PairHash> sceneObjectCollisions;
     // 存储碰撞区域
     std::vector<cocos2d::Rect> collisionAreas;
+
+    // 存储 door 区域的碰撞框和 index 属性
+    std::unordered_map<cocos2d::Rect, int> doorAreas;
 };
 
 

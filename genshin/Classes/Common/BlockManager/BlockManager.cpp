@@ -32,7 +32,7 @@ void BlockManager::updateBlocksForPlayer(Player* playerNode) {
     if (newPlayerBlock == playerBlock) {
         return;
     }
-    playerBlock = newPlayerBlock;    
+    playerBlock = newPlayerBlock;
 
     blockStatus.clear();  // 清空原先的状态
 
@@ -47,7 +47,7 @@ void BlockManager::updateBlocksForPlayer(Player* playerNode) {
             }
 
             blockStatus[blockToLoad] = true; // 标记为需要加载
-            auto SOs=getSceneObjectsInBlock(blockToLoad);
+            auto SOs = getSceneObjectsInBlock(blockToLoad);
             for (auto SO : SOs) {
                 SO->generateSpriteIfNeeded();
             }
@@ -136,7 +136,7 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
             float health = objectData["health"].asFloat();
             float attack = objectData["attack"].asFloat();
             float defence = objectData["defence"].asFloat();
-            std::string element = objectData["element"].asString();  
+            std::string element = objectData["element"].asString();
             float attackRange = objectData["attackRange"].asFloat();
             int aggressionLevel = objectData["aggressionLevel"].asInt();
             float detectionRadius = objectData["detectionRadius"].asFloat();
@@ -154,7 +154,7 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
             enemy->setPosition(Vec2(x, y));
             blockToEnemies[block].push_back(enemy);
         }
-        else if (type == "Collection"|| type == "Fish") {
+        else if (type == "Collection" || type == "Fish") {
             SceneObject* sceneObject = new SceneObject();
             std::string subtype = objectData["subtype"].asString();
             if (subtype == "door") {    // 目前设想的特殊物体
@@ -163,6 +163,13 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
                 // sceneObject->loadFromFile(jsonpath);
                 sceneObject->setPosition(Vec2(x, y));
                 blockToSceneObjects[block].push_back(sceneObject);
+
+                // 处理 door 区域
+                int index = objectData["index"].asInt();
+                float width = objectData["width"].asFloat();
+                float height = objectData["height"].asFloat();
+                Rect doorRect(x, y, width, height);
+                doorAreas[doorRect] = index;
             }
             else {
                 // 读取场景物体特有数据
@@ -177,8 +184,8 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
                     if (!itemId.empty()) {
                         sceneObject->addItemId(std::stoi(itemId));
                     }
-                }      
-                
+                }
+
                 // 添加到区块
                 blockToSceneObjects[block].push_back(sceneObject);
             }
@@ -200,12 +207,12 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
 }
 
 // 处理点击事件（比如采摘、烹饪、钓鱼点等）
-void BlockManager::handleClickEvent(const Vec2& clickPosition,Player* player) {
-    checkCollisions(clickPosition,player);
+void BlockManager::handleClickEvent(const Vec2& clickPosition, Player* player) {
+    checkCollisions(clickPosition, player);
 }
 
 // 检查玩家点击位置与场景物体或敌人的碰撞
-void BlockManager::checkCollisions(const Vec2& clickPosition,Player* player) {
+void BlockManager::checkCollisions(const Vec2& clickPosition, Player* player) {
     std::pair<int, int> block = getBlockCoordinates(clickPosition);
 
     // 检查场景物体
@@ -238,7 +245,7 @@ std::vector<Enemy*> BlockManager::getEnemiesInBlock(const std::pair<int, int>& b
 void BlockManager::clear() {
     for (auto& block : blockToEnemies) {
         for (auto& enemy : block.second) {
-            delete enemy; 
+            delete enemy;
         }
     }
 
@@ -283,6 +290,24 @@ void BlockManager::updateCollisionMap() {
 }
 
 void BlockManager::addEnemy(Enemy* enemy) {
-    std::pair<int, int>block= getBlockCoordinates(enemy->getPosition());
+    std::pair<int, int>block = getBlockCoordinates(enemy->getPosition());
     blockToEnemies[block].push_back(enemy);
+}
+
+int BlockManager::checkPlayerInDoorArea(const cocos2d::Vec2& playerPosition) {
+    for (const auto& doorArea : doorAreas) {
+        if (doorArea.first.containsPoint(playerPosition)) {
+            return doorArea.second;
+        }
+    }
+    return -1; // 返回 -1 表示玩家不在任何 door 区域
+}
+
+int BlockManager::checkPlayerInSmallMapDoorArea(const cocos2d::Vec2& playerPosition) {
+    for (const auto& doorArea : doorAreas) {
+        if (doorArea.first.containsPoint(playerPosition)) {
+            return doorArea.second;
+        }
+    }
+    return -1; // 返回 -1 表示玩家不在任何 door 区域
 }
