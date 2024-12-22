@@ -78,7 +78,8 @@ bool TestScene::init()
             slSystem = new SLSystem(tpAnchor);
             slSystem->setPlayer(player);
             tpAnchor->setPlayer(player);
-            slSystem->loadFromJson("Resources/JSON/save.json");
+            slSystem->loadFromJson("save1.json");
+            tpAnchor->loadFromJson("JSON/TPAnchors.json");
             auto tpAnchors = tpAnchor->gettpPointActivation();
             for (auto& anchor : tpAnchors) {
                 Vec2 pos = anchor.first;
