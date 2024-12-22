@@ -69,7 +69,7 @@ void Enemy::takeDamage(float amount) {
 
         // 运行动作
         sprite->runAction(deathSequence);
-
+        spriteGenerated = false;
     }
 
     drawProgressBar(barNode, health / maxHealth);

@@ -187,10 +187,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\Classes\System\SLSystem\SLSystem.cpp" />
     <ClCompile Include="..\Classes\TestScene.cpp" />
     <ClCompile Include="..\Classes\UI\Hud.cpp" />
-    <ClCompile Include="HelloWorldScene.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="NPC.cpp" />
-    <ClCompile Include="SeneNPC.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
@@ -231,7 +228,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\System\SLSystem\SLSystem.h" />
     <ClInclude Include="..\Classes\TestScene.h" />
     <ClInclude Include="..\Classes\UI\Hud.h" />
-    <ClInclude Include="HelloWorldScene.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="SeneNPC.h" />
   </ItemGroup>

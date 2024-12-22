@@ -9,12 +9,12 @@
 
 using namespace rapidjson;
 
-SLSystem::SLSystem()
+SLSystem::SLSystem(TPAnchor* tpAnchor)
     : mainMajorProgress(0),
     mainMinorProgress(0),
     player(nullptr),
     treasureChest(nullptr),
-    tpAnchor(nullptr),
+    tpAnchor(tpAnchor),
     playerPosition(cocos2d::Vec2::ZERO) {}
 
 SLSystem::~SLSystem() {}
@@ -72,6 +72,7 @@ cocos2d::Vec2 SLSystem::getPlayerPosition() {
 }
 
 void SLSystem::saveToJson(const std::string& jsonFilePath) const {
+    tpAnchor->saveToJson("JSON/TPAnchors.json");
     Document doc;
     doc.SetObject();
     auto& allocator = doc.GetAllocator();
@@ -136,6 +137,7 @@ void SLSystem::saveToJson(const std::string& jsonFilePath) const {
 }
 
 void SLSystem::loadFromJson(const std::string& jsonFilePath) {
+    tpAnchor->loadFromJson("JSON/TPAnchors.json");
     std::ifstream ifs(jsonFilePath);
     if (!ifs.is_open()) {
         throw std::runtime_error("Failed to open file for loading: " + jsonFilePath);
@@ -187,11 +189,7 @@ void SLSystem::loadFromJson(const std::string& jsonFilePath) {
     if (treasureChest && doc.HasMember("treasureChest")) {
         treasureChest->loadFromJson(doc["treasureChest"].GetString());
     }
-
-    // 加载锚点信息
-    if (tpAnchor && doc.HasMember("tpAnchor")) {
-        tpAnchor->loadFromJson(doc["tpAnchor"].GetString());
-    }*/
+    */
 
     // 加载玩家位置
     if (doc.HasMember("playerPosition")) {

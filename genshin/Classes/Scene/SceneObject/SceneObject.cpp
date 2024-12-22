@@ -157,15 +157,18 @@ SceneObject* SceneObject::clone(const Vec2& position) const {
 // 在需要时生成精灵
 void SceneObject::generateSpriteIfNeeded() {
     if (!spriteGenerated) {
-        auto sprite = Sprite::create("Backgrounds/Cooking_Background.jpg");
-        sprite->setContentSize(cocos2d::Size(72, 72));
-        sprite->setName("sprite");
-        auto runningScene = Director::getInstance()->getRunningScene();
+        if (type == ObjectType::PICKUP) {
+            auto sprite = Sprite::create("food/Apple.jpg");
+            sprite->setContentSize(cocos2d::Size(72, 72));
+            sprite->setName("sprite");
+            auto runningScene = Director::getInstance()->getRunningScene();
 
-        if (sprite) {
-            this->addChild(sprite);  // 将精灵添加到场景物体中
-            runningScene->addChild(this);
-            spriteGenerated = true;   // 标记精灵已生成
+            if (sprite) {
+                this->addChild(sprite);  // 将精灵添加到场景物体中
+                runningScene->addChild(this);
+                spriteGenerated = true;   // 标记精灵已生成
+            }
         }
+        spriteGenerated = true;   // 标记精灵已生成
     }
 }

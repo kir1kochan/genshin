@@ -9,7 +9,7 @@
 #include <vector>
 #include <set>
 #include <utility>
-
+#include "../../Scene/SceneObject/TPAnchor.h"
 #define BLOCK_SIZE 1280
 #define LOAD_RADIUS 2
 #define UNLOAD_RADIUS 3

@@ -53,6 +53,7 @@ void BlockManager::updateBlocksForPlayer(Player* playerNode) {
             }
             auto enemys = getEnemiesInBlock(blockToLoad);
             for (auto enemy : enemys) {
+                enemy->heal(enemy->getMaxHealth());
                 enemy->generateSprite();
             }
             // 将区块加入已加载列表
@@ -105,9 +106,8 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
     // 将碰撞区域图块标注层设置不可见
     auto area = tmxMap->getLayer("area");
     area->setVisible(false);
-
     // 获取对象层（假设对象层的名字为 "ObjectLayer"）
-    TMXObjectGroup* objectGroup = tmxMap->getObjectGroup("Objects");
+    TMXObjectGroup* objectGroup = tmxMap->getObjectGroup("ObjectLayer");
     if (!objectGroup) {
         CCLOG("No object layer found in TMX file: %s", tmxFile.c_str());
         return;
@@ -118,7 +118,8 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
     for (auto& obj : objects) {
         // 解析每个对象的类型和位置
         ValueMap objectData = obj.asValueMap();
-        std::string type = objectData["name"].asString();
+        std::string type = objectData["type"].asString();
+        std::string name = objectData["name"].asString();
         float x = objectData["x"].asFloat();
         float y = objectData["y"].asFloat();
         // 将对象添加到相应的区块中
@@ -131,7 +132,7 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
             enemy->setPosition(Vec2(x, y));
             blockToEnemies[block].push_back(enemy);
         }
-        else if (type == "Enem") {
+        else if (type == "Enemy") {
             // 读取敌人特有数据，如生命值、攻击力等
             float health = objectData["health"].asFloat();
             float attack = objectData["attack"].asFloat();
@@ -154,7 +155,7 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
             enemy->setPosition(Vec2(x, y));
             blockToEnemies[block].push_back(enemy);
         }
-        else if (type == "Collection"|| type == "Fish") {
+        else if (type == "Collection"|| type == "pickup" || type == "Fish") {
             SceneObject* sceneObject = new SceneObject();
             std::string subtype = objectData["subtype"].asString();
             if (subtype == "door") {    // 目前设想的特殊物体
@@ -196,6 +197,7 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
                 collisionAreas.push_back(collisionRect);
             }
         }
+        
     }
 }
 
