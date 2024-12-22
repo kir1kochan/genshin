@@ -22,9 +22,30 @@ void TPAnchor::teleport(Player& player) {
     CCLOG("No activated TP point found.");
 }
 
+std::unordered_map<cocos2d::Vec2, bool>  TPAnchor::gettpPointActivation() const{
+    return tpPointActivation;
+}
+
 void TPAnchor::activateTPPoint(const cocos2d::Vec2& point) {
     tpPointActivation[point] = true;  // 激活某个点
     CCLOG("TP Point (%.2f, %.2f) activated.", point.x, point.y);
+
+    auto hud = player->getHud();
+    int index;
+    if (hud) {
+        for (auto anchor : tpPointActivation) {
+            if (anchor.second) {
+                index = tpPointsIDs[anchor.first];
+                if (index > 0 && index <= 5) {
+                    hud->hideFogLayers(hud->getMiniMapNode(), index);
+                    if (hud->getExpandedMiniMapNode()) {
+                        hud->hideFogLayers(hud->getExpandedMiniMapNode(), index);
+                    }
+                }
+            }        
+            
+        }
+    }
 }
 
 void TPAnchor::loadFromJson(const std::string& jsonFilePath) {
@@ -59,6 +80,13 @@ void TPAnchor::loadFromJson(const std::string& jsonFilePath) {
                     isActivated = point["activated"].GetBool();
                 }
                 tpPointActivation[cocos2d::Vec2(x, y)] = isActivated;
+                int id;
+                if (point.HasMember("index")) {
+                    id = point["index"].GetInt();
+                }
+                tpPointsIDs[cocos2d::Vec2(x, y)] = id;
+                auto hud = player->getHud();
+                
             }
         }
     }
@@ -84,7 +112,13 @@ void TPAnchor::saveToJson(const std::string& jsonFilePath) {
         if (tpPointActivation.find(point) != tpPointActivation.end()) {
             pointObj.AddMember("activated", tpPointActivation.at(point), allocator);
         }
+        // 添加对应的 TP 点位 ID
+        if (tpPointsIDs.find(point) != tpPointsIDs.end()) {
+            pointObj.AddMember("index", tpPointsIDs.at(point), allocator);
+        }
+
         points.PushBack(pointObj, allocator);
+
     }
     doc.AddMember("tpPoints", points, allocator);
 
@@ -104,5 +138,3 @@ void TPAnchor::saveToJson(const std::string& jsonFilePath) {
         CCLOG("Failed to save to JSON file.");
     }
 }
-
-

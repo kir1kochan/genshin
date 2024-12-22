@@ -32,8 +32,7 @@ void BlockManager::updateBlocksForPlayer(Player* playerNode) {
     if (newPlayerBlock == playerBlock) {
         return;
     }
-    playerBlock = newPlayerBlock;
-    updateCollisionMap(); // 更新碰撞映射
+    playerBlock = newPlayerBlock;    
 
     blockStatus.clear();  // 清空原先的状态
 
@@ -48,13 +47,22 @@ void BlockManager::updateBlocksForPlayer(Player* playerNode) {
             }
 
             blockStatus[blockToLoad] = true; // 标记为需要加载
-
+            auto SOs=getSceneObjectsInBlock(blockToLoad);
+            for (auto SO : SOs) {
+                SO->generateSpriteIfNeeded();
+            }
+            auto enemys = getEnemiesInBlock(blockToLoad);
+            for (auto enemy : enemys) {
+                enemy->heal(enemy->getMaxHealth());
+                enemy->generateSprite();
+            }
             // 将区块加入已加载列表
             if (loadedBlocks.find(blockToLoad) == loadedBlocks.end()) {
                 loadedBlocks.insert(blockToLoad); // 添加到已加载的区块集合中
             }
         }
     }
+    updateCollisionMap(); // 更新碰撞映射
 
     // 计算要卸载的区块
     for (auto it = loadedBlocks.begin(); it != loadedBlocks.end();) {
@@ -98,7 +106,6 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
     // 将碰撞区域图块标注层设置不可见
     auto area = tmxMap->getLayer("area");
     area->setVisible(false);
-
     // 获取对象层（假设对象层的名字为 "ObjectLayer"）
     TMXObjectGroup* objectGroup = tmxMap->getObjectGroup("ObjectLayer");
     if (!objectGroup) {
@@ -112,6 +119,7 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
         // 解析每个对象的类型和位置
         ValueMap objectData = obj.asValueMap();
         std::string type = objectData["type"].asString();
+        std::string name = objectData["name"].asString();
         float x = objectData["x"].asFloat();
         float y = objectData["y"].asFloat();
         // 将对象添加到相应的区块中
@@ -140,26 +148,28 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
             // 创建敌人并加入到区块
             Enemy* enemy = new(std::nothrow) Enemy(
                 health, attack, defence,
-                static_cast<Element>(std::stoi(element)), attackRange,
+                stringToElement(element), attackRange,
                 aggressionLevel, detectionRadius,
                 baseLevel, imagePath, drop
             );
             enemy->setPosition(Vec2(x, y));
             blockToEnemies[block].push_back(enemy);
         }
-        else if (type == "SceneObject") {
+        else if (type == "Collection"|| type == "pickup" || type == "Fish") {
             SceneObject* sceneObject = new SceneObject();
             std::string subtype = objectData["subtype"].asString();
             if (subtype == "door") {    // 目前设想的特殊物体
                 std::string jsonpath = objectData["jsonpath"].asString();
                 SceneObject* sceneObject = new SceneObject();
                 // sceneObject->loadFromFile(jsonpath);
+                sceneObject->setPosition(Vec2(x, y));
+                blockToSceneObjects[block].push_back(sceneObject);
             }
             else {
                 // 读取场景物体特有数据
                 std::string imagePath = objectData["imagePath"].asString();  // 物体纹理路径
                 // 创建场景物体
-                SceneObject* sceneObject = new(std::nothrow) SceneObject(stringToObjectType(subtype), Vec2(x, y), imagePath);
+                SceneObject* sceneObject = new(std::nothrow) SceneObject(stringToObjectType(type), Vec2(x, y), imagePath);
                 // 解析并存储多个物品ID
                 std::string itemIdsStr = objectData["itemIds"].asString();  // 存储为逗号分隔的字符串
                 std::istringstream itemIdsStream(itemIdsStr);
@@ -173,8 +183,6 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
                 // 添加到区块
                 blockToSceneObjects[block].push_back(sceneObject);
             }
-            sceneObject->setPosition(Vec2(x, y));
-            blockToSceneObjects[block].push_back(sceneObject);
         }
         else if (type == "Collision") { // 碰撞区域处理
             // 检查是否有 width 和 height 字段
@@ -189,23 +197,26 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
                 collisionAreas.push_back(collisionRect);
             }
         }
+        
     }
 }
 
 // 处理点击事件（比如采摘、烹饪、钓鱼点等）
-void BlockManager::handleClickEvent(const Vec2& clickPosition) {
-    checkCollisions(clickPosition);
+void BlockManager::handleClickEvent(const Vec2& clickPosition,Player* player) {
+    checkCollisions(clickPosition,player);
 }
 
 // 检查玩家点击位置与场景物体或敌人的碰撞
-void BlockManager::checkCollisions(const Vec2& clickPosition) {
+void BlockManager::checkCollisions(const Vec2& clickPosition,Player* player) {
     std::pair<int, int> block = getBlockCoordinates(clickPosition);
 
     // 检查场景物体
     if (blockToSceneObjects.find(block) != blockToSceneObjects.end()) {
         for (auto& sceneObject : blockToSceneObjects[block]) {
-            if (sceneObject->getBoundingBox().containsPoint(clickPosition)) {
+            auto rect = Rect(sceneObject->getPosition() - Vec2(36, 36), Size(72, 72));
+            if (rect.containsPoint(clickPosition)) {
                 CCLOG("SceneObject clicked!");
+                sceneObject->interactWithPlayer(player->getBackpack());
                 // 执行场景物体的点击事件处理
             }
         }

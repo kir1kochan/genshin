@@ -332,8 +332,6 @@ void BackpackMainLayer::createEquipmentIcons() {
         weaponIcon->setPosition(Vec2(startX, startY));
         weaponIcon->setScale(1.3f);
         equipmentIconsContainer->addChild(weaponIcon);
-        // 显示包围盒
-        createBoundingBoxForIcons(weaponIcon);
         addHoverListenerForIcons(weaponIcon, weapon.get()->getName(), std::to_string(weapon.get()->getPower()), weapon.get()->getId(), [this, weaponIcon, weapon]() { player->unequipWeapon();
         this->eraseHoverListenerForIcons(weaponIcon); this->refreshEquipmentIcons(); backpackLayer->addItemToBlank(weapon.get()->getId()); this->updatePlayerData(); });
         /* 延迟添加双击卸下的监听器和悬停监听

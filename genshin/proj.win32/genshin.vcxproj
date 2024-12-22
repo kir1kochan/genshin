@@ -230,7 +230,6 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\System\SLSystem\SLSystem.h" />
     <ClInclude Include="..\Classes\TestScene.h" />
     <ClInclude Include="..\Classes\UI\Hud.h" />
-    <ClInclude Include="HelloWorldScene.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="SeneNPC.h" />
   </ItemGroup>

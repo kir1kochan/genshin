@@ -287,9 +287,6 @@
     <ClInclude Include="SeneNPC.h">
       <Filter>src\Classes\Scene\SceneObject</Filter>
     </ClInclude>
-    <ClInclude Include="HelloWorldScene.h">
-      <Filter>src\Classes</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\System\SLSystem\SLSystem.h">
       <Filter>src\Classes\System</Filter>
     </ClInclude>

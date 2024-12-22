@@ -25,7 +25,9 @@ public:
 
     // 通过 Player 的引用进行传送
     void teleport(Player& player);
-
+    void setPlayer(Player* player) {
+        this->player = player;
+    }
     // 设置某个 TP 点位为激活
     void activateTPPoint(const cocos2d::Vec2& point);
 
@@ -35,6 +37,9 @@ public:
     // 保存 TP 点位数据到 JSON 文件
     void saveToJson(const std::string& jsonFilePath);
 
+
+    std::unordered_map<cocos2d::Vec2, bool>  gettpPointActivation() const;
+
 private:
     // 存储所有 TP 点位坐标
     std::vector<cocos2d::Vec2> tpPoints;
@@ -42,6 +47,9 @@ private:
     // 存储每个 TP 点位的激活情况，true 表示激活，false 表示未激活
     std::unordered_map<cocos2d::Vec2, bool> tpPointActivation;
 
+    std::unordered_map<cocos2d::Vec2,int> tpPointsIDs;
+
+    Player* player;
 };
 
 #endif  // __TPANCHOR_H__

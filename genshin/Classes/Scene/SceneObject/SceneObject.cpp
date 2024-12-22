@@ -8,13 +8,13 @@ using namespace cocos2d;
 
 // 将字符串转换为 ObjectType 枚举
 ObjectType stringToObjectType(const std::string& str) {
-    if (str == "PICKUP") {
+    if (str == "PICKUP"||str=="Collection") {
         return ObjectType::PICKUP;
     }
     else if (str == "COOKING") {
         return ObjectType::COOKING;
     }
-    else if (str == "FISHING") {
+    else if (str == "FISHING"|| str == "Fish") {
         return ObjectType::FISHING;
     }
     else {
@@ -115,6 +115,9 @@ void SceneObject::interactWithPlayer(Backpack* backpack) {
     case ObjectType::FISHING: {
         // 钓鱼交互，触发钓鱼过程
         srand(time(0)); // 初始化随机种子
+
+        auto fishingEvent = new cocos2d::EventCustom("FISHING_STARTED_EVENT");
+        _eventDispatcher->dispatchEvent(fishingEvent);  // 发送事件
         // 创建并启动钓鱼系统
         FishingSystem* fishingSystem = new FishingSystem;
         fishingSystem->startFishing(Director::getInstance()->getRunningScene());
@@ -123,7 +126,6 @@ void SceneObject::interactWithPlayer(Backpack* backpack) {
         fishingSystem->setOnFishingResultCallback([this, backpack](bool success) {
             if (success) {
                 CCLOG("You successfully caught the fish!");
-
                 // 钓鱼成功，随机掉落物品
                 if (!itemIds.empty()) {
                     int randomIndex = rand() % itemIds.size();  // 从物品ID列表中随机选择一个
@@ -155,10 +157,18 @@ SceneObject* SceneObject::clone(const Vec2& position) const {
 // 在需要时生成精灵
 void SceneObject::generateSpriteIfNeeded() {
     if (!spriteGenerated) {
-        auto sprite = Sprite::create(imagePath);
-        if (sprite) {
-            this->addChild(sprite);  // 将精灵添加到场景物体中
-            spriteGenerated = true;   // 标记精灵已生成
+        if (type == ObjectType::PICKUP) {
+            auto sprite = Sprite::create("food/Apple.jpg");
+            sprite->setContentSize(cocos2d::Size(72, 72));
+            sprite->setName("sprite");
+            auto runningScene = Director::getInstance()->getRunningScene();
+
+            if (sprite) {
+                this->addChild(sprite);  // 将精灵添加到场景物体中
+                runningScene->addChild(this);
+                spriteGenerated = true;   // 标记精灵已生成
+            }
         }
+        spriteGenerated = true;   // 标记精灵已生成
     }
 }

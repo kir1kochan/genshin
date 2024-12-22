@@ -60,7 +60,7 @@ private:
     bool is_running = true;
     SLSystem* slSystem;
     Vec3 _savedCameraPosition=Vec3(0,0,500);
-
+    TPAnchor* tpAnchor;
     virtual void onExit() override;
     virtual void onEnter() override;
 

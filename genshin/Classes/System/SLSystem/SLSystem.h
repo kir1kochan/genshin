@@ -10,7 +10,7 @@
 
 class SLSystem {
 public:
-    SLSystem();
+    SLSystem(TPAnchor* tpAnchor);
     ~SLSystem();
 
     // 设定和读取主线任务的进度

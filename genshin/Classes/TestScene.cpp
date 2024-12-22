@@ -11,8 +11,8 @@ Scene* TestScene::createScene()
     return TestScene::create();
 }
 void TestScene::checkPlayerAndNpcDistance() {
-   float distance = player->getPosition().distance(npc->getPosition());  // ¼ÆËãÍæ¼ÒºÍ NPC Ö®¼äµÄ¾àÀë
-   // Èç¹û¾àÀëĞ¡ÓÚ 100£¬´¥·¢¶Ô»°
+   float distance = player->getPosition().distance(npc->getPosition());  // è®¡ç®—ç©å®¶å’Œ NPC ä¹‹é—´çš„è·ç¦»
+   // å¦‚æœè·ç¦»å°äº 100ï¼Œè§¦å‘å¯¹è¯
    if (distance < 100.0f) {
        npc->startDialogue();
    }
@@ -23,75 +23,88 @@ bool TestScene::init()
     if (!Scene::init()) {
         return false;
     }
-    // ¼ÓÔØ TMX µØÍ¼×÷Îª±³¾°
+    // åŠ è½½ TMX åœ°å›¾ä½œä¸ºèƒŒæ™¯
     // loadBackgroundMap();
 
-    // »ñÈ¡µ¼Ñİ£¨Director£©ÊµÀı
+    // è·å–å¯¼æ¼”ï¼ˆDirectorï¼‰å®ä¾‹
     auto director = Director::getInstance();
 
-    // ÉèÖÃ OpenGL µÄÖ¡´óĞ¡£¬¿ÉÒÔÔö´óÕâ¸ö³ß´çÀ´·Å´óÊÓÍ¼
-    director->getOpenGLView()->setFrameSize(1920, 1080);  // ÀıÈç£¬Ê¹ÓÃ¸ü´óµÄ·Ö±æÂÊ
+    // è®¾ç½® OpenGL çš„å¸§å¤§å°ï¼Œå¯ä»¥å¢å¤§è¿™ä¸ªå°ºå¯¸æ¥æ”¾å¤§è§†å›¾
+    director->getOpenGLView()->setFrameSize(1920, 1080);  // ä¾‹å¦‚ï¼Œä½¿ç”¨æ›´å¤§çš„åˆ†è¾¨ç‡
 
-    // »ñÈ¡ÆÁÄ»µÄ¿É¼û´óĞ¡
+    // è·å–å±å¹•çš„å¯è§å¤§å°
     Size visibleSize = director->getVisibleSize();
 
-    // ÉèÖÃÉè¼Æ·Ö±æÂÊ´óĞ¡£¬Ê¹ÓÃ NO_BORDER ¿ÉÒÔÈ·±£ÊÓ´°°´±ÈÀıÌîÂú
+    // è®¾ç½®è®¾è®¡åˆ†è¾¨ç‡å¤§å°ï¼Œä½¿ç”¨ NO_BORDER å¯ä»¥ç¡®ä¿è§†çª—æŒ‰æ¯”ä¾‹å¡«æ»¡
     director->getOpenGLView()->setDesignResolutionSize(1920, 1080, ResolutionPolicy::NO_BORDER);
 
     
 
     scheduleOnce([this](float dt) {
         if (!blockManager) {
-            blockManager = new BlockManager(static_cast<std::string>("/maps/world.tmx"));
+            blockManager = new BlockManager(static_cast<std::string>("maps/world.tmx"));
         }
         }, 0.1f, "init_bm_key");
 
-    // ²âÊÔÄ£¿é 1
+    // æµ‹è¯•æ¨¡å— 1
     addTestModule1();
 
-    // ÉèÖÃ¼üÅÌÊÂ¼ş¼àÌıÆ÷
+    // è®¾ç½®é”®ç›˜äº‹ä»¶ç›‘å¬å™¨
     setupKeyboardListener();
 
 
-    // ÉèÖÃÊó±êÊäÈë¹ÜÀíÆ÷ÓÃÓÚÊÓ½ÇËõ·Å
+    // è®¾ç½®é¼ æ ‡è¾“å…¥ç®¡ç†å™¨ç”¨äºè§†è§’ç¼©æ”¾
     scheduleOnce([this](float dt) {
         if (!mouseInputManager) {
             mouseInputManager = new MainGameMouseEventManager;
-            mouseInputManager->initialize();  // ³õÊ¼»¯ÊäÈë¹ÜÀíÆ÷
+            mouseInputManager->initialize();  // åˆå§‹åŒ–è¾“å…¥ç®¡ç†å™¨
         }
         }, 0.1f, "init_mouse_manager_key");
 
-    // ¼ÓÈëÍæ¼Ò
+    // åŠ å…¥ç©å®¶
     scheduleOnce([this](float dt) {
         auto runningScene = cocos2d::Director::getInstance()->getRunningScene();
         auto map = runningScene->getChildByName<cocos2d::TMXTiledMap*>("background");
-        auto objectLayer = map->getObjectGroup("Objects");  // »ñÈ¡¶ÔÓ¦Í¼²ã
-        auto spawnPoint = objectLayer->getObject("SpawnPoint");  // »ñÈ¡¶ÔÏóµã
-        float x = spawnPoint["x"].asFloat();
-        float y = spawnPoint["y"].asFloat();
         auto playerspirt = Sprite::create("player.png");
         player = new Player(playerspirt);
-        player->setPosition(x, y);
 
-        this->addChild(player, 1);  // ½«Íæ¼Ò¼ÓÈëµ½³¡¾°ÖĞ
+        this->addChild(player, 1);  // å°†ç©å®¶åŠ å…¥åˆ°åœºæ™¯ä¸­
         player->setVisible(true);
         player->setScale(1.0f);
         cooking = new CookingSystem(player->getBackpack());
         this->addChild(cooking, 9);
         fishing = new FishingSystem;
-        // ÉèÖÃÍæ¼ÒÊäÈë¹ÜÀíÆ÷£¨ÀıÈç¼üÅÌ¿ØÖÆ£©
+        if (!slSystem) {
+            tpAnchor = new TPAnchor();
+            slSystem = new SLSystem(tpAnchor);
+            slSystem->setPlayer(player);
+            tpAnchor->setPlayer(player);
+            slSystem->loadFromJson("JSON/save1.json");
+            auto tpAnchors = tpAnchor->gettpPointActivation();
+            for (auto& anchor : tpAnchors) {
+                Vec2 pos = anchor.first;
+                auto sprite = cocos2d::Sprite::create("Icon/Anchor.jpg");
+                this->addChild(sprite);
+                sprite->setName("Anchor");
+                sprite->setPosition(pos.x, pos.y);
+
+            }
+        }
+        player->getHud()->setTPAnchor(tpAnchor);
+        tpAnchor->activateTPPoint(Vec2(1808.0, 6280.0));
+        // è®¾ç½®ç©å®¶è¾“å…¥ç®¡ç†å™¨ï¼ˆä¾‹å¦‚é”®ç›˜æ§åˆ¶ï¼‰
         if (!keyboardEventManager) {
             keyboardEventManager = new KeyboardEventManager;
             keyboardEventManager->initialize();
-            keyboardEventManager->setPlayer(player);  // ½«Íæ¼Ò¶ÔÏó´«µİ¸øÊÂ¼ş¹ÜÀíÆ÷
+            keyboardEventManager->setPlayer(player);  // å°†ç©å®¶å¯¹è±¡ä¼ é€’ç»™äº‹ä»¶ç®¡ç†å™¨
         }
 
-        // ´´½¨²¢ÉèÖÃ±³°üÖ÷²ã
-        backpackMainLayer = BackpackMainLayer::create(player);  // Ê¹ÓÃ create ·½·¨´«Èë player
-        this->addChild(backpackMainLayer);  // ½« BackpackMainLayer Ìí¼Óµ½³¡¾°ÖĞ
-        // ½«±³°ü²ãµÄ z ÖáÔö¸ß£¬È·±£ËüÔÚÇ°Ãæ
+        // åˆ›å»ºå¹¶è®¾ç½®èƒŒåŒ…ä¸»å±‚
+        backpackMainLayer = BackpackMainLayer::create(player);  // ä½¿ç”¨ create æ–¹æ³•ä¼ å…¥ player
+        this->addChild(backpackMainLayer);  // å°† BackpackMainLayer æ·»åŠ åˆ°åœºæ™¯ä¸­
+        // å°†èƒŒåŒ…å±‚çš„ z è½´å¢é«˜ï¼Œç¡®ä¿å®ƒåœ¨å‰é¢
         backpackMainLayer->setLocalZOrder(10);
-        // ³õÊ¼»¯±³°ü²ãÊ±£¬·ÅÔÚÆÁÄ»Íâ
+        // åˆå§‹åŒ–èƒŒåŒ…å±‚æ—¶ï¼Œæ”¾åœ¨å±å¹•å¤–
         backpackMainLayer->setPosition(Vec2(-Director::getInstance()->getVisibleSize().width, 0));
 
         mouseInputManager->setPlayer(player);
@@ -105,29 +118,29 @@ bool TestScene::init()
         }
         }, 0.1f, "init_SM_key");
 
-    // Ìí¼Ó NPC
+    // æ·»åŠ  NPC
     scheduleOnce([this](float dt) {
-        // »ñÈ¡ NPC µÄÎ»ÖÃ£¨¿ÉÒÔ´ÓµØÍ¼ÖĞ»ñÈ¡£¬»òÕßÊÖ¶¯ÉèÖÃ£©
-        auto npc = NPC::create("/images/princess.png");  // ¼ÙÉè NPC Ê¹ÓÃ "npc.png" Í¼Æ¬
-        npc->setPosition(Vec2(5815, 345));  // ÉèÖÃ NPC µÄÎ»ÖÃ
-        this->addChild(npc, 2);  // ½« NPC ¼ÓÈë³¡¾°ÖĞ
+        // è·å– NPC çš„ä½ç½®ï¼ˆå¯ä»¥ä»åœ°å›¾ä¸­è·å–ï¼Œæˆ–è€…æ‰‹åŠ¨è®¾ç½®ï¼‰
+        auto npc = NPC::create("/images/princess.png");  // å‡è®¾ NPC ä½¿ç”¨ "npc.png" å›¾ç‰‡
+        npc->setPosition(Vec2(5815, 345));  // è®¾ç½® NPC çš„ä½ç½®
+        this->addChild(npc, 2);  // å°† NPC åŠ å…¥åœºæ™¯ä¸­
 
         npc->startDialogue();
         }, 0.1f, "init_npc_key");
 
     scheduleOnce([this](float dt) {
-        // ´´½¨¾çÇé¹ÜÀíÆ÷²¢Æô¶¯¾çÇé
+        // åˆ›å»ºå‰§æƒ…ç®¡ç†å™¨å¹¶å¯åŠ¨å‰§æƒ…
         if (!storyManager) {
             storyManager = StoryManager::create();
-            this->addChild(storyManager, 3);  // ½«¾çÇé¹ÜÀíÆ÷Ìí¼Óµ½³¡¾°
+            this->addChild(storyManager, 3);  // å°†å‰§æƒ…ç®¡ç†å™¨æ·»åŠ åˆ°åœºæ™¯
         }
 
-        // Æô¶¯Ò»¶Î¾çÇé
+        // å¯åŠ¨ä¸€æ®µå‰§æƒ…
         storyManager->startStory("Welcome to the world! This is your adventure!\nLevel up to 100 throught tough battle and you will complete this game");
         }, 0.1f, "init_story_key");
 
     schedule([this](float deltaTime) {
-        this->update(deltaTime);  // Ã¿Ö¡µ÷ÓÃ update ·½·¨
+        this->update(deltaTime);  // æ¯å¸§è°ƒç”¨ update æ–¹æ³•
         }, 0.5f, "update_key");
 
     /*scheduleOnce([this](float dt) {
@@ -136,36 +149,54 @@ bool TestScene::init()
             this->addChild(eq);
         }
         }, 0.1f, "init_EQ_key");*/
+
     scheduleOnce([this](float dt) {
         if (!slSystem) {
             slSystem = new SLSystem();
             slSystem->setPlayer(player);
             try {
             slSystem->loadFromJson("/JSON/save1.json");
-                // ¿ÉÄÜÅ×³öÒì³£µÄ´úÂë£¬ÀıÈç¼ÓÔØÎÄ¼ş¡¢×ÊÔ´µÈ
-                // ÀıÈç£ºstd::string data = loadData("file.txt");
+                // å¯èƒ½æŠ›å‡ºå¼‚å¸¸çš„ä»£ç ï¼Œä¾‹å¦‚åŠ è½½æ–‡ä»¶ã€èµ„æºç­‰
+                // ä¾‹å¦‚ï¼šstd::string data = loadData("file.txt");
             }
             catch (const std::runtime_error& e) {
                 CCLOG("Caught exception: %s", e.what());
-                // ½øĞĞ±ØÒªµÄÒì³£´¦Àí£¬±ÈÈçÏÔÊ¾´íÎóĞÅÏ¢
+                // è¿›è¡Œå¿…è¦çš„å¼‚å¸¸å¤„ç†ï¼Œæ¯”å¦‚æ˜¾ç¤ºé”™è¯¯ä¿¡æ¯
             }
 
         }
         }, 0.1f, "init_EQ_key");
+
+
+
+    auto listener1 = cocos2d::EventListenerCustom::create("COOKING_STARTED_EVENT", [this](cocos2d::EventCustom* event) {
+        CCLOG("Cooking event received!");
+        keyboardEventManager->setBackpackActive(true);
+        mouseInputManager->setIsListening(false);
+        });
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener1, this);  // å°†ç›‘å¬å™¨æ·»åŠ åˆ°äº‹ä»¶åˆ†å‘å™¨
+
+    auto listener2 = cocos2d::EventListenerCustom::create("FISHING_STARTED_EVENT", [this](cocos2d::EventCustom* event) {
+        CCLOG("Fishing event received!");
+        keyboardEventManager->setBackpackActive(true);
+        mouseInputManager->setIsListening(false);
+        });
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener2, this);  // å°†ç›‘å¬å™¨æ·»åŠ åˆ°äº‹ä»¶åˆ†å‘å™¨
+
     return true;
 }
 
 void TestScene::loadBackgroundMap()
 {
-    // ¼ÓÔØ TMX µØÍ¼
+    // åŠ è½½ TMX åœ°å›¾
     auto map = TMXTiledMap::create("/maps/forest.tmx");
     map->setName("background");
-    this->addChild(map, -1);  // ½«µØÍ¼×÷Îª±³¾°²ãÌí¼Óµ½³¡¾°ÖĞ
+    this->addChild(map, -1);  // å°†åœ°å›¾ä½œä¸ºèƒŒæ™¯å±‚æ·»åŠ åˆ°åœºæ™¯ä¸­
 }
 
 void TestScene::addTestModule1()
 {
-    // Èç¹ûÄ£¿éÒÑ¾­Ìí¼Ó¹ıÁË£¬¾Í²»ÔÙÌí¼Ó
+    // å¦‚æœæ¨¡å—å·²ç»æ·»åŠ è¿‡äº†ï¼Œå°±ä¸å†æ·»åŠ 
     if (this->getChildByName("module1")) {
         return;
     }
@@ -173,14 +204,14 @@ void TestScene::addTestModule1()
         player->unequipWeapon();
     }
     auto label = Label::createWithTTF("Test Module 1", "fonts/Marker Felt.ttf", 24);
-    label->setName("module1");  // ¸øÄ£¿éÃüÃû
+    label->setName("module1");  // ç»™æ¨¡å—å‘½å
     label->setPosition(Director::getInstance()->getVisibleSize() / 2);
     this->addChild(label);
 }
 
 void TestScene::addTestModule2()
 {
-    // Èç¹ûÄ£¿éÒÑ¾­Ìí¼Ó¹ıÁË£¬¾Í²»ÔÙÌí¼Ó
+    // å¦‚æœæ¨¡å—å·²ç»æ·»åŠ è¿‡äº†ï¼Œå°±ä¸å†æ·»åŠ 
     if (this->getChildByName("module2")) {
         return;
     }
@@ -188,7 +219,7 @@ void TestScene::addTestModule2()
     player->equipWeapon(newWeapon);
     player->levelUp();
     auto label = Label::createWithTTF("Test Module 2", "fonts/Marker Felt.ttf", 24);
-    label->setName("module2");  // ¸øÄ£¿éÃüÃû
+    label->setName("module2");  // ç»™æ¨¡å—å‘½å
     label->setPosition(Director::getInstance()->getVisibleSize() / 2);
     player->addItemToBackpack(300302, 1);
     player->addItemToBackpack(300109, 1);
@@ -210,43 +241,44 @@ void TestScene::setupKeyboardListener()
     eventListener->onKeyPressed = [this](EventKeyboard::KeyCode keyCode, Event* event) {
         if (keyCode == EventKeyboard::KeyCode::KEY_1) {
             CCLOG("Switching to Test Module 1");
-            this->removeChildByName("module2"); // ÒÆ³ı Test Module 2
+            this->removeChildByName("module2"); // ç§»é™¤ Test Module 2
             addTestModule1();
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_2) {
             CCLOG("Switching to Test Module 2");
-            this->removeChildByName("module1"); // ÒÆ³ı Test Module 1
+            this->removeChildByName("module1"); // ç§»é™¤ Test Module 1
             addTestModule2();
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_B) {
             CCLOG("Switching to Backpack");
-            switchToBackpack();  // ÇĞ»»µ½±³°ü
+            switchToBackpack();  // åˆ‡æ¢åˆ°èƒŒåŒ…
             keyboardEventManager->setBackpackActive(true);
             mouseInputManager->setIsListening(false);
             is_running = false;
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_ESCAPE) {
             CCLOG("Exiting Backpack");
-            exitBackpack();  // ÍË³ö±³°ü
+            exitBackpack();  // é€€å‡ºèƒŒåŒ…
             keyboardEventManager->setBackpackActive(false);
             mouseInputManager->setIsListening(true);
             is_running = true;
-            // ´´½¨²¢·¢ËÍÊÂ¼ş
+            // åˆ›å»ºå¹¶å‘é€äº‹ä»¶
             auto cookingEvent = new cocos2d::EventCustom("COOKING_ENDED_EVENT");
-            _eventDispatcher->dispatchEvent(cookingEvent);  // ·¢ËÍÊÂ¼ş
-            // ´´½¨²¢·¢ËÍÊÂ¼ş
+            _eventDispatcher->dispatchEvent(cookingEvent);  // å‘é€äº‹ä»¶
+            // åˆ›å»ºå¹¶å‘é€äº‹ä»¶
             auto fishingEvent = new cocos2d::EventCustom("FISHING_ENDED_EVENT");
-            _eventDispatcher->dispatchEvent(fishingEvent);  // ·¢ËÍÊÂ¼ş
+            _eventDispatcher->dispatchEvent(fishingEvent);  // å‘é€äº‹ä»¶
             auto mapEvent = new cocos2d::EventCustom("MAP_ENDED_EVENT");
-            _eventDispatcher->dispatchEvent(mapEvent);  // ·¢ËÍÊÂ¼ş
+            _eventDispatcher->dispatchEvent(mapEvent);  // å‘é€äº‹ä»¶
             player->getChildByName("sprite")->setVisible(true);
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_F) {
-            keyboardEventManager->setBackpackActive(true);
+            blockManager->handleClickEvent(player->getPosition(),player);
+            /*keyboardEventManager->setBackpackActive(true);
             mouseInputManager->setIsListening(false);
-            // ´´½¨²¢·¢ËÍÊÂ¼ş
+            // åˆ›å»ºå¹¶å‘é€äº‹ä»¶
             // auto cookingEvent = new cocos2d::EventCustom("COOKING_STARTED_EVENT");
-            // _eventDispatcher->dispatchEvent(cookingEvent);  // ·¢ËÍÊÂ¼ş
+            // _eventDispatcher->dispatchEvent(cookingEvent);  // å‘é€äº‹ä»¶
             fishing = new FishingSystem();
             fishing->startFishing(this);
             fishing->setOnFishingResultCallback([this](bool success) {
@@ -264,7 +296,7 @@ void TestScene::setupKeyboardListener()
                     delete fishing;
                     fishing = nullptr;
                     }, 2.0f, "delay_action_key"); 
-                } );
+                } );*/
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_M) {
             CCLOG("Toggling MiniMap");
@@ -279,10 +311,10 @@ void TestScene::setupKeyboardListener()
                 keyboardEventManager->setBackpackActive(true);
                 mouseInputManager->setIsListening(false);
             }
-            hud->toggleMiniMap();  // ÇĞ»»Ğ¡µØÍ¼ÏÔÊ¾Ä£Ê½
+            hud->toggleMiniMap();  // åˆ‡æ¢å°åœ°å›¾æ˜¾ç¤ºæ¨¡å¼
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_E) {
-            // ¼ÙÉè E ¼ü´¥·¢Óë NPC ¶Ô»°
+            // å‡è®¾ E é”®è§¦å‘ä¸ NPC å¯¹è¯
             if (npc) {
                 npc->startDialogue();
                 if (storyManager) {
@@ -294,7 +326,7 @@ void TestScene::setupKeyboardListener()
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventListener, this);
 }
 
-// ÇĞ»»µ½±³°ü
+// åˆ‡æ¢åˆ°èƒŒåŒ…
 void TestScene::switchToBackpack()
 {
     backpackMainLayer->setVisible(true);
@@ -304,39 +336,39 @@ void TestScene::switchToBackpack()
     Camera* camera = Camera::getDefaultCamera();
     Vec3 cameraPosition = camera->getPosition3D();
     Vec3 targetPosition = cameraPosition - Vec3(visibleSize.width / 2 - 275, visibleSize.height / 2 - 155, 380);
-    // ±³°ü²ãÒÆ¶¯µ½Ä¿±êÎ»ÖÃ
-    auto moveTo = MoveTo::create(0.5f, targetPosition);  // Ä¿±êÎ»ÖÃÉèÖÃÎª 3D ×ø±ê
+    // èƒŒåŒ…å±‚ç§»åŠ¨åˆ°ç›®æ ‡ä½ç½®
+    auto moveTo = MoveTo::create(0.5f, targetPosition);  // ç›®æ ‡ä½ç½®è®¾ç½®ä¸º 3D åæ ‡
     backpackMainLayer->runAction(moveTo);
     is_running = false;
-    // ÔİÍ£Íæ¼Ò
+    // æš‚åœç©å®¶
     // player->setPaused(true);
 }
 
-// ÍË³ö±³°ü
+// é€€å‡ºèƒŒåŒ…
 void TestScene::exitBackpack()
 {
     auto moveOut = MoveTo::create(0.5f, Vec2(-Director::getInstance()->getVisibleSize().width, 0));
     auto spawn = Spawn::create(moveOut, nullptr);
     backpackMainLayer->runAction(Sequence::create(spawn, CallFunc::create([this]() {
-        // ¶¯»­Íê³Éºó£¬È·±£±³°ü²ãÍêÈ«²»¿É¼û²¢Òş²Ø
+        // åŠ¨ç”»å®Œæˆåï¼Œç¡®ä¿èƒŒåŒ…å±‚å®Œå…¨ä¸å¯è§å¹¶éšè—
         backpackMainLayer->setVisible(false);
         }), nullptr));
     is_running = true;
-    // »Ö¸´Íæ¼Ò
+    // æ¢å¤ç©å®¶
     // player->setPaused(false);
 }
 
 TestScene::~TestScene()
 {
-    delete mouseInputManager;  // ÊÍ·ÅÊó±êÊäÈë¹ÜÀíÆ÷
-    delete keyboardEventManager;  // ÊÍ·Å¼üÅÌÊÂ¼ş¹ÜÀíÆ÷
-    delete backpackMainLayer;  // ÊÍ·Å±³°ü²ã
+    delete mouseInputManager;  // é‡Šæ”¾é¼ æ ‡è¾“å…¥ç®¡ç†å™¨
+    delete keyboardEventManager;  // é‡Šæ”¾é”®ç›˜äº‹ä»¶ç®¡ç†å™¨
+    delete backpackMainLayer;  // é‡Šæ”¾èƒŒåŒ…å±‚
 }
 
 bool TestScene::isPlayerNearNPC(Player* player, NPC* npc) {
-    // ¼ÆËãÍæ¼ÒºÍ NPC Ö®¼äµÄ¾àÀë
+    // è®¡ç®—ç©å®¶å’Œ NPC ä¹‹é—´çš„è·ç¦»
     float distance = player->getPosition().distance(npc->getPosition());
-    return distance < 100.0f;  // Èç¹ûĞ¡ÓÚ 100 ÏñËØ£¬ÔòÈÏÎªÍæ¼Ò¿¿½ü NPC
+    return distance < 100.0f;  // å¦‚æœå°äº 100 åƒç´ ï¼Œåˆ™è®¤ä¸ºç©å®¶é è¿‘ NPC
 }
 
 void TestScene::update(float deltaTime)
@@ -346,7 +378,7 @@ void TestScene::update(float deltaTime)
         camera->setPosition3D(player->getPosition3D() + Vec3(0, 0, mouseInputManager->getCameraZ()));
     }
     if (keyboardEventManager) {
-        keyboardEventManager->update(deltaTime);  // µ÷ÓÃ¼üÅÌÊÂ¼ş¹ÜÀíÆ÷µÄ update ·½·¨
+        keyboardEventManager->update(deltaTime);  // è°ƒç”¨é”®ç›˜äº‹ä»¶ç®¡ç†å™¨çš„ update æ–¹æ³•
     }
     if (blockManager && is_running) {
         blockManager->updateBlocksForPlayer(player);
@@ -366,33 +398,33 @@ void TestScene::update(float deltaTime)
         player->update(deltaTime);
     }
     if (npc && player) {
-        // ¼ì²éÍæ¼ÒÊÇ·ñ¿¿½ü NPC
+        // æ£€æŸ¥ç©å®¶æ˜¯å¦é è¿‘ NPC
         if (isPlayerNearNPC(player, npc)) {
-            npc->startDialogue();  // Æô¶¯ NPC ¶Ô»°
+            npc->startDialogue();  // å¯åŠ¨ NPC å¯¹è¯
         }
     }
 }
 
 void TestScene::onExit() {
     Scene::onExit();
-    // ÕâÀï¿ÉÒÔ½øĞĞÊı¾İ±£´æ
+    // è¿™é‡Œå¯ä»¥è¿›è¡Œæ•°æ®ä¿å­˜
     slSystem->getPlayerPosition();
     slSystem->saveToJson("JSON/save1.json");
 }
 
 void TestScene::onEnter() {
     Scene::onEnter();
-    // »Ö¸´Ïà»úµÄ×´Ì¬
+    // æ¢å¤ç›¸æœºçš„çŠ¶æ€
     auto camera = Camera::getDefaultCamera();
     if (camera) {
         camera->setPosition3D(_savedCameraPosition);
     }
-    // ÕâÀï¿ÉÒÔ¼ÌĞøÊı¾İ¶ÁÈ¡
+    // è¿™é‡Œå¯ä»¥ç»§ç»­æ•°æ®è¯»å–
 }
 
 
 void TestScene::loadCameraPosition(){
-    // »Ö¸´Ïà»úµÄ×´Ì¬
+    // æ¢å¤ç›¸æœºçš„çŠ¶æ€
     auto camera = Camera::getDefaultCamera();
     if (camera) {
         camera->setPosition3D(player->getPosition3D() + Vec3(0, 0, mouseInputManager->getCameraZ()));
