@@ -18,6 +18,7 @@ private:
     cocos2d::TMXTiledMap* expandedMiniMapNode ;
     cocos2d::Sprite* expandedMiniMapPlayerIcon;
 
+
     // 进度条的宽度和高度
     float barWidth;  // 进度条的总宽度
     float barHeight; // 进度条的高度
@@ -56,6 +57,17 @@ public:
     void updateMiniMapPosition();
     //切换小地图显示方式
     void toggleMiniMap();
+
+    // 更新主线任务图标位置
+    void updateMissionIconPosition(int stage);
+    //支线
+    void updateSideMissionIconPosition(const std::string& missionName, bool isVisible);
+
+    //隐藏雾
+    void hideFogLayers(cocos2d::TMXTiledMap* map);
+
+    cocos2d::TMXTiledMap* getMiniMapNode() const;
+    cocos2d::TMXTiledMap* getExpandedMiniMapNode() const;
 };
 
 #endif // HUD_H

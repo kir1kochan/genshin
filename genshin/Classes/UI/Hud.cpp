@@ -1,9 +1,11 @@
 #include "Hud.h"
 #include "Classes/Common/Entities/Player/Player.h"
+#include <Scene/SceneObject/TPAnchor.h>
 
 // 构造函数，初始化各成员变量
 Hud::Hud(Player* player)
     : player(player), barWidth(200.0f), barHeight(20.0f), isMiniMapExpanded(false) {
+
     // 创建 DrawNode 用于显示血条和体力条
     healthBarNode = cocos2d::DrawNode::create();
     staminaBarNode = cocos2d::DrawNode::create();
@@ -179,7 +181,7 @@ void Hud::toggleMiniMap() {
         borderNode->setVisible(false); // 隐藏边框节点
 
         // 加载新的小地图
-        expandedMiniMapNode = cocos2d::TMXTiledMap::create("/maps/small_map.tmx");
+        expandedMiniMapNode = cocos2d::TMXTiledMap::create("/maps/small_map2.tmx");
         expandedMiniMapNode->setScale(0.6f);
         auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
         expandedMiniMapNode->setPosition(cocos2d::Vec2(-300, -400));
@@ -203,6 +205,113 @@ void Hud::toggleMiniMap() {
         auto playerPos = player->getPosition();
         expandedMiniMapPlayerIcon->setPosition(playerPos.x * scale, playerPos.y * scale);
 
+
         isMiniMapExpanded = true;
+    }
+}
+
+
+void Hud::updateMissionIconPosition(int stage) {
+    if (!expandedMiniMapNode) {
+        return; // 如果小地图2未加载，则直接返回
+    }
+
+    // 获取 mission 图层
+    auto missionLayer = expandedMiniMapNode->getObjectGroup("mission");
+    if (!missionLayer) {
+        return; // 如果 mission 图层不存在，则直接返回
+    }
+
+    // 获取主线任务图标对象
+    auto missionObject = missionLayer->getObject("MissionIcon");
+    if (missionObject.empty()) {
+        return; // 如果主线任务图标对象不存在，则直接返回
+    }
+
+    // 获取当前图标位置
+    float x = missionObject["x"].asFloat();
+    float y = missionObject["y"].asFloat();
+
+    // 根据阶段值更新图标位置
+    switch (stage) {
+    case 0:
+        x -= 200;
+        break;
+    case 1:
+        x += 300;
+        y += 300;
+        break;
+        // 可以根据需要添加更多阶段
+    default:
+        break;
+    }
+
+    // 更新主线任务图标的位置
+    auto missionIcon = expandedMiniMapNode->getChildByName<cocos2d::Sprite*>("MissionIcon");
+    if (missionIcon) {
+        missionIcon->setPosition(cocos2d::Vec2(x, y));
+    }
+    else {
+        // 如果图标不存在，则创建并添加到小地图2中
+        missionIcon = cocos2d::Sprite::create("mission_icon.png");
+        missionIcon->setName("MissionIcon");
+        missionIcon->setPosition(cocos2d::Vec2(x, y));
+        expandedMiniMapNode->addChild(missionIcon);
+    }
+}
+
+void Hud::updateSideMissionIconPosition(const std::string& missionName, bool isVisible) {
+    if (!expandedMiniMapNode) {
+        return; // 如果小地图2未加载，则直接返回
+    }
+
+    // 获取 sideMission 图层
+    auto sideMissionLayer = expandedMiniMapNode->getObjectGroup("sideMission");
+    if (!sideMissionLayer) {
+        return; // 如果 sideMission 图层不存在，则直接返回
+    }
+
+    // 获取支线任务图标对象
+    auto missionObject = sideMissionLayer->getObject(missionName);
+    if (missionObject.empty()) {
+        return; // 如果支线任务图标对象不存在，则直接返回
+    }
+
+    // 获取当前图标位置
+    float x = missionObject["x"].asFloat();
+    float y = missionObject["y"].asFloat();
+
+    // 更新支线任务图标的位置和可见性
+    auto missionIcon = expandedMiniMapNode->getChildByName<cocos2d::Sprite*>(missionName);
+    if (missionIcon) {
+        missionIcon->setVisible(isVisible);
+        if (isVisible) {
+            missionIcon->setPosition(cocos2d::Vec2(x, y));
+        }
+    }
+    else if (isVisible) {
+        // 如果图标不存在且需要显示，则创建并添加到小地图2中
+        missionIcon = cocos2d::Sprite::create("side_mission_icon.png");
+        missionIcon->setName(missionName);
+        missionIcon->setPosition(cocos2d::Vec2(x, y));
+        expandedMiniMapNode->addChild(missionIcon);
+    }
+}
+
+cocos2d::TMXTiledMap* Hud::getMiniMapNode() const {
+    return miniMapNode;
+}
+
+cocos2d::TMXTiledMap* Hud::getExpandedMiniMapNode() const {
+    return expandedMiniMapNode;
+}
+
+void Hud::hideFogLayers(cocos2d::TMXTiledMap* map) {
+    for (int i = 1; i <= 5; ++i) {
+        std::string layerName = "fog_" + std::to_string(i);
+        auto layer = map->getLayer(layerName);
+        if (layer) {
+            layer->setVisible(false);
+        }
     }
 }
