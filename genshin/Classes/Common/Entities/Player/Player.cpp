@@ -18,7 +18,7 @@ Player::Player( Element element, float attackRange)
     loadSkillAnimations(); // 缓存所有技能动画
 
     // 创建 HUD 并作为子节点
-    Hud* hud = Hud::create(this);
+    hud = Hud::create(this);
     if (hud) {
         hud->setName("hud");
         this->addChild(hud);  // 添加为子节点
@@ -34,7 +34,7 @@ Player::Player() : Entities(), experience(0), level(1), weapon(nullptr), armor(n
     loadSkillAnimations(); // 缓存所有技能动画
 
     // 创建 HUD 并作为子节点
-    Hud* hud = Hud::create(this);
+    hud = Hud::create(this);
     if (hud) {
         hud->setName("hud");
         this->addChild(hud);  // 添加为子节点
@@ -48,11 +48,12 @@ Player::Player(cocos2d::Sprite* sprite)
     skillBar.resize(4, nullptr); // 初始化技能栏为空
 
     if (sprite != nullptr) {
+        sprite->setName("sprite");
         this->addChild(sprite, 1);  // 添加到当前节点
     }
     loadSkillAnimations(); // 缓存所有技能动画
     // 创建 HUD 并作为子节点
-    Hud* hud = Hud::create(this);
+    hud = Hud::create(this);
     if (hud) {
         hud->setName("hud");
         this->addChild(hud);  // 添加为子节点
@@ -60,8 +61,9 @@ Player::Player(cocos2d::Sprite* sprite)
 }
 
 Player::Player(float health, cocos2d::Sprite* sprite)
-    : Entities(health,0,0, Element::FIRE,0), experience(0), level(1), weapon(nullptr), armor(nullptr), accessory(nullptr),
-    currentShield(0), maxStamina(100.0f), stamina(100.0f), backpack(nullptr) {
+    : Entities(health,0,0, Element::FIRE,0), experience(0), level(100), weapon(nullptr), armor(nullptr), accessory(nullptr),
+    currentShield(0), maxStamina(100.0f), stamina(100.0f), backpack() {
+    backpack = new Backpack;
     skillBar.resize(4, nullptr); // 初始化技能栏为空
 
     if (sprite != nullptr) {
@@ -620,8 +622,8 @@ void Player::loadFromJson(const std::string& jsonString) {
     // 反序列化 Player 特有数据
     if (doc.HasMember("experience")) experience = doc["experience"].GetInt();
     if (doc.HasMember("level")) level = doc["level"].GetInt();
-    if (doc.HasMember("maxStamina")) maxStamina = doc["maxStamina"].GetInt();
-    if (doc.HasMember("stamina")) stamina = doc["stamina"].GetInt();
+    if (doc.HasMember("maxStamina")) maxStamina = doc["maxStamina"].GetFloat();
+    if (doc.HasMember("stamina")) stamina = doc["stamina"].GetFloat();
 
     // 反序列化装备（通过 ID 恢复指针）
     if (doc.HasMember("weapon")) {

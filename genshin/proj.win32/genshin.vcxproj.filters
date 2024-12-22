@@ -162,14 +162,8 @@
     <ClCompile Include="..\Classes\System\QuestSystem\EscortQuest.cpp">
       <Filter>src\Classes\System</Filter>
     </ClCompile>
-    <ClCompile Include="SeneNPC.cpp">
-      <Filter>src\Classes\Scene\SceneObject</Filter>
-    </ClCompile>
-    <ClCompile Include="NPC.cpp">
-      <Filter>src\Classes\Common\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="HelloWorldScene.cpp">
-      <Filter>src\Classes</Filter>
+    <ClCompile Include="..\Classes\System\SLSystem\SLSystem.cpp">
+      <Filter>src\Classes\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -292,6 +286,9 @@
     </ClInclude>
     <ClInclude Include="HelloWorldScene.h">
       <Filter>src\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\System\SLSystem\SLSystem.h">
+      <Filter>src\Classes\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

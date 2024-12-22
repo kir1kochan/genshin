@@ -51,7 +51,7 @@ private:
     // 存储技能的所有动画
     std::vector<Vector<SpriteFrame*>> skillAnimations;
 
-
+    Hud* hud=nullptr;
 public:
     Player( Element element, float attackRange);
     Player();  // 默认构造函数
@@ -162,6 +162,9 @@ public:
 
     void lauchSkill(int skillSlot, Enemy& target);
 
+    Hud* getHud() {
+        return hud;
+    }
 };
 
 #endif // PLAYER_H

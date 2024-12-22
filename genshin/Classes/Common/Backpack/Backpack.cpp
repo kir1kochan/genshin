@@ -254,3 +254,26 @@ const std::unordered_map<std::shared_ptr<Item>, int>& Backpack::getItems() const
 std::shared_ptr<Item> Backpack::findItemById(int id) {
     return idToItemMap[id];
 }
+
+void Backpack::loadFromJson(const std::string& jsonString, int i) {
+    rapidjson::Document doc;
+    doc.Parse(jsonString.c_str());
+
+    if (doc.HasParseError() || !doc.IsObject()) {
+        CCLOG("Error parsing JSON");
+        return;
+    }
+
+    if (doc.HasMember("items") && doc["items"].IsArray()) {
+        for (const auto& itemJson : doc["items"].GetArray()) {
+            int itemId = itemJson["id"].GetInt();
+            int quantity = itemJson["quantity"].GetInt();
+            if (quantity) {
+                addItem(itemId, quantity);  // 加载存档中的物品数量
+            }
+        }
+    }
+    if (doc.HasMember("coins") && doc["coins"].IsInt()) {
+        coins = doc["coins"].GetInt();
+    }
+}

@@ -14,9 +14,8 @@ bool TestScene::init()
     if (!Scene::init()) {
         return false;
     }
-
     // 加载 TMX 地图作为背景
-    loadBackgroundMap();
+    // loadBackgroundMap();
 
     // 获取导演（Director）实例
     auto director = Director::getInstance();
@@ -30,15 +29,12 @@ bool TestScene::init()
     // 设置设计分辨率大小，使用 NO_BORDER 可以确保视窗按比例填满
     director->getOpenGLView()->setDesignResolutionSize(1920, 1080, ResolutionPolicy::NO_BORDER);
 
-    // 如果地图太小，可以调整缩放比例，放大地图
-    auto map = TMXTiledMap::create("/maps/world.tmx");
-    if (map) {
-        map->setName("background");
-        this->addChild(map, -1);  // 将地图作为背景层添加到场景中
-    }
 
-    auto layer = map->getLayer("area");
-    layer->setVisible(false);
+    scheduleOnce([this](float dt) {
+        if (!blockManager) {
+            blockManager = new BlockManager(static_cast<std::string>("/maps/world.tmx"));
+        }
+        }, 0.1f, "init_bm_key");
 
     // 测试模块 1
     addTestModule1();
@@ -56,7 +52,9 @@ bool TestScene::init()
         }, 0.1f, "init_mouse_manager_key");
 
     // 加入玩家
-    scheduleOnce([this, map](float dt) {
+    scheduleOnce([this](float dt) {
+        auto runningScene = cocos2d::Director::getInstance()->getRunningScene();
+        auto map = runningScene->getChildByName<cocos2d::TMXTiledMap*>("background");
         auto objectLayer = map->getObjectGroup("Objects");  // 获取对应图层
         auto spawnPoint = objectLayer->getObject("SpawnPoint");  // 获取对象点
         float x = spawnPoint["x"].asFloat();
@@ -90,12 +88,6 @@ bool TestScene::init()
         }, 0.1f, "init_player_key");
 
     scheduleOnce([this](float dt) {
-        if (!blockManager) {
-            blockManager=new BlockManager;
-        }
-        }, 0.1f, "init_bm_key");
-
-    scheduleOnce([this](float dt) {
         if (!spiritManager) {
             spiritManager = new SpiritManager();
             spiritManager->init(blockManager,player);
@@ -104,10 +96,23 @@ bool TestScene::init()
         }, 0.1f, "init_SM_key");
 
 
-    schedule([this,map](float deltaTime) {
-        this->update(deltaTime ,map);  // 每帧调用 update 方法
+    schedule([this](float deltaTime) {
+        this->update(deltaTime);  // 每帧调用 update 方法
         }, 0.5f, "update_key");
 
+    /*scheduleOnce([this](float dt) {
+        if (!eq) {
+            eq = EscortQuest::create(player,blockManager,spiritManager);
+            this->addChild(eq);
+        }
+        }, 0.1f, "init_EQ_key");*/
+    scheduleOnce([this](float dt) {
+        if (!slSystem) {
+            slSystem = new SLSystem();
+            slSystem->setPlayer(player);
+            slSystem->loadFromJson("/JSON/save1.json");
+        }
+        }, 0.1f, "init_EQ_key");
     return true;
 }
 
@@ -151,7 +156,7 @@ void TestScene::addTestModule2()
     auto slime = new Enemy();
     slime->setSpriteFilename("monsters/man_eater_flower.png");
     slime->generateSprite();
-    slime->setPosition(5700, 400);
+    slime->setPosition(5620, 985);
     this->addChild(label);
     this->addChild(slime);
     blockManager->addEnemy(slime);
@@ -193,6 +198,9 @@ void TestScene::setupKeyboardListener()
             // 创建并发送事件
             auto fishingEvent = new cocos2d::EventCustom("FISHING_ENDED_EVENT");
             _eventDispatcher->dispatchEvent(fishingEvent);  // 发送事件
+            auto mapEvent = new cocos2d::EventCustom("MAP_ENDED_EVENT");
+            _eventDispatcher->dispatchEvent(mapEvent);  // 发送事件
+            player->getChildByName("sprite")->setVisible(true);
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_F) {
             keyboardEventManager->setBackpackActive(true);
@@ -218,6 +226,21 @@ void TestScene::setupKeyboardListener()
                     fishing = nullptr;
                     }, 2.0f, "delay_action_key"); 
                 } );
+        }
+        else if (keyCode == EventKeyboard::KeyCode::KEY_M) {
+            CCLOG("Toggling MiniMap");
+            
+            auto hud = player->getHud(); 
+            if (hud->getIsExpanded()) {
+                keyboardEventManager->setBackpackActive(false);
+                mouseInputManager->setIsListening(true);
+            }
+            else {
+
+                keyboardEventManager->setBackpackActive(true);
+                mouseInputManager->setIsListening(false);
+            }
+            hud->toggleMiniMap();  // 切换小地图显示模式
         }
         };
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventListener, this);
@@ -262,14 +285,14 @@ TestScene::~TestScene()
     delete backpackMainLayer;  // 释放背包层
 }
 
-void TestScene::update(float deltaTime, CCTMXTiledMap* map)
+void TestScene::update(float deltaTime)
 {
     auto camera = Camera::getDefaultCamera();
     if (camera) {
         camera->setPosition3D(player->getPosition3D() + Vec3(0, 0, mouseInputManager->getCameraZ()));
     }
     if (keyboardEventManager) {
-        keyboardEventManager->update(deltaTime,map);  // 调用键盘事件管理器的 update 方法
+        keyboardEventManager->update(deltaTime);  // 调用键盘事件管理器的 update 方法
     }
     if (blockManager && is_running) {
         blockManager->updateBlocksForPlayer(player);
@@ -293,6 +316,8 @@ void TestScene::update(float deltaTime, CCTMXTiledMap* map)
 void TestScene::onExit() {
     Scene::onExit();
     // 这里可以进行数据保存
+    slSystem->getPlayerPosition();
+    slSystem->saveToJson("JSON/save1.json");
 }
 
 void TestScene::onEnter() {
@@ -313,3 +338,4 @@ void TestScene::loadCameraPosition(){
         camera->setPosition3D(player->getPosition3D() + Vec3(0, 0, mouseInputManager->getCameraZ()));
     }
 }
+

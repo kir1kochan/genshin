@@ -9,6 +9,7 @@
 #include "Classes/Common/SpiritManager/SpiritManager.h"
 #include "System/FishingSystem/FishingSystem.h"
 #include "System/CookingSystem/CookingSystem.h"
+#include "System/SLSystem/SLSystem.h"
 class TestScene : public cocos2d::Scene
 {
 public:
@@ -30,7 +31,7 @@ public:
     void switchToBackpack();
     void exitBackpack();
     // 每帧更新
-    void update(float deltaTime,CCTMXTiledMap* map);
+    void update(float deltaTime);
 
     // 恢复相机位置
     void loadCameraPosition() ;
@@ -49,6 +50,7 @@ private:
     CookingSystem* cooking = nullptr;
     float gaptime=0;
     bool is_running = true;
+    SLSystem* slSystem;
     Vec3 _savedCameraPosition=Vec3(0,0,500);
 
     virtual void onExit() override;
