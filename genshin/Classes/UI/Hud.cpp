@@ -101,14 +101,14 @@ void Hud::setTPAnchor(TPAnchor* tpAnchor) {
     for (auto& anchor : tpAnchors) {
         Vec2 pos = anchor.first;
         if (anchor.second) {
-            auto sprite = cocos2d::Sprite::create("Icon/Anchor.jpg");
+            auto sprite = cocos2d::Sprite::create("Icon/Anchor.png");
             sprite->setScale(0.5);
             miniMapNode->addChild(sprite);
             sprite->setName("Anchor");
             sprite->setPosition(pos.x * scale, pos.y * scale);
         }
         else {
-            auto sprite = cocos2d::Sprite::create("Icon/Anchor.jpg");
+            auto sprite = cocos2d::Sprite::create("Icon/Anchor.png");
             sprite->setScale(0.5);
             miniMapNode->addChild(sprite);
             sprite->setName("Anchor");
@@ -214,14 +214,14 @@ void Hud::hideFogLayers(cocos2d::TMXTiledMap* map, int index) {
     for (auto& anchor : tpAnchors) {
         Vec2 pos = anchor.first;
         if (anchor.second) {
-            auto sprite = cocos2d::Sprite::create("Icon/Anchor.jpg");
+            auto sprite = cocos2d::Sprite::create("Icon/Anchor.png");
             sprite->setScale(0.5);
             miniMapNode->addChild(sprite);
             sprite->setName("Anchor");
             sprite->setPosition(pos.x * scale, pos.y * scale);
         }
         else {
-            auto sprite = cocos2d::Sprite::create("Icon/Anchor.jpg");
+            auto sprite = cocos2d::Sprite::create("Icon/Anchor.png");
             sprite->setScale(0.5);
             miniMapNode->addChild(sprite);
             sprite->setName("Anchor");
@@ -454,8 +454,8 @@ void Hud::toggleMiniMap() {
             Vec2 pos = anchor.first;
             if (anchor.second) {
                 auto button = cocos2d::MenuItemImage::create(
-                    "Icon/Anchor.jpg",
-                    "Icon/Anchor.jpg",
+                    "Icon/Anchor.png",
+                    "Icon/Anchor.png",
                     [this,pos](cocos2d::Ref* sender) {
                         player->setPosition(pos);
                         CCLOG(("touched!"));
@@ -467,7 +467,7 @@ void Hud::toggleMiniMap() {
                 button->setPosition(pos.x * scale, pos.y * scale);
             }
             else {
-                auto sprite = cocos2d::Sprite::create("Icon/Anchor.jpg");
+                auto sprite = cocos2d::Sprite::create("Icon/Anchor.png");
                 expandedMiniMapNode->addChild(sprite);
                 sprite->setName("Anchor");
                 sprite->setColor(cocos2d::Color3B(128, 128, 128));

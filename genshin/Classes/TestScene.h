@@ -9,6 +9,7 @@
 #include "Classes/Common/SpiritManager/SpiritManager.h"
 #include "System/FishingSystem/FishingSystem.h"
 #include "System/CookingSystem/CookingSystem.h"
+#include "System/QuestSystem/EscortQuest.h"
 #include "System/SLSystem/SLSystem.h"
 #include "Classes/Common/Entities/NPC.h"
 #include "Classes/Common/StoryManager/StoryManager.h"
@@ -61,6 +62,7 @@ private:
     SLSystem* slSystem;
     Vec3 _savedCameraPosition=Vec3(0,0,500);
     TPAnchor* tpAnchor;
+    EscortQuest* eq;
     virtual void onExit() override;
     virtual void onEnter() override;
 
