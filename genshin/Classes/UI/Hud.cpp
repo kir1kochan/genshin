@@ -458,9 +458,12 @@ void Hud::toggleMiniMap() {
                     "Icon/Anchor.jpg",
                     [this,pos](cocos2d::Ref* sender) {
                         player->setPosition(pos);
+                        CCLOG(("touched!"));
                     });
-                button->setName("Anchor");
-                expandedMiniMapNode->addChild(button);
+                auto menu = cocos2d::Menu::create(button, nullptr);
+                menu->setPosition(cocos2d::Vec2::ZERO);
+                menu->setName("Anchor");
+                expandedMiniMapNode->addChild(menu);
                 button->setPosition(pos.x * scale, pos.y * scale);
             }
             else {

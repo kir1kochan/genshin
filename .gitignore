@@ -2,6 +2,7 @@
 Debug/
 Release/
 **/Debug.win32/
+**/Rekease.win32/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Dd]Release/
@@ -51,3 +52,8 @@ Release/
 # 忽略操作系统生成的临时文件（如 Windows 下的 thumbs.db 和 .DS_Store）
 Thumbs.db
 .DS_Store
+
+# 忽略 Release.win32 文件夹
+genshin/cocos2d/cocos/2d/Release.win32/
+genshin/proj.win32/Release.win32/
+
