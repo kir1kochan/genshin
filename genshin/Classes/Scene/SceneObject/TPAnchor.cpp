@@ -62,8 +62,10 @@ void TPAnchor::loadFromJson(const std::string& jsonFilePath) {
                 const rapidjson::Value& point = points[i];
                 float x = point["x"].GetFloat();
                 float y = point["y"].GetFloat();
+                int index = point["index"].GetInt();
 
                 tpPoints.push_back(cocos2d::Vec2(x, y));
+                tpPointIndex[cocos2d::Vec2(x, y)] = index;
 
                 // 默认未激活, 但是如果 JSON 中有激活状态，就恢复激活状态
                 bool isActivated = false;
@@ -91,6 +93,8 @@ void TPAnchor::saveToJson(const std::string& jsonFilePath) {
         rapidjson::Value pointObj(rapidjson::kObjectType);
         pointObj.AddMember("x", point.x, allocator);
         pointObj.AddMember("y", point.y, allocator);
+        pointObj.AddMember("index", tpPointIndex[point], allocator);
+
 
         // 添加激活状态
         if (tpPointActivation.find(point) != tpPointActivation.end()) {
