@@ -46,8 +46,6 @@ bool TestScene::init()
         }
         }, 0.1f, "init_bm_key");
 
-    // 测试模块 1
-    addTestModule1();
 
     // 设置键盘事件监听器
     setupKeyboardListener();
@@ -79,7 +77,15 @@ bool TestScene::init()
             slSystem = new SLSystem(tpAnchor);
             slSystem->setPlayer(player);
             tpAnchor->setPlayer(player);
-            slSystem->loadFromJson("JSON/save1.json");
+            try {
+                slSystem->loadFromJson("/JSON/save1.json");
+                // 可能抛出异常的代码，例如加载文件、资源等
+                // 例如：std::string data = loadData("file.txt");
+            }
+            catch (const std::runtime_error& e) {
+                CCLOG("Caught exception: %s", e.what());
+                // 进行必要的异常处理，比如显示错误信息
+            }
             auto tpAnchors = tpAnchor->gettpPointActivation();
             for (auto& anchor : tpAnchors) {
                 Vec2 pos = anchor.first;
@@ -150,23 +156,6 @@ bool TestScene::init()
         }
         }, 0.1f, "init_EQ_key");*/
 
-    scheduleOnce([this](float dt) {
-        if (!slSystem) {
-            slSystem = new SLSystem();
-            slSystem->setPlayer(player);
-            try {
-            slSystem->loadFromJson("/JSON/save1.json");
-                // 可能抛出异常的代码，例如加载文件、资源等
-                // 例如：std::string data = loadData("file.txt");
-            }
-            catch (const std::runtime_error& e) {
-                CCLOG("Caught exception: %s", e.what());
-                // 进行必要的异常处理，比如显示错误信息
-            }
-
-        }
-        }, 0.1f, "init_EQ_key");
-
 
 
     auto listener1 = cocos2d::EventListenerCustom::create("COOKING_STARTED_EVENT", [this](cocos2d::EventCustom* event) {
@@ -194,62 +183,12 @@ void TestScene::loadBackgroundMap()
     this->addChild(map, -1);  // 将地图作为背景层添加到场景中
 }
 
-void TestScene::addTestModule1()
-{
-    // 如果模块已经添加过了，就不再添加
-    if (this->getChildByName("module1")) {
-        return;
-    }
-    if (player) {
-        player->unequipWeapon();
-    }
-    auto label = Label::createWithTTF("Test Module 1", "fonts/Marker Felt.ttf", 24);
-    label->setName("module1");  // 给模块命名
-    label->setPosition(Director::getInstance()->getVisibleSize() / 2);
-    this->addChild(label);
-}
-
-void TestScene::addTestModule2()
-{
-    // 如果模块已经添加过了，就不再添加
-    if (this->getChildByName("module2")) {
-        return;
-    }
-    std::shared_ptr<Weapon> newWeapon = std::make_shared<Weapon>(100101, "Copper_Broadsword", 10, 30, 1.2);
-    player->equipWeapon(newWeapon);
-    player->levelUp();
-    auto label = Label::createWithTTF("Test Module 2", "fonts/Marker Felt.ttf", 24);
-    label->setName("module2");  // 给模块命名
-    label->setPosition(Director::getInstance()->getVisibleSize() / 2);
-    player->addItemToBackpack(300302, 1);
-    player->addItemToBackpack(300109, 1);
-    auto slime = new Enemy();
-    slime->setSpriteFilename("monsters/man_eater_flower.png");
-    slime->generateSprite();
-    slime->setPosition(5620, 985);
-    this->addChild(label);
-    this->addChild(slime);
-    blockManager->addEnemy(slime);
-    //player->testSkill();
-    //player->setShield(150,5);
-    //for (int i = 0; i < 30; i++) { player->levelUp(); }
-}
 
 void TestScene::setupKeyboardListener()
 {
     auto eventListener = EventListenerKeyboard::create();
     eventListener->onKeyPressed = [this](EventKeyboard::KeyCode keyCode, Event* event) {
-        if (keyCode == EventKeyboard::KeyCode::KEY_1) {
-            CCLOG("Switching to Test Module 1");
-            this->removeChildByName("module2"); // 移除 Test Module 2
-            addTestModule1();
-        }
-        else if (keyCode == EventKeyboard::KeyCode::KEY_2) {
-            CCLOG("Switching to Test Module 2");
-            this->removeChildByName("module1"); // 移除 Test Module 1
-            addTestModule2();
-        }
-        else if (keyCode == EventKeyboard::KeyCode::KEY_B) {
+        if (keyCode == EventKeyboard::KeyCode::KEY_B) {
             CCLOG("Switching to Backpack");
             switchToBackpack();  // 切换到背包
             keyboardEventManager->setBackpackActive(true);
