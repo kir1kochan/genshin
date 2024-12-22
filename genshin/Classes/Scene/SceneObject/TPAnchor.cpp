@@ -25,6 +25,15 @@ void TPAnchor::teleport(Player& player) {
 void TPAnchor::activateTPPoint(const cocos2d::Vec2& point) {
     tpPointActivation[point] = true;  // 激活某个点
     CCLOG("TP Point (%.2f, %.2f) activated.", point.x, point.y);
+
+    // 获取 HUD 对象并隐藏雾图层
+    auto hud = dynamic_cast<Hud*>(this->getParent()->getChildByName("Hud"));
+    if (hud) {
+        hud->hideFogLayers(hud->getMiniMapNode());
+        if (hud->getExpandedMiniMapNode()) {
+            hud->hideFogLayers(hud->getExpandedMiniMapNode());
+        }
+    }
 }
 
 void TPAnchor::loadFromJson(const std::string& jsonFilePath) {
@@ -105,4 +114,12 @@ void TPAnchor::saveToJson(const std::string& jsonFilePath) {
     }
 }
 
-
+void TPAnchor::hideFogLayers(cocos2d::TMXTiledMap* map) {
+    for (int i = 1; i <= 5; ++i) {
+        std::string layerName = "fog_" + std::to_string(i);
+        auto layer = map->getLayer(layerName);
+        if (layer) {
+            layer->setVisible(false);
+        }
+    }
+}
