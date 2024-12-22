@@ -10,6 +10,8 @@
 #include "System/FishingSystem/FishingSystem.h"
 #include "System/CookingSystem/CookingSystem.h"
 #include "System/SLSystem/SLSystem.h"
+#include "Classes/Common/Entities/NPC.h"
+#include "Classes/Common/StoryManager/StoryManager.h"
 class TestScene : public cocos2d::Scene
 {
 public:
@@ -35,10 +37,16 @@ public:
 
     // 恢复相机位置
     void loadCameraPosition() ;
+    
+    void checkPlayerAndNpcDistance();
+
+    bool isPlayerNearNPC(Player* player, NPC* npc);
 
     CREATE_FUNC(TestScene);
 
 private:
+    NPC* npc;
+    StoryManager* storyManager;
     MainGameMouseEventManager* mouseInputManager;  // 鼠标输入管理器
     KeyboardEventManager* keyboardEventManager;  // 键盘事件管理器
     Player* player;  // 玩家对象指针
@@ -55,6 +63,7 @@ private:
 
     virtual void onExit() override;
     virtual void onEnter() override;
+
 };
 
 #endif // TESTSCENE_H

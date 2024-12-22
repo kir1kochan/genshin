@@ -2,11 +2,20 @@
 #include "Classes/Common/EventManager/KeyboardEventManager.h"
 #include "Classes/Common/EventManager/MainGameMouseEventManager.h"
 #include "Classes/Common/Entities/Player/Player.h"
+#include "Classes/Common/Entities/NPC.h"
+#include "Classes/Common/StoryManager/StoryManager.h"
 USING_NS_CC;
 
 Scene* TestScene::createScene()
 {
     return TestScene::create();
+}
+void TestScene::checkPlayerAndNpcDistance() {
+   float distance = player->getPosition().distance(npc->getPosition());  // 计算玩家和 NPC 之间的距离
+   // 如果距离小于 100，触发对话
+   if (distance < 100.0f) {
+       npc->startDialogue();
+   }
 }
 
 bool TestScene::init()
@@ -29,6 +38,7 @@ bool TestScene::init()
     // 设置设计分辨率大小，使用 NO_BORDER 可以确保视窗按比例填满
     director->getOpenGLView()->setDesignResolutionSize(1920, 1080, ResolutionPolicy::NO_BORDER);
 
+    
 
     scheduleOnce([this](float dt) {
         if (!blockManager) {
@@ -95,6 +105,26 @@ bool TestScene::init()
         }
         }, 0.1f, "init_SM_key");
 
+    // 添加 NPC
+    scheduleOnce([this](float dt) {
+        // 获取 NPC 的位置（可以从地图中获取，或者手动设置）
+        auto npc = NPC::create("/images/princess.png");  // 假设 NPC 使用 "npc.png" 图片
+        npc->setPosition(Vec2(5815, 345));  // 设置 NPC 的位置
+        this->addChild(npc, 2);  // 将 NPC 加入场景中
+
+        npc->startDialogue();
+        }, 0.1f, "init_npc_key");
+
+    scheduleOnce([this](float dt) {
+        // 创建剧情管理器并启动剧情
+        if (!storyManager) {
+            storyManager = StoryManager::create();
+            this->addChild(storyManager, 3);  // 将剧情管理器添加到场景
+        }
+
+        // 启动一段剧情
+        storyManager->startStory("Welcome to the world! This is your adventure!\nLevel up to 100 throught tough battle and you will complete this game");
+        }, 0.1f, "init_story_key");
 
     schedule([this](float deltaTime) {
         this->update(deltaTime);  // 每帧调用 update 方法
@@ -110,7 +140,16 @@ bool TestScene::init()
         if (!slSystem) {
             slSystem = new SLSystem();
             slSystem->setPlayer(player);
+            try {
             slSystem->loadFromJson("/JSON/save1.json");
+                // 可能抛出异常的代码，例如加载文件、资源等
+                // 例如：std::string data = loadData("file.txt");
+            }
+            catch (const std::runtime_error& e) {
+                CCLOG("Caught exception: %s", e.what());
+                // 进行必要的异常处理，比如显示错误信息
+            }
+
         }
         }, 0.1f, "init_EQ_key");
     return true;
@@ -242,6 +281,15 @@ void TestScene::setupKeyboardListener()
             }
             hud->toggleMiniMap();  // 切换小地图显示模式
         }
+        else if (keyCode == EventKeyboard::KeyCode::KEY_E) {
+            // 假设 E 键触发与 NPC 对话
+            if (npc) {
+                npc->startDialogue();
+                if (storyManager) {
+                    storyManager->startStory("This is a test story. Welcome!");
+                }
+            }
+        }
         };
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventListener, this);
 }
@@ -285,6 +333,12 @@ TestScene::~TestScene()
     delete backpackMainLayer;  // 释放背包层
 }
 
+bool TestScene::isPlayerNearNPC(Player* player, NPC* npc) {
+    // 计算玩家和 NPC 之间的距离
+    float distance = player->getPosition().distance(npc->getPosition());
+    return distance < 100.0f;  // 如果小于 100 像素，则认为玩家靠近 NPC
+}
+
 void TestScene::update(float deltaTime)
 {
     auto camera = Camera::getDefaultCamera();
@@ -310,6 +364,12 @@ void TestScene::update(float deltaTime)
     }
     if (player&&is_running) {
         player->update(deltaTime);
+    }
+    if (npc && player) {
+        // 检查玩家是否靠近 NPC
+        if (isPlayerNearNPC(player, npc)) {
+            npc->startDialogue();  // 启动 NPC 对话
+        }
     }
 }
 
