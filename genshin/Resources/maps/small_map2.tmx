@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="6">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="23" nextobjectid="10">
  <tileset firstgid="1" source="little_map.tsx"/>
  <tileset firstgid="1025" source="fog01.tsx"/>
  <tileset firstgid="1537" source="vstreets.tsx"/>
@@ -33,13 +33,36 @@
    eJzt0kEKABAUhOHZvAtxEy7oqKSUFTZ6yf+VxmpqRAIAAADeF0yKts8bkqm0o2z9vswbWm/x2j96vfaPXo/9aXp3j/15+nfs/3v/aVZNWyuO
   </data>
  </layer>
- <layer id="18" name="missions" width="32" height="32">
+ <layer id="18" name="mission" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt1MEJADAIA0BfLtH99+wCvoqglLsJAgmJgH4npxOgg530AlDzj3R72ZQd8rsLN/YAxw==
+   eJztwUERAAAMAqC9LLH+Pe3hAZ8DAAAAxhUgGAAi
+  </data>
+ </layer>
+ <layer id="19" name="sideMission" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20PBxQAAADwbhAAAAE=
+  </data>
+ </layer>
+ <layer id="20" name="branch_mission2" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20PBxQAAADwbhAAAAE=
   </data>
  </layer>
  <objectgroup id="17" name="Objects">
   <object id="5" name="SpawnPoint" x="231.091" y="271.545">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="21" name="mission">
+  <object id="6" name="MissionIcon" x="4" y="5">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="22" name="sideMission">
+  <object id="7" name="side1" x="783" y="306">
+   <point/>
+  </object>
+  <object id="8" name="side2" x="732" y="469">
    <point/>
   </object>
  </objectgroup>
