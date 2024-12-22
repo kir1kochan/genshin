@@ -174,6 +174,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Common\Item\Item.cpp" />
     <ClCompile Include="..\Classes\Common\Item\Potion\Potion.cpp" />
     <ClCompile Include="..\Classes\Common\SpiritManager\SpiritManager.cpp" />
+    <ClCompile Include="..\Classes\Common\StoryManager\StoryManager.cpp" />
     <ClCompile Include="..\Classes\Scene\BackpackScene\BackpackLayer.cpp" />
     <ClCompile Include="..\Classes\Scene\BackpackScene\BackpackMainLayer.cpp" />
     <ClCompile Include="..\Classes\Scene\BackpackScene\SkillLayer.cpp" />
@@ -215,6 +216,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Common\Item\Item.h" />
     <ClInclude Include="..\Classes\Common\Item\Potion\Potion.h" />
     <ClInclude Include="..\Classes\Common\SpiritManager\SpiritManager.h" />
+    <ClInclude Include="..\Classes\Common\StoryManager\StoryManager.h" />
     <ClInclude Include="..\Classes\Scene\BackpackScene\BackpackLayer.h" />
     <ClInclude Include="..\Classes\Scene\BackpackScene\BackpackMainLayer.h" />
     <ClInclude Include="..\Classes\Scene\BackpackScene\SkillLayer.h" />
