@@ -106,13 +106,28 @@ bool TestScene::init()
             this->addChild(eq);
         }
         }, 0.1f, "init_EQ_key");*/
+
     scheduleOnce([this](float dt) {
         if (!slSystem) {
             slSystem = new SLSystem();
             slSystem->setPlayer(player);
-            slSystem->loadFromJson("/JSON/save1.json");
+            slSystem->loadFromJson("JSON/save1.json");
         }
         }, 0.1f, "init_EQ_key");
+
+    auto listener1 = cocos2d::EventListenerCustom::create("COOKING_STARTED_EVENT", [this](cocos2d::EventCustom* event) {
+        CCLOG("Cooking event received!");
+        keyboardEventManager->setBackpackActive(true);
+        mouseInputManager->setIsListening(false);
+        });
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener1, this);  // 将监听器添加到事件分发器
+
+    auto listener2 = cocos2d::EventListenerCustom::create("FISHING_STARTED_EVENT", [this](cocos2d::EventCustom* event) {
+        CCLOG("Fishing event received!");
+        keyboardEventManager->setBackpackActive(true);
+        mouseInputManager->setIsListening(false);
+        });
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener2, this);  // 将监听器添加到事件分发器
     return true;
 }
 
@@ -203,7 +218,8 @@ void TestScene::setupKeyboardListener()
             player->getChildByName("sprite")->setVisible(true);
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_F) {
-            keyboardEventManager->setBackpackActive(true);
+            blockManager->handleClickEvent(player->getPosition(),player);
+            /*keyboardEventManager->setBackpackActive(true);
             mouseInputManager->setIsListening(false);
             // 创建并发送事件
             // auto cookingEvent = new cocos2d::EventCustom("COOKING_STARTED_EVENT");
@@ -225,7 +241,7 @@ void TestScene::setupKeyboardListener()
                     delete fishing;
                     fishing = nullptr;
                     }, 2.0f, "delay_action_key"); 
-                } );
+                } );*/
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_M) {
             CCLOG("Toggling MiniMap");

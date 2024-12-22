@@ -200,5 +200,6 @@ void SLSystem::loadFromJson(const std::string& jsonFilePath) {
             playerPosition.x = position["x"].GetFloat();
             playerPosition.y = position["y"].GetFloat();
         }
+        player->setPosition(playerPosition);
     }
 }
