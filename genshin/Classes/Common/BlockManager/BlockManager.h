@@ -28,7 +28,7 @@ public:
 
     std::pair<int, int> getBlockCoordinates(const cocos2d::Vec2& position) const;
     void updateBlocksForPlayer(Player* playerNode);
-    void handleClickEvent(const cocos2d::Vec2& clickPosition);
+    void handleClickEvent(const cocos2d::Vec2& clickPosition, Player* player);
     void clear();
     
     // 更新玩家所在区域的物体的碰撞箱的映射
@@ -53,7 +53,7 @@ private:
     void loadObjectsFromTMX(const std::string& tmxFile);
 
     // 处理点击事件
-    void checkCollisions(const cocos2d::Vec2& clickPosition);
+    void checkCollisions(const cocos2d::Vec2& clickPosition, Player* player);
 
     // 存储区块状态（true为加载，false为卸载）
     std::unordered_map<std::pair<int, int>, bool, PairHash> blockStatus;

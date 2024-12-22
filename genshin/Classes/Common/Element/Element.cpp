@@ -24,6 +24,13 @@ Element stringToElement(const std::string& str) {
     if (str == "Thunder") return Element::THUNDER;
     if (str == "Grass") return Element::GRASS;
     if (str == "Ice") return Element::ICE;
+    if (str == "fire") return Element::FIRE;
+    if (str == "water") return Element::WATER;
+    if (str == "earth") return Element::EARTH;
+    if (str == "air") return Element::AIR;
+    if (str == "thunder") return Element::THUNDER;
+    if (str == "grass") return Element::GRASS;
+    if (str == "ice") return Element::ICE;
     throw std::invalid_argument("Invalid element string: " + str); // 异常处理，确保有效字符串
 }
 
