@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="22" height="12" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="39">
+ <tileset firstgid="1" source="walls.tsx"/>
+ <tileset firstgid="6145" name="tavern-furniture" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
+  <image source="../images/tavern-furniture.png" trans="ff00ff" width="1024" height="1024"/>
+ </tileset>
+ <tileset firstgid="7169" name="tavern-deco" tilewidth="32" tileheight="32" tilecount="896" columns="16">
+  <image source="../images/tavern-deco.png" trans="ff00ff" width="512" height="1792"/>
+  <tile id="128">
+   <animation>
+    <frame tileid="128" duration="100"/>
+    <frame tileid="130" duration="100"/>
+    <frame tileid="132" duration="100"/>
+    <frame tileid="130" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="129">
+   <animation>
+    <frame tileid="129" duration="100"/>
+    <frame tileid="131" duration="100"/>
+    <frame tileid="133" duration="100"/>
+    <frame tileid="131" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="146">
+   <animation>
+    <frame tileid="146" duration="100"/>
+    <frame tileid="148" duration="100"/>
+    <frame tileid="150" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="147">
+   <animation>
+    <frame tileid="147" duration="100"/>
+    <frame tileid="149" duration="100"/>
+    <frame tileid="151" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="162">
+   <animation>
+    <frame tileid="162" duration="100"/>
+    <frame tileid="164" duration="100"/>
+    <frame tileid="166" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="163">
+   <animation>
+    <frame tileid="163" duration="100"/>
+    <frame tileid="165" duration="100"/>
+    <frame tileid="167" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="177">
+   <animation>
+    <frame tileid="177" duration="100"/>
+    <frame tileid="178" duration="100"/>
+    <frame tileid="179" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="181">
+   <animation>
+    <frame tileid="181" duration="100"/>
+    <frame tileid="182" duration="100"/>
+    <frame tileid="183" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="185">
+   <animation>
+    <frame tileid="185" duration="100"/>
+    <frame tileid="186" duration="100"/>
+    <frame tileid="187" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="189">
+   <animation>
+    <frame tileid="189" duration="100"/>
+    <frame tileid="190" duration="100"/>
+    <frame tileid="191" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="193">
+   <animation>
+    <frame tileid="193" duration="100"/>
+    <frame tileid="194" duration="100"/>
+    <frame tileid="195" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="197">
+   <animation>
+    <frame tileid="197" duration="100"/>
+    <frame tileid="198" duration="100"/>
+    <frame tileid="199" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="201">
+   <animation>
+    <frame tileid="201" duration="100"/>
+    <frame tileid="202" duration="100"/>
+    <frame tileid="203" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="205">
+   <animation>
+    <frame tileid="205" duration="100"/>
+    <frame tileid="206" duration="100"/>
+    <frame tileid="207" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="209">
+   <animation>
+    <frame tileid="209" duration="100"/>
+    <frame tileid="210" duration="100"/>
+    <frame tileid="211" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="213">
+   <animation>
+    <frame tileid="213" duration="100"/>
+    <frame tileid="214" duration="100"/>
+    <frame tileid="215" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="217">
+   <animation>
+    <frame tileid="217" duration="100"/>
+    <frame tileid="218" duration="100"/>
+    <frame tileid="219" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="221">
+   <animation>
+    <frame tileid="221" duration="100"/>
+    <frame tileid="222" duration="100"/>
+    <frame tileid="223" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="229">
+   <animation>
+    <frame tileid="229" duration="100"/>
+    <frame tileid="230" duration="100"/>
+    <frame tileid="231" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="237">
+   <animation>
+    <frame tileid="237" duration="100"/>
+    <frame tileid="238" duration="100"/>
+    <frame tileid="239" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="646">
+   <animation>
+    <frame tileid="646" duration="100"/>
+    <frame tileid="648" duration="100"/>
+    <frame tileid="650" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="647">
+   <animation>
+    <frame tileid="647" duration="100"/>
+    <frame tileid="649" duration="100"/>
+    <frame tileid="651" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="662">
+   <animation>
+    <frame tileid="662" duration="100"/>
+    <frame tileid="664" duration="100"/>
+    <frame tileid="666" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="663">
+   <animation>
+    <frame tileid="663" duration="100"/>
+    <frame tileid="665" duration="100"/>
+    <frame tileid="667" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="726">
+   <animation>
+    <frame tileid="726" duration="100"/>
+    <frame tileid="728" duration="100"/>
+    <frame tileid="730" duration="100"/>
+    <frame tileid="728" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="727">
+   <animation>
+    <frame tileid="727" duration="100"/>
+    <frame tileid="729" duration="100"/>
+    <frame tileid="731" duration="100"/>
+    <frame tileid="729" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="728">
+   <animation>
+    <frame tileid="728" duration="100"/>
+    <frame tileid="730" duration="100"/>
+    <frame tileid="728" duration="100"/>
+    <frame tileid="726" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="729">
+   <animation>
+    <frame tileid="729" duration="100"/>
+    <frame tileid="731" duration="100"/>
+    <frame tileid="729" duration="100"/>
+    <frame tileid="727" duration="100"/>
+   </animation>
+  </tile>
+ </tileset>
+ <tileset firstgid="8065" name="lute" tilewidth="64" tileheight="64" tilecount="273" columns="13">
+  <image source="../images/lutist.png" trans="ff00ff" width="832" height="1344"/>
+  <tile id="183">
+   <animation>
+    <frame tileid="183" duration="100"/>
+    <frame tileid="184" duration="100"/>
+    <frame tileid="185" duration="100"/>
+    <frame tileid="186" duration="100"/>
+    <frame tileid="185" duration="100"/>
+    <frame tileid="183" duration="100"/>
+    <frame tileid="184" duration="100"/>
+    <frame tileid="185" duration="100"/>
+    <frame tileid="186" duration="100"/>
+    <frame tileid="187" duration="100"/>
+    <frame tileid="186" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="185">
+   <animation>
+    <frame tileid="185" duration="200"/>
+    <frame tileid="184" duration="200"/>
+    <frame tileid="183" duration="200"/>
+    <frame tileid="183" duration="200"/>
+    <frame tileid="184" duration="200"/>
+    <frame tileid="185" duration="200"/>
+    <frame tileid="186" duration="200"/>
+   </animation>
+  </tile>
+ </tileset>
+ <tileset firstgid="8338" name="drumstick" tilewidth="64" tileheight="64" tilecount="273" columns="13">
+  <image source="../images/drummer.png" trans="ff00ff" width="832" height="1344"/>
+  <tile id="186">
+   <animation>
+    <frame tileid="186" duration="200"/>
+    <frame tileid="185" duration="50"/>
+    <frame tileid="183" duration="100"/>
+    <frame tileid="182" duration="150"/>
+   </animation>
+  </tile>
+  <tile id="187">
+   <animation>
+    <frame tileid="187" duration="100"/>
+    <frame tileid="185" duration="100"/>
+    <frame tileid="183" duration="50"/>
+    <frame tileid="184" duration="100"/>
+    <frame tileid="186" duration="100"/>
+   </animation>
+  </tile>
+ </tileset>
+ <tileset firstgid="8611" name="flute" tilewidth="64" tileheight="64" tilecount="273" columns="13">
+  <image source="../images/flautist.png" trans="ff00ff" width="832" height="1344"/>
+  <tile id="81">
+   <animation>
+    <frame tileid="81" duration="200"/>
+    <frame tileid="82" duration="100"/>
+    <frame tileid="83" duration="200"/>
+    <frame tileid="82" duration="100"/>
+   </animation>
+  </tile>
+ </tileset>
+ <tileset firstgid="8884" source="doors.tsx"/>
+ <tileset firstgid="9140" source="floors.tsx"/>
+ <layer id="1" name="floor" width="22" height="12">
+  <data encoding="csv">
+391,582,582,582,582,582,582,582,582,582,582,582,582,582,582,582,582,582,582,582,582,390,
+519,3585,3586,3586,3586,3586,3586,3586,3586,3586,3586,3586,3586,3586,3586,3586,3586,3586,3586,3586,3587,517,
+519,3649,3650,3650,3650,3650,3650,3650,3650,3650,3650,3650,3650,3650,3650,3650,3650,3650,3650,3650,3651,517,
+519,3713,3714,3714,3714,3714,3714,3714,3714,3714,3714,3714,3714,3714,3714,3714,3714,3714,3714,3714,3715,517,
+519,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,517,
+519,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,517,
+519,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,517,
+519,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,517,
+519,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,517,
+519,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,517,
+519,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,10368,517,
+327,454,454,454,454,454,454,454,454,454,454,454,454,454,454,454,454,454,454,454,454,326
+</data>
+ </layer>
+ <layer id="2" name="图块层 2" width="22" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,6339,6403,6340,6354,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,6388,6371,6435,6372,6386,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,6417,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6452,0,0,
+0,0,6015,6354,0,6354,0,6015,0,6353,6353,0,6015,0,0,0,0,6015,0,6452,0,0,
+0,0,6079,6386,0,6386,0,6079,0,6347,6348,6384,6079,6352,6350,6384,0,6079,0,0,0,0,
+0,0,6143,6434,6435,6436,6355,6143,6355,6379,6380,6355,6143,6355,6382,6385,6349,6143,0,0,0,0,
+0,0,0,0,0,0,6387,0,6387,0,0,6387,0,6387,0,0,6381,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="11" name="图块层 7" width="22" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,9308,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,9340,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="3" name="图块层 3" width="22" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,7169,7186,7187,0,0,0,0,0,0,0,7179,0,0,0,
+0,0,0,6275,0,0,6276,0,7201,7202,7203,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,6209,0,0,6210,0,0,0,0,6350,0,10324,10324,10324,10324,0,0,0,0,0,
+0,0,0,6241,6306,6306,6242,0,0,0,0,6382,0,10324,10324,10324,10324,0,0,0,6346,0,
+0,0,0,6152,6153,6153,6154,0,0,0,0,0,0,6461,6462,6462,6463,0,0,0,6378,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6410,0,
+0,0,0,6402,6403,6404,0,0,0,0,0,0,0,0,7537,0,0,0,0,0,6442,0,
+0,0,0,6417,0,6417,0,6413,0,6417,6384,0,6413,0,0,0,6351,0,0,0,0,0,
+0,0,0,0,0,0,0,6445,0,0,0,0,6445,0,0,0,6417,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="4" name="图块层 4" width="22" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,7909,0,0,7620,7624,0,7837,0,0,0,7837,0,7908,0,0,7908,0,0,0,7910,0,
+0,7925,0,0,7636,7640,0,7853,0,0,0,7853,0,7924,0,0,7924,0,0,8986,7926,0,
+0,7941,0,0,0,0,0,0,0,0,0,0,0,7940,0,0,7940,0,0,9002,7942,0,
+0,0,0,7657,0,0,7626,0,0,0,0,0,0,0,0,7213,7214,0,0,0,0,0,
+0,0,0,0,0,0,7642,0,0,0,0,0,0,0,0,7229,7230,0,0,0,7608,0,
+0,0,0,7956,7957,7957,7958,0,0,0,0,0,0,7956,7957,7957,7958,0,0,0,7586,0,
+0,0,7970,0,0,0,0,7970,0,0,0,0,7970,0,0,0,0,7970,0,0,7445,0,
+0,0,7805,7570,7346,7511,0,7986,0,7346,7225,7219,7986,7220,0,0,0,7805,0,0,0,0,
+0,0,8002,0,0,0,0,7591,0,0,0,0,7589,0,0,0,7210,8002,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="6" name="图块层 5" width="22" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,6356,0,7462,7464,0,0,0,0,0,7223,0,0,0,0,0,0,0,0,0,0,
+0,0,6356,0,7572,7443,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,6356,6356,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="7" name="图块层 6" width="22" height="12">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,6149,6150,6150,6151,0,0,0,0,0,0,0,7315,7316,0,0,0,0,0,0,
+0,0,7717,6181,0,0,6183,0,0,0,0,0,0,0,7331,7332,0,0,0,0,0,0,
+0,0,0,6213,6214,6214,6215,0,0,0,0,0,0,6393,0,0,6392,0,0,0,0,0,
+0,0,0,6216,6185,6185,6218,0,0,0,0,0,0,6426,0,0,6428,0,0,0,0,0,
+0,0,0,6248,0,0,6250,0,0,0,0,0,0,6458,6360,6361,6460,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup id="10" name="ObjectLayer">
+  <object id="23" name="SpawnPoint" x="73.5056" y="220.151">
+   <point/>
+  </object>
+  <object id="1" gid="8692" x="447" y="188" width="64" height="64"/>
+  <object id="2" gid="8250" x="415" y="156" width="64" height="64"/>
+  <object id="3" gid="8524" x="479" y="156" width="64" height="64"/>
+  <object id="4" name="CollisionArea" x="289.667" y="254.833" width="63.3337" height="39.6667"/>
+  <object id="5" name="CollisionArea" x="227" y="287.5" width="27.3337" height="65.6667"/>
+  <object id="6" name="CollisionArea" x="385.667" y="286.833" width="30.0003" height="64.3333"/>
+  <object id="7" name="CollisionArea" x="448.333" y="260.833" width="34.0003" height="31.6667"/>
+  <object id="8" name="CollisionArea" x="511" y="292.833" width="60.0003" height="30.3333"/>
+  <object id="9" name="CollisionArea" x="639" y="162.833" width="32.667" height="121"/>
+  <object id="10" name="CollisionArea" x="417.667" y="125.5" width="36.667" height="79.6667"/>
+  <object id="11" name="CollisionArea" x="417" y="171.5" width="126" height="33"/>
+  <object id="12" name="CollisionArea" x="512.333" y="121.5" width="31.3337" height="81.6667"/>
+  <object id="13" name="CollisionArea" x="66.9998" y="290.167" width="26.667" height="29"/>
+  <object id="14" name="CollisionArea" x="100.333" y="263.5" width="85.3337" height="31.6667"/>
+  <object id="15" name="CollisionArea" x="255.667" y="111.5" width="95.3337" height="33"/>
+  <object id="16" name="CollisionArea" x="353.667" y="138.833" width="29.3337" height="25.6667"/>
+  <object id="17" name="CollisionArea" x="103" y="126.833" width="32.0003" height="63"/>
+  <object id="18" name="CollisionArea" x="186" y="125.167" width="32.0003" height="65.6667"/>
+  <object id="19" name="CollisionArea" x="103.333" y="190.5" width="16.667" height="114.333" rotation="-90"/>
+  <object id="20" name="CollisionArea" x="671.333" y="125.833" width="32.0003" height="225.667"/>
+  <object id="21" name="CollisionArea" x="-1.33348" y="126.5" width="31.3336" height="225.667"/>
+  <object id="22" name="CollisionArea" x="682" y="352.5" width="30.0003" height="662.334" rotation="90"/>
+  <object id="32" name="CollisionArea" x="688.667" y="94.833" width="32.0003" height="662.334" rotation="90"/>
+  <object id="38" name="door" x="33.988" y="190.914" width="26.0534" height="63.9216">
+   <properties>
+    <property name="index" type="int" value="0"/>
+    <property name="subtype" value="door"/>
+    <property name="type" value="SceneObject"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
