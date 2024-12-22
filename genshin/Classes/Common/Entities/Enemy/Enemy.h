@@ -21,7 +21,7 @@ private:
     int drop;                    // 掉落物id（若无则为0）
     Vector<SpriteFrame*> frames; // 动画帧容器
     Vector<Animate*> animates; // 动画容器
-
+    int enemyState=0;
     Vector<SpriteFrame*> attackFrames; // 攻击动作帧容器
     Sprite* sprite; // 角色精灵
     DrawNode* barNode;

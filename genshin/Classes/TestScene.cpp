@@ -14,7 +14,6 @@ bool TestScene::init()
     if (!Scene::init()) {
         return false;
     }
-
     // 加载 TMX 地图作为背景
     loadBackgroundMap();
 
@@ -31,7 +30,7 @@ bool TestScene::init()
     director->getOpenGLView()->setDesignResolutionSize(1920, 1080, ResolutionPolicy::NO_BORDER);
 
     // 如果地图太小，可以调整缩放比例，放大地图
-    auto map = TMXTiledMap::create("/maps/world.tmx");
+    auto map = TMXTiledMap::create("/maps/world2.tmx");
     if (map) {
         map->setName("background");
         this->addChild(map, -1);  // 将地图作为背景层添加到场景中
@@ -108,6 +107,12 @@ bool TestScene::init()
         this->update(deltaTime ,map);  // 每帧调用 update 方法
         }, 0.5f, "update_key");
 
+    scheduleOnce([this](float dt) {
+        if (!eq) {
+            eq = EscortQuest::create(player,blockManager,spiritManager);
+            this->addChild(eq);
+        }
+        }, 0.1f, "init_EQ_key");
     return true;
 }
 
@@ -151,7 +156,7 @@ void TestScene::addTestModule2()
     auto slime = new Enemy();
     slime->setSpriteFilename("monsters/man_eater_flower.png");
     slime->generateSprite();
-    slime->setPosition(5700, 400);
+    slime->setPosition(5620, 985);
     this->addChild(label);
     this->addChild(slime);
     blockManager->addEnemy(slime);
@@ -193,6 +198,9 @@ void TestScene::setupKeyboardListener()
             // 创建并发送事件
             auto fishingEvent = new cocos2d::EventCustom("FISHING_ENDED_EVENT");
             _eventDispatcher->dispatchEvent(fishingEvent);  // 发送事件
+            auto mapEvent = new cocos2d::EventCustom("MAP_ENDED_EVENT");
+            _eventDispatcher->dispatchEvent(mapEvent);  // 发送事件
+            player->getChildByName("sprite")->setVisible(true);
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_F) {
             keyboardEventManager->setBackpackActive(true);
@@ -218,6 +226,21 @@ void TestScene::setupKeyboardListener()
                     fishing = nullptr;
                     }, 2.0f, "delay_action_key"); 
                 } );
+        }
+        else if (keyCode == EventKeyboard::KeyCode::KEY_M) {
+            CCLOG("Toggling MiniMap");
+            
+            auto hud = player->getHud(); 
+            if (hud->getIsExpanded()) {
+                keyboardEventManager->setBackpackActive(false);
+                mouseInputManager->setIsListening(true);
+            }
+            else {
+
+                keyboardEventManager->setBackpackActive(true);
+                mouseInputManager->setIsListening(false);
+            }
+            hud->toggleMiniMap();  // 切换小地图显示模式
         }
         };
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(eventListener, this);
@@ -313,3 +336,4 @@ void TestScene::loadCameraPosition(){
         camera->setPosition3D(player->getPosition3D() + Vec3(0, 0, mouseInputManager->getCameraZ()));
     }
 }
+

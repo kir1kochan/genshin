@@ -11,7 +11,13 @@ private:
     // 进度条绘制节点
     cocos2d::DrawNode* healthBarNode;  // 血条节点
     cocos2d::DrawNode* staminaBarNode; // 体力条节点
-
+    cocos2d::TMXTiledMap* miniMapNode; // 小地图节点
+    cocos2d::Sprite* miniMapPlayerIcon; // 小地图玩家图标
+    cocos2d::ClippingNode* clipper;//裁剪
+    cocos2d::DrawNode* stencil;//遮罩层
+    cocos2d::DrawNode* borderNode;//边框
+    cocos2d::TMXTiledMap* expandedMiniMapNode;
+    cocos2d::Sprite* expandedMiniMapPlayerIcon;
     // 技能栏绘制节点
     std::vector<cocos2d::DrawNode*> skillBarNode;   // 技能栏节点
 
@@ -25,12 +31,17 @@ private:
     // 引用玩家对象
     Player* player;
 
+    // 小地图显示状态
+    bool isMiniMapExpanded;
+
     // 更新进度条位置（避免重叠）
     void updateBarPositions();
 
     // 绘制通用的矩形进度条
     void drawProgressBar(cocos2d::DrawNode* barNode, float percent, cocos2d::Color4F color);
 
+    // 初始化小地图玩家图标
+    void initMiniMapPlayerIcon();
 public:
     // 构造函数与析构函数
     Hud(Player* player);
@@ -53,8 +64,14 @@ public:
 
     void useSkill(int skillSlot, float cdTime);
 
+    // 更新小地图的位置
+    void updateMiniMapPosition();
+    //切换小地图显示方式
+    void toggleMiniMap();
 
-
+    bool getIsExpanded() {
+        return isMiniMapExpanded;
+    }
 };
 
 #endif // HUD_H
