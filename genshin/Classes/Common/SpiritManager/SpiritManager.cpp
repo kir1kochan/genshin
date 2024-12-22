@@ -107,7 +107,7 @@ void SpiritManager::updateEnemy(float deltatime){
         for (const auto& entry : enemyDistances) {
             Enemy* enemy = entry.first;
             float distance = entry.second;
-
+            enemy->generateSprite();
             enemy->update(deltatime);
             // 调用怪物的 AI 行为，并传入玩家的等级和敌人距离
             enemy->aiBehavior(distance, player);

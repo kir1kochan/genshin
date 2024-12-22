@@ -6,7 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
-
+#include <filesystem>
 using namespace rapidjson;
 
 SLSystem::SLSystem(TPAnchor* tpAnchor)
@@ -137,7 +137,7 @@ void SLSystem::saveToJson(const std::string& jsonFilePath) const {
 }
 
 void SLSystem::loadFromJson(const std::string& jsonFilePath) {
-    tpAnchor->loadFromJson("JSON/TPAnchors.json");
+    tpAnchor->loadFromJson("Resources/JSON/TPAnchors.json");
     std::ifstream ifs(jsonFilePath);
     if (!ifs.is_open()) {
         throw std::runtime_error("Failed to open file for loading: " + jsonFilePath);
