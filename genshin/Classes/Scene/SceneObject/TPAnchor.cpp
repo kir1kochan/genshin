@@ -27,7 +27,13 @@ std::unordered_map<cocos2d::Vec2, bool>  TPAnchor::gettpPointActivation() const{
 }
 
 void TPAnchor::activateTPPoint(const cocos2d::Vec2& point) {
-    tpPointActivation[point] = true;  // ¼¤»îÄ³¸öµã
+
+    for (auto anchor : tpPointActivation) {
+        if (point.distance(anchor.first) < 60) {
+            tpPointActivation[anchor.first] = true;
+        }
+    }
+
     CCLOG("TP Point (%.2f, %.2f) activated.", point.x, point.y);
 
     auto hud = player->getHud();
@@ -38,12 +44,9 @@ void TPAnchor::activateTPPoint(const cocos2d::Vec2& point) {
                 index = tpPointsIDs[anchor.first];
                 if (index > 0 && index <= 5) {
                     hud->hideFogLayers(hud->getMiniMapNode(), index);
-                    if (hud->getExpandedMiniMapNode()) {
-                        hud->hideFogLayers(hud->getExpandedMiniMapNode(), index);
-                    }
                 }
-            }        
-            
+            }
+
         }
     }
 }

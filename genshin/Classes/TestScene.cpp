@@ -82,7 +82,7 @@ bool TestScene::init()
             auto tpAnchors = tpAnchor->gettpPointActivation();
             for (auto& anchor : tpAnchors) {
                 Vec2 pos = anchor.first;
-                auto sprite = cocos2d::Sprite::create("Icon/Anchor.jpg");
+                auto sprite = cocos2d::Sprite::create("Icon/Anchor.png");
                 this->addChild(sprite);
                 sprite->setName("Anchor");
                 sprite->setPosition(pos.x, pos.y);
@@ -142,12 +142,12 @@ bool TestScene::init()
         this->update(deltaTime);  // 每帧调用 update 方法
         }, 0.5f, "update_key");
 
-    /*scheduleOnce([this](float dt) {
+    scheduleOnce([this](float dt) {
         if (!eq) {
             eq = EscortQuest::create(player,blockManager,spiritManager);
             this->addChild(eq);
         }
-        }, 0.1f, "init_EQ_key");*/
+        }, 0.1f, "init_EQ_key");
 
 
 
@@ -202,6 +202,7 @@ void TestScene::setupKeyboardListener()
             _eventDispatcher->dispatchEvent(fishingEvent);  // 发送事件
             auto mapEvent = new cocos2d::EventCustom("MAP_ENDED_EVENT");
             _eventDispatcher->dispatchEvent(mapEvent);  // 发送事件
+            
             player->getChildByName("sprite")->setVisible(true);
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_F) {
@@ -229,6 +230,7 @@ void TestScene::setupKeyboardListener()
                     fishing = nullptr;
                     }, 2.0f, "delay_action_key"); 
                 } );*/
+            tpAnchor->activateTPPoint(player->getPosition());
         }
         else if (keyCode == EventKeyboard::KeyCode::KEY_M) {
             CCLOG("Toggling MiniMap");
@@ -341,7 +343,7 @@ void TestScene::onExit() {
     Scene::onExit();
     // 这里可以进行数据保存
     slSystem->getPlayerPosition();
-    slSystem->saveToJson("JSON/save1.json");
+    slSystem->saveToJson("save1.json");
 }
 
 void TestScene::onEnter() {

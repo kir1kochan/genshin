@@ -629,7 +629,7 @@ void BackpackMainLayer::hideHoverInfo() {
     }
     else if (mouseArea == 3) {       
         // ”“œ¬«¯”Ú
-        for (const auto& entry : topRightGrid) {
+        for (const auto& entry : bottomRightGrid) {
             if (entry.second.isHovering == true) {
                 return;
             }
