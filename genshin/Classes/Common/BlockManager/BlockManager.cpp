@@ -154,7 +154,7 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
             enemy->setPosition(Vec2(x, y));
             blockToEnemies[block].push_back(enemy);
         }
-        else if (type == "Collection" || type == "Fish") {
+        else if (type == "Collection" || type == "Fish" || type == "pickup") {
             SceneObject* sceneObject = new SceneObject();
             std::string subtype = objectData["subtype"].asString();
             if (subtype == "door") {    // 目前设想的特殊物体
@@ -190,7 +190,7 @@ void BlockManager::loadObjectsFromTMX(const std::string& tmxFile) {
                 blockToSceneObjects[block].push_back(sceneObject);
             }
         }
-        else if (type == "Collision") { // 碰撞区域处理
+        else if (type == "CollisionArea") { // 碰撞区域处理
             // 检查是否有 width 和 height 字段
             if (objectData.find("width") != objectData.end() && objectData.find("height") != objectData.end()) {
                 float width = objectData["width"].asFloat();
