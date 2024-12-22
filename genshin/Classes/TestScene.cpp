@@ -69,7 +69,6 @@ bool TestScene::init()
         this->addChild(player, 1);  // 将玩家加入到场景中
         player->setVisible(true);
         player->setScale(1.0f);
-        player->setPosition(1808.0, 6280.0);
         cooking = new CookingSystem(player->getBackpack());
         this->addChild(cooking, 9);
         fishing = new FishingSystem;
