@@ -12,7 +12,7 @@ public:
     void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
     void setPlayer(Player* player);
     void setNearestEnemy(Enemy* enemy);
-    void update(float deltaTime, CCTMXTiledMap* map);
+    void update(float deltaTime);
     void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 
     // 设置背包界面的状态

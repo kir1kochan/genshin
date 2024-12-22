@@ -31,7 +31,7 @@ public:
     void switchToBackpack();
     void exitBackpack();
     // 每帧更新
-    void update(float deltaTime,CCTMXTiledMap* map);
+    void update(float deltaTime);
 
     // 恢复相机位置
     void loadCameraPosition() ;

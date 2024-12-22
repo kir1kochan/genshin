@@ -84,7 +84,7 @@ void KeyboardEventManager::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* 
 }
 
 // 每帧更新玩家位置
-void KeyboardEventManager::update(float deltaTime,CCTMXTiledMap* map) {
+void KeyboardEventManager::update(float deltaTime) {
     if (player == nullptr || isBackpackActive) return;  // 如果背包界面激活，忽略更新
 
     // 计算目标位置
@@ -94,6 +94,8 @@ void KeyboardEventManager::update(float deltaTime,CCTMXTiledMap* map) {
     targetPos.y += moveDirection.y * moveSpeed * deltaTime;
 
     //获取地图大小和图块大小
+    auto runningScene = cocos2d::Director::getInstance()->getRunningScene();
+    auto map = runningScene->getChildByName<cocos2d::TMXTiledMap*>("background");
     auto mapSize = map->getMapSize();
     auto tileSize = map->getTileSize();
     //限定终点不能超范围
