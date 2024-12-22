@@ -22,19 +22,31 @@ void TPAnchor::teleport(Player& player) {
     CCLOG("No activated TP point found.");
 }
 
+std::unordered_map<cocos2d::Vec2, bool>  TPAnchor::gettpPointActivation() const {
+    return tpPointActivation;
+}
+
 void TPAnchor::activateTPPoint(const cocos2d::Vec2& point) {
-    tpPointActivation[point] = true;  // 激活某个点
+
+    for (auto anchor : tpPointActivation) {
+        if (point.distance(anchor.first) < 60) {
+            tpPointActivation[anchor.first] = true;
+        }
+    }
+
     CCLOG("TP Point (%.2f, %.2f) activated.", point.x, point.y);
 
-    // 获取 HUD 对象并隐藏雾图层
-    auto hud = dynamic_cast<Hud*>(this->getParent()->getChildByName("Hud"));
+    auto hud = player->getHud();
+    int index;
     if (hud) {
-        int index = tpPointIndex[point];
-        if (index > 0 && index <= 5) {
-            hud->hideFogLayers(hud->getMiniMapNode(), index);
-            if (hud->getExpandedMiniMapNode()) {
-                hud->hideFogLayers(hud->getExpandedMiniMapNode(), index);
+        for (auto anchor : tpPointActivation) {
+            if (anchor.second) {
+                index = tpPointsIDs[anchor.first];
+                if (index > 0 && index <= 5) {
+                    hud->hideFogLayers(hud->getMiniMapNode(), index);
+                }
             }
+
         }
     }
 }
@@ -62,10 +74,8 @@ void TPAnchor::loadFromJson(const std::string& jsonFilePath) {
                 const rapidjson::Value& point = points[i];
                 float x = point["x"].GetFloat();
                 float y = point["y"].GetFloat();
-                int index = point["index"].GetInt();
 
                 tpPoints.push_back(cocos2d::Vec2(x, y));
-                tpPointIndex[cocos2d::Vec2(x, y)] = index;
 
                 // 默认未激活, 但是如果 JSON 中有激活状态，就恢复激活状态
                 bool isActivated = false;
@@ -73,6 +83,13 @@ void TPAnchor::loadFromJson(const std::string& jsonFilePath) {
                     isActivated = point["activated"].GetBool();
                 }
                 tpPointActivation[cocos2d::Vec2(x, y)] = isActivated;
+                int id;
+                if (point.HasMember("index")) {
+                    id = point["index"].GetInt();
+                }
+                tpPointsIDs[cocos2d::Vec2(x, y)] = id;
+                auto hud = player->getHud();
+
             }
         }
     }
@@ -93,14 +110,18 @@ void TPAnchor::saveToJson(const std::string& jsonFilePath) {
         rapidjson::Value pointObj(rapidjson::kObjectType);
         pointObj.AddMember("x", point.x, allocator);
         pointObj.AddMember("y", point.y, allocator);
-        pointObj.AddMember("index", tpPointIndex[point], allocator);
-
 
         // 添加激活状态
         if (tpPointActivation.find(point) != tpPointActivation.end()) {
             pointObj.AddMember("activated", tpPointActivation.at(point), allocator);
         }
+        // 添加对应的 TP 点位 ID
+        if (tpPointsIDs.find(point) != tpPointsIDs.end()) {
+            pointObj.AddMember("index", tpPointsIDs.at(point), allocator);
+        }
+
         points.PushBack(pointObj, allocator);
+
     }
     doc.AddMember("tpPoints", points, allocator);
 
