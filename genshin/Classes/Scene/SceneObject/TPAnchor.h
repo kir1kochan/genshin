@@ -35,8 +35,6 @@ public:
     // 保存 TP 点位数据到 JSON 文件
     void saveToJson(const std::string& jsonFilePath);
 
-    //隐藏小地图雾图层
-    void hideFogLayers(cocos2d::TMXTiledMap* map);
 
 private:
     // 存储所有 TP 点位坐标
@@ -45,6 +43,8 @@ private:
     // 存储每个 TP 点位的激活情况，true 表示激活，false 表示未激活
     std::unordered_map<cocos2d::Vec2, bool> tpPointActivation;
 
+    // 存储每个 TP 点位的索引
+    std::unordered_map<cocos2d::Vec2, int> tpPointIndex;
 };
 
 #endif  // __TPANCHOR_H__
