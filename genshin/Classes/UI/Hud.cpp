@@ -1,6 +1,6 @@
 #include "Hud.h"
 #include "Classes/Common/Entities/Player/Player.h"
-#include <Scene/SceneObject/TPAnchor.h>
+#include "TestScene.h"
 
 // 构造函数，初始化各成员变量
 Hud::Hud(Player* player)
@@ -312,4 +312,18 @@ void Hud::hideFogLayers(cocos2d::TMXTiledMap* map, int index) {
     if (layer) {
         layer->setVisible(false);
     }
+}
+
+void Hud::setMiniMapVisible(bool visible) {
+    miniMapNode->setVisible(visible);
+    clipper->setVisible(visible);
+    borderNode->setVisible(visible);
+}
+
+cocos2d::Vec2 Hud::getMiniMapPlayerPosition() const {
+    return miniMapPlayerIcon->getPosition();
+}
+
+void Hud::setMiniMapPlayerPosition(const cocos2d::Vec2& position) {
+    miniMapPlayerIcon->setPosition(position);
 }

@@ -68,6 +68,15 @@ public:
 
     cocos2d::TMXTiledMap* getMiniMapNode() const;
     cocos2d::TMXTiledMap* getExpandedMiniMapNode() const;
+
+    // 设置悬浮小地图的可见性
+    void setMiniMapVisible(bool visible);
+
+    // 获取悬浮小地图中玩家的位置
+    cocos2d::Vec2 getMiniMapPlayerPosition() const;
+
+    // 设置悬浮小地图中玩家的位置
+    void setMiniMapPlayerPosition(const cocos2d::Vec2& position);
 };
 
 #endif // HUD_H
